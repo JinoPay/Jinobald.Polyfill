@@ -1,0 +1,100 @@
+﻿#if NET35
+using System.Runtime.CompilerServices;
+
+namespace System;
+
+public static partial class StringEx
+{
+    extension(string)
+    {
+        [MethodImpl(MethodImplOptionsEx.AggressiveInlining)]
+        public static string Join(string? separator, IEnumerable<string>? values)
+        {
+            if (values is null) throw new ArgumentNullException(nameof(values));
+
+            var stringList = new List<string>();
+            var length = 0;
+            var separatorLength = separator?.Length ?? 0;
+            foreach (var item in values)
+            {
+                if (length != 0 && separatorLength != 0)
+                {
+                    stringList.Add(separator!);
+                    length += separatorLength;
+                }
+
+                if (item is null) continue;
+
+                stringList.Add(item);
+                length += item.Length;
+            }
+
+            return ConcatExtractedExtracted(stringList.ToArray(), 0, stringList.Count, length);
+        }
+
+        [MethodImpl(MethodImplOptionsEx.AggressiveInlining)]
+        public static string Join<T>(string? separator, IEnumerable<T>? values)
+        {
+            if (values is null) throw new ArgumentNullException(nameof(values));
+
+            var stringList = new List<string>();
+            var length = 0;
+            var separatorLength = separator?.Length ?? 0;
+            foreach (var item in values)
+            {
+                if (length != 0 && separatorLength != 0)
+                {
+                    stringList.Add(separator!);
+                    length += separatorLength;
+                }
+
+                if (item is null) continue;
+
+                var itemToString = item.ToString();
+                stringList.Add(itemToString);
+                length += itemToString.Length;
+            }
+
+            return ConcatExtractedExtracted(stringList.ToArray(), 0, stringList.Count, length);
+        }
+
+        [MethodImpl(MethodImplOptionsEx.AggressiveInlining)]
+        public static string Join(string? separator, params object[]? values)
+        {
+            if (values == null) throw new ArgumentNullException(nameof(values));
+
+            var stringList = new List<string>();
+            var length = 0;
+            var separatorLength = separator?.Length ?? 0;
+            foreach (var item in values)
+            {
+                if (length != 0 && separatorLength != 0)
+                {
+                    stringList.Add(separator!);
+                    length += separatorLength;
+                }
+
+                if (item is null) continue;
+
+                var itemToString = item.ToString();
+                stringList.Add(itemToString);
+                length += itemToString.Length;
+            }
+
+            return ConcatExtractedExtracted(stringList.ToArray(), 0, stringList.Count, length);
+        }
+
+        [MethodImpl(MethodImplOptionsEx.AggressiveInlining)]
+        public static string Join(string separator, params string[] values)
+        {
+            return string.Join(separator, values);
+        }
+
+        [MethodImpl(MethodImplOptionsEx.AggressiveInlining)]
+        public static string Join(string separator, string[] values, int startIndex, int count)
+        {
+            return string.Join(separator, values, startIndex, count);
+        }
+    }
+}
+#endif
