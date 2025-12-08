@@ -14,13 +14,7 @@ public sealed class WeakReference<T> : ISerializable
 
     [NonSerialized] private GCHandle _handle;
 
-    public WeakReference(T? target)
-        : this(target, false)
-    {
-        // Empty
-    }
-
-    public WeakReference(T? target, bool trackResurrection)
+    public WeakReference(T? target, bool trackResurrection = false)
     {
         _trackResurrection = trackResurrection;
         SetTarget(target);
@@ -49,7 +43,7 @@ public sealed class WeakReference<T> : ISerializable
     [SecurityPermission(SecurityAction.Demand, UnmanagedCode = true)]
     public bool TryGetTarget([NotNullWhen(true)] out T? target)
     {
-        target = default;
+        target = null;
         if (!_handle.IsAllocated) return false;
 
         try
