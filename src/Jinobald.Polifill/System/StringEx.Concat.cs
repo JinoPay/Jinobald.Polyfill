@@ -1,4 +1,4 @@
-﻿#if NET35
+﻿
 using System.Runtime.CompilerServices;
 using System.Text;
 
@@ -180,4 +180,3 @@ public static partial class StringEx
         }
     }
 }
-#endif

@@ -14,5 +14,9 @@
     <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
       <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     </PropertyGroup>
+
+    <ItemGroup Condition="'$(TargetFramework)' == 'net462'">
+      <PackageReference Include="System.ValueTuple" Version="4.6.1" />
+    </ItemGroup>
     
 </Project>
