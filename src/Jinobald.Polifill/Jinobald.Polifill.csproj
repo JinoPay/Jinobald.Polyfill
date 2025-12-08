@@ -16,7 +16,16 @@
     </PropertyGroup>
 
     <ItemGroup Condition="'$(TargetFramework)' == 'net462'">
+      <PackageReference Include="Microsoft.Bcl.HashCode" Version="6.0.0" />
       <PackageReference Include="System.ValueTuple" Version="4.6.1" />
+    </ItemGroup>
+    
+    <ItemGroup Condition="'$(TargetFramework)' == 'net472'">
+      <PackageReference Include="Microsoft.Bcl.HashCode" Version="6.0.0" />
+    </ItemGroup>
+
+    <ItemGroup Condition="'$(TargetFramework)' == 'net48'">
+      <PackageReference Include="Microsoft.Bcl.HashCode" Version="6.0.0" />
     </ItemGroup>
     
 </Project>
