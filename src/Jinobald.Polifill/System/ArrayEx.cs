@@ -8,14 +8,6 @@ public static class ArrayEx
 {
     private static readonly CacheDict<Type, Array> _emptyArrays = new(256);
 
-    [MethodImpl(MethodImplOptionsEx.AggressiveInlining)]
-    public static void Fill<T>(T[] array, T value)
-    {
-        if (array == null) throw new ArgumentNullException(nameof(array));
-
-        for (var index = 0; index < array.Length; index++) array[index] = value;
-    }
-
     extension(Array)
     {
         [MethodImpl(MethodImplOptionsEx.AggressiveInlining)]
@@ -29,6 +21,14 @@ public static class ArrayEx
             var result = new T[0];
             _emptyArrays[type] = result;
             return result;
+        }
+
+        [MethodImpl(MethodImplOptionsEx.AggressiveInlining)]
+        public static void Fill<T>(T[] array, T value)
+        {
+            if (array == null) throw new ArgumentNullException(nameof(array));
+
+            for (var index = 0; index < array.Length; index++) array[index] = value;
         }
     }
 }
