@@ -1,4 +1,5 @@
 ﻿#if NET35
+using System.Collections.ThreadSafe;
 using System.Runtime.CompilerServices;
 
 namespace System;
@@ -21,7 +22,7 @@ public static class ArrayEx
         public static T[] Empty<T>()
         {
             var type = typeof(T);
-            if (type == typeof(Type)) return (T[])(object)TypeEx.EmptyTypes;
+            if (type == typeof(Type)) return (T[])(object)Type.EmptyTypes;
 
             if (_emptyArrays.TryGetValue(type, out var array)) return (T[])array;
 

@@ -1,4 +1,4 @@
-﻿#if NET35
+﻿#if NET35 || NET462 || NET472 || NET48
 
 // ReSharper disable once RedundantAttributeUsageProperty
 
