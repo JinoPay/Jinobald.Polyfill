@@ -1,3 +1,7 @@
+#pragma warning disable
+
+#if !NET8_0_OR_GREATER
+
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 
@@ -9,9 +13,8 @@ public static partial class ZipArchiveEntryEx
 {
     extension(ZipArchiveEntry target)
     {
-#if !NET10
         /// <summary>
-        ///     OS and application specific file attributes.
+        /// OS and application specific file attributes.
         /// </summary>
         //Link: https://learn.microsoft.com/en-us/dotnet/api/system.io.compression.ziparchiveentry.externalattributes?view=net-10.0
         public int ExternalAttributes
@@ -19,6 +22,6 @@ public static partial class ZipArchiveEntryEx
             get => 0;
             set { }
         }
-#endif
     }
 }
+#endif
