@@ -1,8 +1,6 @@
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 
-#pragma warning disable
-
 namespace System.IO.Compression;
 
 [ExcludeFromCodeCoverage]

@@ -1,5 +1,3 @@
-#pragma warning disable
-
 namespace System.Xml.Linq;
 
 internal static partial class Polyfill
