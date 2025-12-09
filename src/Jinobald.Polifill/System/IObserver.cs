@@ -1,8 +1,8 @@
-﻿#if LESSTHAN_NET40
+﻿#if NET35   
 
 #pragma warning disable CA1716 // Identifiers should not match keywords
 
-namespace Jinobald.Polifill;
+namespace System;
 
 /// <summary>Provides a mechanism for receiving push-based notifications.</summary>
 /// <typeparam name="T">The object that provides notification information.</typeparam>
