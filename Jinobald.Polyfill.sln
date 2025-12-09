@@ -1,8 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Jinobald.Polifill", "src\Jinobald.Polifill\Jinobald.Polifill.csproj", "{EA427CDF-CB02-4301-9B78-D7A1665C6AA0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Jinobald.Polyfill", "src\Jinobald.Polyfill\Jinobald.Polyfill.csproj", "{EA427CDF-CB02-4301-9B78-D7A1665C6AA0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Jinobald.Polifill.Tests", "tests\Jinobald.Polifill.Tests\Jinobald.Polifill.Tests.csproj", "{B8F3E4A2-1D7C-4E9F-A6B8-C9D2E5F7A3B1}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Jinobald.Polyfill.Tests", "tests\Jinobald.Polyfill.Tests\Jinobald.Polyfill.Tests.csproj", "{B8F3E4A2-1D7C-4E9F-A6B8-C9D2E5F7A3B1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -7,6 +7,7 @@
         <Nullable>enable</Nullable>
         <IsPackable>false</IsPackable>
         <IsTestProject>true</IsTestProject>
+        <RootNamespace>Jinobald.Polifill.Tests</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>
@@ -23,7 +24,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\src\Jinobald.Polifill\Jinobald.Polifill.csproj" />
+        <ProjectReference Include="..\..\src\Jinobald.Polyfill\Jinobald.Polyfill.csproj" />
     </ItemGroup>
 
 </Project>

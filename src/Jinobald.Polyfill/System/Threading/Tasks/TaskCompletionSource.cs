@@ -4,14 +4,14 @@ using System.Diagnostics.CodeAnalysis;
 
 #nullable enable
 
-namespace System.Diagnostics;
+namespace System.Threading.Tasks;
 
 /// <summary>
-///     Represents the producer side of a <see cref="Tasks.Task" /> unbound to a
-///     delegate, providing access to the consumer side through the <see cref="Tasks.Task" /> property.
+///     Represents the producer side of a <see cref="Task" /> unbound to a
+///     delegate, providing access to the consumer side through the <see cref="Task" /> property.
 /// </summary>
 [ExcludeFromCodeCoverage]
-[DebuggerNonUserCode]
+[System.Diagnostics.DebuggerNonUserCode]
 //Link: https://learn.microsoft.com/en-us/dotnet/api/system.threading.tasks.taskcompletionsource?view=net-10.0
 public class TaskCompletionSource
 {
@@ -42,13 +42,13 @@ public class TaskCompletionSource
     }
 
     /// <summary>
-    ///     Gets the <see cref="Tasks.Task" /> created
+    ///     Gets the <see cref="Task" /> created
     ///     by this <see cref="TaskCompletionSource" />.
     /// </summary>
     public Task Task => inner.Task;
 
     /// <summary>
-    ///     Attempts to transition the underlying <see cref="Tasks.Task" /> into the <see cref="TaskStatus.Canceled" /> state.
+    ///     Attempts to transition the underlying <see cref="Task" /> into the <see cref="TaskStatus.Canceled" /> state.
     /// </summary>
     public bool TrySetCanceled()
     {
@@ -56,7 +56,7 @@ public class TaskCompletionSource
     }
 
     /// <summary>
-    ///     Attempts to transition the underlying <see cref="Tasks.Task" /> into the <see cref="TaskStatus.Canceled" /> state.
+    ///     Attempts to transition the underlying <see cref="Task" /> into the <see cref="TaskStatus.Canceled" /> state.
     /// </summary>
     public bool TrySetCanceled(CancellationToken cancellationToken)
     {
@@ -64,7 +64,7 @@ public class TaskCompletionSource
     }
 
     /// <summary>
-    ///     Attempts to transition the underlying <see cref="Tasks.Task" /> into the <see cref="TaskStatus.Faulted" /> state.
+    ///     Attempts to transition the underlying <see cref="Task" /> into the <see cref="TaskStatus.Faulted" /> state.
     /// </summary>
     public bool TrySetException(Exception exception)
     {
@@ -72,7 +72,7 @@ public class TaskCompletionSource
     }
 
     /// <summary>
-    ///     Attempts to transition the underlying <see cref="Tasks.Task" /> into the <see cref="TaskStatus.Faulted" /> state.
+    ///     Attempts to transition the underlying <see cref="Task" /> into the <see cref="TaskStatus.Faulted" /> state.
     /// </summary>
     public bool TrySetException(IEnumerable<Exception> exceptions)
     {
@@ -80,7 +80,7 @@ public class TaskCompletionSource
     }
 
     /// <summary>
-    ///     Attempts to transition the underlying <see cref="Tasks.Task" /> into the <see cref="TaskStatus.RanToCompletion" />
+    ///     Attempts to transition the underlying <see cref="Task" /> into the <see cref="TaskStatus.RanToCompletion" />
     ///     state.
     /// </summary>
     public bool TrySetResult()
@@ -89,7 +89,7 @@ public class TaskCompletionSource
     }
 
     /// <summary>
-    ///     Transitions the underlying <see cref="Tasks.Task" /> into the <see cref="TaskStatus.Canceled" /> state.
+    ///     Transitions the underlying <see cref="Task" /> into the <see cref="TaskStatus.Canceled" /> state.
     /// </summary>
     public void SetCanceled()
     {
@@ -97,7 +97,7 @@ public class TaskCompletionSource
     }
 
     /// <summary>
-    ///     Transitions the underlying <see cref="Tasks.Task" /> into the <see cref="TaskStatus.Canceled" /> state
+    ///     Transitions the underlying <see cref="Task" /> into the <see cref="TaskStatus.Canceled" /> state
     ///     using the specified token.
     /// </summary>
     public void SetCanceled(CancellationToken cancellationToken)
@@ -105,20 +105,20 @@ public class TaskCompletionSource
         inner.SetCanceled(cancellationToken);
     }
 
-    /// <summary>Transitions the underlying <see cref="Tasks.Task" /> into the <see cref="TaskStatus.Faulted" /> state.</summary>
+    /// <summary>Transitions the underlying <see cref="Task" /> into the <see cref="TaskStatus.Faulted" /> state.</summary>
     public void SetException(Exception exception)
     {
         inner.SetException(exception);
     }
 
-    /// <summary>Transitions the underlying <see cref="Tasks.Task" /> into the <see cref="TaskStatus.Faulted" /> state.</summary>
+    /// <summary>Transitions the underlying <see cref="Task" /> into the <see cref="TaskStatus.Faulted" /> state.</summary>
     public void SetException(IEnumerable<Exception> exceptions)
     {
         inner.SetException(exceptions);
     }
 
     /// <summary>
-    ///     Transitions the underlying <see cref="Tasks.Task" /> into the <see cref="TaskStatus.RanToCompletion" /> state.
+    ///     Transitions the underlying <see cref="Task" /> into the <see cref="TaskStatus.RanToCompletion" /> state.
     /// </summary>
     public void SetResult()
     {

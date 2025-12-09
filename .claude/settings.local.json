@@ -1,8 +1,7 @@
 {
   "permissions": {
     "allow": [
-      "Bash(dotnet build:*)",
-      "Bash(dotnet test:*)"
+      "Bash(ForEach-Object { $_ame })"
     ],
     "deny": [],
     "ask": []

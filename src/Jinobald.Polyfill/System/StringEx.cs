@@ -5,7 +5,7 @@ namespace System;
 using System;
 using System.Collections.Generic;
 
-static partial class Polyfill
+static partial class StringEx
 {
     extension(string)
     {

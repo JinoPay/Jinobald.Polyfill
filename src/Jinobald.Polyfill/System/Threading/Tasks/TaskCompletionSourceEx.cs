@@ -2,7 +2,7 @@
 
 namespace System.Threading.Tasks;
 
-internal static partial class Polyfill
+internal static partial class TaskCompletionSourceEx
 {
     /// <summary>
     ///     Transitions the underlying <see cref="Task{TResult}" /> into the <see cref="TaskStatus.Canceled" /> state
