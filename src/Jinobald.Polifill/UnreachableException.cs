@@ -1,0 +1,49 @@
+using System.Diagnostics.CodeAnalysis;
+
+#if !NET7_0_OR_GREATER
+
+#nullable enable
+
+namespace System.Diagnostics;
+
+/// <summary>
+///     Exception thrown when the program executes an instruction that was thought to be unreachable.
+/// </summary>
+/// <seealso href="https://learn.microsoft.com/en-us/dotnet/api/system.diagnostics.unreachableexception" />
+/// <seealso
+///     href="https://source.dot.net/#System.Private.CoreLib/src/libraries/System.Private.CoreLib/src/System/Diagnostics/UnreachableException.cs" />
+[ExcludeFromCodeCoverage]
+[DebuggerNonUserCode]
+public sealed class UnreachableException : Exception
+{
+    /// <summary>
+    ///     Initializes a new instance of the <see cref="UnreachableException" /> class with the default error message.
+    /// </summary>
+    public UnreachableException()
+        : base("The program executed an instruction that was thought to be unreachable.")
+    {
+    }
+
+    /// <summary>
+    ///     Initializes a new instance of the <see cref="UnreachableException" />
+    ///     class with a specified error message.
+    /// </summary>
+    public UnreachableException(string? message)
+        : base(message)
+    {
+    }
+
+    /// <summary>
+    ///     Initializes a new instance of the <see cref="UnreachableException" />
+    ///     class with a specified error message and a reference to the inner exception that is the cause of
+    ///     this exception.
+    /// </summary>
+    public UnreachableException(string? message, Exception? innerException)
+        : base(message, innerException)
+    {
+    }
+}
+#else
+using System.Runtime.CompilerServices;
+[assembly: TypeForwardedTo(typeof(System.Diagnostics.UnreachableException))]
+#endif
