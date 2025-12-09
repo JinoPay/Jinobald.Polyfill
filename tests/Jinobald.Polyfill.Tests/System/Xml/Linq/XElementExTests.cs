@@ -1,7 +1,7 @@
 using System.Xml.Linq;
 using Xunit;
 
-namespace Jinobald.Polifill.Tests;
+namespace Jinobald.Polyfill.Tests.System.Xml.Linq;
 
 public class XElementExTests
 {

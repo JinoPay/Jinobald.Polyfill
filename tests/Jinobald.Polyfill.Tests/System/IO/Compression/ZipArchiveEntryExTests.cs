@@ -1,7 +1,7 @@
 using System.IO.Compression;
 using Xunit;
 
-namespace Jinobald.Polifill.Tests;
+namespace Jinobald.Polyfill.Tests.System.IO.Compression;
 
 public class ZipArchiveEntryExTests
 {

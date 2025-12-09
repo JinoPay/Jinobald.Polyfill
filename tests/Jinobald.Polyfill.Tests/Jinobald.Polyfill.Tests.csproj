@@ -7,7 +7,7 @@
         <Nullable>enable</Nullable>
         <IsPackable>false</IsPackable>
         <IsTestProject>true</IsTestProject>
-        <RootNamespace>Jinobald.Polifill.Tests</RootNamespace>
+        <RootNamespace>Jinobald.Polyfill.Tests</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>

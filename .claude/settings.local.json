@@ -1,7 +1,9 @@
 {
   "permissions": {
     "allow": [
-      "Bash(ForEach-Object { $_ame })"
+      "Bash(ForEach-Object { $_ame })",
+      "Bash(dir:*)",
+      "Bash(tree:*)"
     ],
     "deny": [],
     "ask": []
