@@ -27,5 +27,15 @@
     <ItemGroup Condition="'$(TargetFramework)' == 'net48'">
       <PackageReference Include="Microsoft.Bcl.HashCode" Version="6.0.0" />
     </ItemGroup>
+
+    <ItemGroup>
+      <Compile Remove="System\Threading\ReentryGuard.cs" />
+      <Compile Remove="System\Collections\ThreadSafe\ThreadSafeCollection.cs" />
+      <Compile Remove="System\Collections\Extensions.cs" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="System\" />
+    </ItemGroup>
     
 </Project>
