@@ -2,9 +2,8 @@ using Xunit;
 
 namespace Jinobald.Polyfill.Tests.System;
 
-public class StringExTests
+public partial class StringExTests
 {
-#if NETSTANDARD2_0 || NETFRAMEWORK
     [Fact]
     public void Join_WithCharSeparator_ShouldJoinStrings()
     {
@@ -82,80 +81,7 @@ public class StringExTests
         // Assert
         Assert.Equal("1,2,3", result);
     }
-#endif
 
-#if NETFRAMEWORK || NETSTANDARD2_0 || NETCOREAPP2_0 || NETCOREAPP2_1 || NETCOREAPP2_2
-    [Fact]
-    public void Create_WithValidLength_ShouldCreateString()
-    {
-        // Arrange
-        var length = 5;
-
-        // Act
-        var result = string.Create(length, 'x', (span, state) =>
-        {
-            for (var i = 0; i < span.Length; i++)
-            {
-                span[i] = state;
-            }
-        });
-
-        // Assert
-        Assert.Equal("xxxxx", result);
-    }
-
-    [Fact]
-    public void Create_WithZeroLength_ShouldReturnEmpty()
-    {
-        // Act
-        var result = string.Create(0, 'x', (span, state) => { });
-
-        // Assert
-        Assert.Equal(string.Empty, result);
-    }
-
-    [Fact]
-    public void Create_WithNegativeLength_ShouldThrow()
-    {
-        // Act & Assert
-        Assert.Throws<ArgumentOutOfRangeException>(() =>
-            string.Create(-1, 'x', (span, state) => { }));
-    }
-
-    [Fact]
-    public void Create_WithComplexState_ShouldWork()
-    {
-        // Arrange
-        var data = new { Prefix = "Hello", Suffix = "World" };
-
-        // Act
-        var result = string.Create(10, data, (span, state) =>
-        {
-            state.Prefix.AsSpan().CopyTo(span);
-            state.Suffix.AsSpan().CopyTo(span.Slice(5));
-        });
-
-        // Assert
-        Assert.Equal("HelloWorld", result);
-    }
-#endif
-
-#if !NETCOREAPP3_0_OR_GREATER && (NETSTANDARD2_1 || NETCOREAPP2_0 || NETCOREAPP2_1 || NETCOREAPP2_2)
-    [Fact]
-    public void GetHashCode_FromSpan_ShouldReturnHashCode()
-    {
-        // Arrange
-        var text = "test".AsSpan();
-
-        // Act
-        var hashCode = string.GetHashCode(text);
-
-        // Assert
-        Assert.Equal("test".GetHashCode(), hashCode);
-    }
-#endif
-
-#if !NET9_0_OR_GREATER && (NETSTANDARD2_1 || NETCOREAPP)
     [Fact]
     public void Join_WithCharSeparator_ReadOnlySpan_ShouldJoinStrings()
     {
@@ -233,5 +159,4 @@ public class StringExTests
         // Assert
         Assert.Equal("a,,c", result);
     }
-#endif
 }
