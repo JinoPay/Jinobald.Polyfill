@@ -4,7 +4,6 @@ namespace Jinobald.Polyfill.Tests.System;
 
 public class StringExTests
 {
-#if NETSTANDARD2_0 || NETFRAMEWORK
     [Fact]
     public void Join_WithCharSeparator_ShouldJoinStrings()
     {
@@ -82,9 +81,7 @@ public class StringExTests
         // Assert
         Assert.Equal("1,2,3", result);
     }
-#endif
 
-#if NETFRAMEWORK || NETSTANDARD2_0 || NETCOREAPP2_0 || NETCOREAPP2_1 || NETCOREAPP2_2
     [Fact]
     public void Create_WithValidLength_ShouldCreateString()
     {
@@ -138,9 +135,7 @@ public class StringExTests
         // Assert
         Assert.Equal("HelloWorld", result);
     }
-#endif
 
-#if !NETCOREAPP3_0_OR_GREATER && (NETSTANDARD2_1 || NETCOREAPP2_0 || NETCOREAPP2_1 || NETCOREAPP2_2)
     [Fact]
     public void GetHashCode_FromSpan_ShouldReturnHashCode()
     {
@@ -153,9 +148,7 @@ public class StringExTests
         // Assert
         Assert.Equal("test".GetHashCode(), hashCode);
     }
-#endif
 
-#if !NET9_0_OR_GREATER && (NETSTANDARD2_1 || NETCOREAPP)
     [Fact]
     public void Join_WithCharSeparator_ReadOnlySpan_ShouldJoinStrings()
     {
@@ -233,5 +226,4 @@ public class StringExTests
         // Assert
         Assert.Equal("a,,c", result);
     }
-#endif
 }
