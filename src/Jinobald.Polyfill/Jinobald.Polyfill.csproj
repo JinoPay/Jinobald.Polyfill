@@ -11,35 +11,35 @@
 
     <!-- Define conditional compilation symbols based on framework -->
     <PropertyGroup Condition="'$(TargetFramework)' == 'net35'">
-        <DefineConstants>$(DefineConstants);NET35</DefineConstants>
+        <DefineConstants>$(DefineConstants);NET35;NETFRAMEWORK</DefineConstants>
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(TargetFramework)' == 'net40'">
-        <DefineConstants>$(DefineConstants);NET40</DefineConstants>
+        <DefineConstants>$(DefineConstants);NET40;NETFRAMEWORK</DefineConstants>
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(TargetFramework)' == 'net45'">
-        <DefineConstants>$(DefineConstants);NET45</DefineConstants>
+        <DefineConstants>$(DefineConstants);NET45;NETFRAMEWORK</DefineConstants>
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(TargetFramework)' == 'net451'">
-        <DefineConstants>$(DefineConstants);NET451</DefineConstants>
+        <DefineConstants>$(DefineConstants);NET451;NETFRAMEWORK</DefineConstants>
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(TargetFramework)' == 'net452'">
-        <DefineConstants>$(DefineConstants);NET452</DefineConstants>
+        <DefineConstants>$(DefineConstants);NET452;NETFRAMEWORK</DefineConstants>
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(TargetFramework)' == 'net46'">
-        <DefineConstants>$(DefineConstants);NET46</DefineConstants>
+        <DefineConstants>$(DefineConstants);NET46;NETFRAMEWORK</DefineConstants>
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(TargetFramework)' == 'net461'">
-        <DefineConstants>$(DefineConstants);NET461</DefineConstants>
+        <DefineConstants>$(DefineConstants);NET461;NETFRAMEWORK</DefineConstants>
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(TargetFramework)' == 'net462' or '$(TargetFramework)' == 'net47' or '$(TargetFramework)' == 'net471' or '$(TargetFramework)' == 'net472' or '$(TargetFramework)' == 'net48' or '$(TargetFramework)' == 'net481'">
-        <DefineConstants>$(DefineConstants);FeatureMemory;AllowUnsafeBlocks</DefineConstants>
+        <DefineConstants>$(DefineConstants);NETFRAMEWORK;FeatureMemory;AllowUnsafeBlocks</DefineConstants>
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(TargetFramework)' == 'net6.0' or '$(TargetFramework)' == 'net7.0' or '$(TargetFramework)' == 'net8.0' or '$(TargetFramework)' == 'net9.0' or '$(TargetFramework)' == 'net10.0'">
