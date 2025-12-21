@@ -1,9 +1,13 @@
+// Jinobald.Polyfill - ValueTuple 폴리필
+// .NET 4.0~4.6.2에서 ValueTuple을 사용할 수 있도록 하는 구현
+// .NET 4.7 이상에서는 네이티브 ValueTuple이 존재하므로 제외
+
+#if NET40 || NET45 || NET451 || NET452 || NET46 || NET461 || NET462
+
 namespace System;
 
 using System.Collections;
 using System.Collections.Generic;
-
-#if NET40_OR_GREATER
 
 /// <summary>
 /// Provides static methods for creating value tuple objects.

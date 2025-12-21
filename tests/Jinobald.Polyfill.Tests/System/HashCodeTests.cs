@@ -5,7 +5,8 @@ namespace Jinobald.Polyfill.Tests.System
 {
     public class HashCodeTests
     {
-#if NET45 || NET451 || NET46 || NET461 || NET462 || NET47 || NET471 || NET472 || NET48 || NET481
+// 폴리필 HashCode는 NET35-NET481에서 사용 가능, 테스트는 NET45 이상에서 실행
+#if NET45 || NET451 || NET452 || NET46 || NET461 || NET462 || NET47 || NET471 || NET472 || NET48 || NET481
         [Fact]
         public void HashCode_Add_SingleValue()
         {

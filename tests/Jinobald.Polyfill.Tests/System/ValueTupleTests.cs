@@ -1,3 +1,7 @@
+// Jinobald.Polyfill - ValueTuple 테스트
+// ValueTuple 구조체에 대한 단위 테스트
+
+using System.Runtime.CompilerServices;
 using Xunit;
 
 namespace Jinobald.Polyfill.Tests.System;
@@ -123,7 +127,7 @@ public class ValueTupleTests
     [Fact]
     public void ValueTuple_WithNullValues_HandlesCorrectly()
     {
-        var tuple = ValueTuple.Create((string)null, (object)null);
+        var tuple = ValueTuple.Create((string?)null, (object?)null);
         Assert.Null(tuple.Item1);
         Assert.Null(tuple.Item2);
     }
