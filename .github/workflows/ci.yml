@@ -226,14 +226,13 @@ jobs:
 
   # Windows - .NET Framework 4.6
   test-windows-net46:
-    runs-on: windows-2019
+    runs-on: windows-latest
     steps:
     - uses: actions/checkout@v4
     - uses: actions/setup-dotnet@v4
       with:
-        dotnet-version: |
-          8.0.x
-          10.0.x
+        dotnet-version: '8.0.x'
+    - run: choco install netfx-4.6.2-devpack -y
     - run: dotnet restore
     - run: dotnet build --no-restore --configuration Release --framework net46
     - run: dotnet test --no-build --configuration Release --verbosity normal --framework net46
