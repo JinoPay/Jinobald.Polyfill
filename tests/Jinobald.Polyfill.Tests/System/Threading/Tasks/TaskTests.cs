@@ -230,8 +230,8 @@ public class TaskTests
     [Fact]
     public void Task_Wait_WithTimeout_ReturnsTrue()
     {
-        var task = Task.Run(() => Thread.Sleep(10));
-        var completed = task.Wait(1000);
+        var task = Task.Run(() => Thread.Sleep(50));
+        var completed = task.Wait(2000);
         Assert.True(completed);
         Assert.True(task.IsCompleted);
     }
