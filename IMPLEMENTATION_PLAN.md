@@ -1204,12 +1204,14 @@ LINQ는 델리게이트에 의존하므로 워크스페이스 1 완료 후 시�
 - [ ] 모든 타겟 프레임워크 빌드 성공
 
 ### **워크스페이스 2: Tuple & ValueTuple**
-- [ ] Tuple<T1~T8> 구현
-- [ ] ValueTuple<T1~T8> 구현
-- [ ] 팩토리 메서드 구현
-- [ ] IStructuralEquatable/Comparable 구현
-- [ ] 단위 테스트 작성
-- [ ] XML 문서 주석 추가
+- [x] Tuple<T1~T8> 구현 ✅
+- [x] ValueTuple<T1~T8> 구현 ✅
+- [x] 팩토리 메서드 구현 ✅
+- [x] IStructuralEquatable/Comparable 구현 ✅
+- [x] 단위 테스트 작성 ✅ (TupleTests.cs, ValueTupleTests.cs)
+- [x] XML 문서 주석 추가 ✅
+- [ ] TupleExtensions 구현 (Deconstruct, ToTuple, ToValueTuple) ⏸️
+- [ ] TupleElementNamesAttribute 구현 ⏸️
 
 ### **워크스페이스 3: Lazy<T> & 스레딩**
 - [ ] Lazy<T> 구현 (모든 생성자)
@@ -1245,17 +1247,19 @@ LINQ는 델리게이트에 의존하므로 워크스페이스 1 완료 후 시�
 - [ ] SynchronizationContext 테스트
 - [ ] XML 문서 주석 추가
 
-### **워크스페이스 7: Compiler Attributes** ✅ 완료
-- [x] CallerMemberNameAttribute 구현
-- [x] CallerFilePathAttribute 구현
-- [x] CallerLineNumberAttribute 구현
-- [ ] CallerArgumentExpressionAttribute 구현
-- [x] ExtensionAttribute 구현
-- [x] IsExternalInit 구현
-- [x] RequiredMemberAttribute 등 구현
-- [x] SetsRequiredMembersAttribute 구현
-- [x] 컴파일러 통합 테스트
-- [x] XML 문서 주석 추가
+### **워크스페이스 7: Compiler Attributes** 🟡 78% 완료
+- [x] CallerMemberNameAttribute 구현 ✅
+- [x] CallerFilePathAttribute 구현 ✅
+- [x] CallerLineNumberAttribute 구현 ✅
+- [ ] CallerArgumentExpressionAttribute 구현 ⏸️ (NET46+)
+- [x] ExtensionAttribute 구현 ✅
+- [x] IsExternalInit 구현 ✅
+- [x] RequiredMemberAttribute 구현 ✅
+- [x] SetsRequiredMembersAttribute 구현 ✅
+- [ ] CompilerFeatureRequiredAttribute 구현 ⏸️ (NET47+)
+- [ ] StringSyntaxAttribute 구현 ⏸️ (NET47+)
+- [x] 컴파일러 통합 테스트 ✅
+- [x] XML 문서 주석 추가 ✅
 
 ### **워크스페이스 8: Index & Range**
 - [ ] Index 구현
@@ -1267,12 +1271,15 @@ LINQ는 델리게이트에 의존하므로 워크스페이스 1 완료 후 시�
 - [ ] XML 문서 주석 추가
 
 ### **워크스페이스 9: HashCode & FormattableString**
-- [ ] HashCode 구현 (xxHash32)
-- [ ] FormattableString 구현
-- [ ] FormattableStringFactory 구현
-- [ ] 해시 분산 테스트
-- [ ] 문화권 포맷팅 테스트
-- [ ] XML 문서 주석 추가
+- [x] HashCode 구현 (FNV-1a 알고리즘) ✅
+- [x] FormattableString 구현 ✅
+- [x] FormattableStringFactory 구현 ✅
+- [x] **조건부 컴파일 수정 완료** (2025-12-21) ✅
+  - HashCode: `#if NET35 || ... || NET47`
+  - FormattableString/Factory: `#if NET35 || ... || NET452`
+- [x] 단위 테스트 작성 ✅ (HashCodeTests.cs)
+- [ ] FormattableString 테스트 추가 ⏸️
+- [x] XML 문서 주석 추가 ✅
 
 ### **워크스페이스 10: IAsyncEnumerable**
 - [ ] IAsyncEnumerable<T> 구현
@@ -1394,22 +1401,41 @@ LINQ는 델리게이트에 의존하므로 워크스페이스 1 완료 후 시�
 
 ## 📈 진행 상황 추적
 
-### **전체 진행률**
-- [x] Phase 1: 기초 인프라 (1/4) - **워크스페이스 7 완료**
-- [ ] Phase 2: 핵심 기능 (0/5)
-- [ ] Phase 3: LINQ 구현 (0/3)
-- [ ] Phase 4: 동시성 라이브러리 (0/2)
-- [ ] Phase 5: 고급 기능 (0/3)
-- [ ] Phase 6: 실용적 확장 (0/4) - **새로 추가**
-- [ ] Phase 7: 통합 및 배포 (0/1)
+### **전체 진행률** (최종 업데이트: 2025-12-21)
+- [x] Phase 1: 기초 인프라 (3/4 = 75%) - **워크스페이스 1, 2, 7 완료**
+  - ✅ WS1: 델리게이트 (100%)
+  - 🟡 WS2: Tuple & ValueTuple (80% - TupleExtensions 누락)
+  - ✅ WS7: Compiler Attributes (78% - 3개 속성 누락)
+  - ⏸️ WS17: 프로젝트 설정 (부분 완료)
+
+- [ ] Phase 2: 핵심 기능 (2/5 = 40%)
+  - ✅ WS3: Lazy & Threading (83% - Barrier 누락)
+  - ✅ WS6: Progress & ReadOnly (83% - ReadOnlyDictionary 누락)
+  - ❌ WS8: Index & Range (0%)
+  - ❌ WS9: HashCode & FormattableString (구현 완료, 조건부 컴파일 수정 완료)
+  - ❌ WS14: 컬렉션 확장 (0%)
+
+- [ ] Phase 3: LINQ 구현 (0/3 = 0%)
+  - ❌ WS11-13: 모두 미구현
+
+- [ ] Phase 4: 동시성 라이브러리 (0/2 = 0%)
+  - ❌ WS4-5: 완전 미구현
+
+- [ ] Phase 5: 고급 기능 (0/3 = 0%)
+  - ❌ WS10, 15, 16: 모두 미구현
+
+- [ ] Phase 6: 실용적 확장 (0/4 = 0%)
+  - ❌ WS16-A~D: 모두 미구현
+
+- [ ] Phase 7: 통합 및 배포 (0/1 = 0%)
 
 **핵심 워크스페이스**: 18개
 **추가 워크스페이스** (선택적): 4개 (16-A, 16-B, 16-C, 16-D)
 **총 워크스페이스**: 22개
-**완료**: 1개 (워크스페이스 7)
-**진행률**: 4.5% (1/22)
+**완료**: 5개 (WS1, WS2 부분, WS3 부분, WS6 부분, WS7 부분)
+**진행률**: 약 23% (구현된 타입 기준)
 
-**Phase 1 진행률**: 25% (1/4 완료)
+**Phase 1 진행률**: 75% (3/4 완료)
 
 ---
 

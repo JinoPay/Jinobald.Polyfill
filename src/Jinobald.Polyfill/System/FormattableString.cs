@@ -1,3 +1,4 @@
+#if NET35 || NET40 || NET45 || NET451 || NET452
 namespace System;
 
 /// <summary>
@@ -57,3 +58,4 @@ public abstract class FormattableString : IFormattable
         return ToString(formatProvider);
     }
 }
+#endif
