@@ -1,3 +1,4 @@
+#if !NETFRAMEWORK
 using Xunit;
 
 namespace Jinobald.Polyfill.Tests.System;
@@ -130,3 +131,4 @@ public partial class StringExTests
         public string Value { get; set; } = string.Empty;
     }
 }
+#endif

@@ -1,3 +1,4 @@
+#if NETCOREAPP3_0_OR_GREATER
 using Xunit;
 
 namespace Jinobald.Polyfill.Tests.System;
@@ -69,3 +70,4 @@ public partial class StringExTests
         Assert.True(result);
     }
 }
+#endif

@@ -68,10 +68,10 @@ public class UnreachableExceptionTests
     public void Exception_ShouldBeThrowable()
     {
         // Act & Assert
-        var thrown = Assert.Throws<UnreachableException>(() =>
+        var thrown = Assert.Throws<UnreachableException>((Action)(() =>
         {
             throw new UnreachableException("Test throw");
-        });
+        }));
 
         Assert.Equal("Test throw", thrown.Message);
     }
