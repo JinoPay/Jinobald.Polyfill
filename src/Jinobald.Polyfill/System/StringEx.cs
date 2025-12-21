@@ -67,9 +67,11 @@ static partial class StringEx
 
                         var value = values[index];
 
-                        value.CopyTo(span);
-
-                        span = span.Slice(value.Length);
+                        if (value != null)
+                        {
+                            value.AsSpan().CopyTo(span);
+                            span = span.Slice(value.Length);
+                        }
                     }
                 }
             }
@@ -125,7 +127,7 @@ static partial class StringEx
                         if (index > 0 &&
                             separator.Length > 0)
                         {
-                            separator.CopyTo(span);
+                            separator.AsSpan().CopyTo(span);
 
                             span = span.Slice(separator.Length);
                         }
@@ -137,7 +139,7 @@ static partial class StringEx
                             continue;
                         }
 
-                        value.CopyTo(span);
+                        value.AsSpan().CopyTo(span);
 
                         span = span.Slice(value.Length);
                     }
@@ -163,8 +165,18 @@ static partial class StringEx
         /// Returns the hash code for the provided read-only character span using the specified rules.
         /// </summary>
         //Link: https://learn.microsoft.com/en-us/dotnet/api/system.string.gethashcode?view=net-10.0#system-string-gethashcode(system-readonlyspan((system-char))-system-stringcomparison)
-        public static int GetHashCode(ReadOnlySpan<char> value,StringComparison comparisonType) =>
-            value.ToString().GetHashCode(comparisonType);
+        public static int GetHashCode(ReadOnlySpan<char> value,StringComparison comparisonType)
+        {
+            var str = value.ToString();
+            var s = comparisonType switch
+            {
+                StringComparison.CurrentCultureIgnoreCase => str.ToLower(),
+                StringComparison.OrdinalIgnoreCase => str.ToUpperInvariant(),
+                StringComparison.InvariantCultureIgnoreCase => str.ToUpperInvariant(),
+                _ => str
+            };
+            return s.GetHashCode();
+        }
 #endif
 #endif
 
