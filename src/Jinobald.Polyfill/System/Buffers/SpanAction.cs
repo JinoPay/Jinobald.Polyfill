@@ -3,12 +3,12 @@
 namespace System.Buffers;
 
 /// <summary>
-/// Encapsulates a method that receives a span of objects of type T and a state object of type TArg.
+/// Span 형식의 객체와 TArg 형식의 상태 객체를 받는 메서드를 캡슐화합니다.
 /// </summary>
-/// <typeparam name="T">The type of the objects in the span.</typeparam>
-/// <typeparam name="TArg">The type of the object that represents the state.</typeparam>
-/// <param name="span">A span of objects of type T.</param>
-/// <param name="arg">A state object of type TArg.</param>
+/// <typeparam name="T">span의 객체 형식입니다.</typeparam>
+/// <typeparam name="TArg">상태를 나타내는 객체의 형식입니다.</typeparam>
+/// <param name="span">T 형식의 객체 span입니다.</param>
+/// <param name="arg">TArg 형식의 상태 객체입니다.</param>
 public delegate void SpanAction<T, in TArg>(Span<T> span, TArg arg);
 
 #endif
