@@ -28,5 +28,10 @@ jobs:
     - name: Build
       run: dotnet build --no-restore --configuration Release
 
-    - name: Test
+    - name: Test (Windows - All Frameworks)
+      if: runner.os == 'Windows'
       run: dotnet test --no-build --configuration Release --verbosity normal
+
+    - name: Test (Linux/macOS - .NET Core only)
+      if: runner.os != 'Windows'
+      run: dotnet test --no-build --configuration Release --verbosity normal --framework net${{ matrix.dotnet-version == '8.0.x' && '8.0' || matrix.dotnet-version == '9.0.x' && '9.0' || '10.0' }}
