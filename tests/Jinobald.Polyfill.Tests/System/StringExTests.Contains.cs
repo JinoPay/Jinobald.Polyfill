@@ -8,10 +8,10 @@ public partial class StringExTests
     public void Contains_WithChar_ShouldReturnTrue()
     {
         // Arrange
-        var text = "Hello World";
+        string text = "Hello World";
 
         // Act
-        var result = text.Contains('o');
+        bool result = text.Contains('o');
 
         // Assert
         Assert.True(result);
@@ -21,10 +21,10 @@ public partial class StringExTests
     public void Contains_WithChar_NotFound_ShouldReturnFalse()
     {
         // Arrange
-        var text = "Hello World";
+        string text = "Hello World";
 
         // Act
-        var result = text.Contains('x');
+        bool result = text.Contains('x');
 
         // Assert
         Assert.False(result);
@@ -34,10 +34,10 @@ public partial class StringExTests
     public void Contains_WithChar_EmptyString_ShouldReturnFalse()
     {
         // Arrange
-        var text = "";
+        string text = "";
 
         // Act
-        var result = text.Contains('x');
+        bool result = text.Contains('x');
 
         // Assert
         Assert.False(result);

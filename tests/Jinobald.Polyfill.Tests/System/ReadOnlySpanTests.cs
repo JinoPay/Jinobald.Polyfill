@@ -1,14 +1,13 @@
-namespace Jinobald.Polyfill.Tests.System;
-
-using global::System;
 using Xunit;
+
+namespace Jinobald.Polyfill.Tests.System;
 
 public class ReadOnlySpanTests
 {
     [Fact]
     public void ReadOnlySpan_FromArray_CreatesSpan()
     {
-        var array = new[] { 1, 2, 3, 4, 5 };
+        int[] array = new[] { 1, 2, 3, 4, 5 };
         var span = new ReadOnlySpan<int>(array);
         Assert.Equal(5, span.Length);
         Assert.False(span.IsEmpty);
@@ -17,7 +16,7 @@ public class ReadOnlySpanTests
     [Fact]
     public void ReadOnlySpan_FromArraySegment_CreatesSpan()
     {
-        var array = new[] { 1, 2, 3, 4, 5 };
+        int[] array = new[] { 1, 2, 3, 4, 5 };
         var span = new ReadOnlySpan<int>(array, 1, 3);
         Assert.Equal(3, span.Length);
         Assert.Equal(2, span[0]);
@@ -28,7 +27,7 @@ public class ReadOnlySpanTests
     [Fact]
     public void ReadOnlySpan_Indexer_GetsValues()
     {
-        var array = new[] { 1, 2, 3 };
+        int[] array = new[] { 1, 2, 3 };
         var span = new ReadOnlySpan<int>(array);
         Assert.Equal(1, span[0]);
         Assert.Equal(2, span[1]);
@@ -38,26 +37,34 @@ public class ReadOnlySpanTests
     [Fact]
     public void ReadOnlySpan_Indexer_OutOfRange_Throws()
     {
-        var array = new[] { 1, 2, 3 };
+        int[] array = new[] { 1, 2, 3 };
         var span = new ReadOnlySpan<int>(array);
 
-        var caught1 = false;
-        try { var x = span[3]; }
+        bool caught1 = false;
+        try
+        {
+            int x = span[3];
+        }
         catch (IndexOutOfRangeException) { caught1 = true; }
+
         Assert.True(caught1);
 
-        var caught2 = false;
-        try { var x = span[-1]; }
+        bool caught2 = false;
+        try
+        {
+            int x = span[-1];
+        }
         catch (IndexOutOfRangeException) { caught2 = true; }
+
         Assert.True(caught2);
     }
 
     [Fact]
     public void ReadOnlySpan_Slice_WithStart_CreatesSlice()
     {
-        var array = new[] { 1, 2, 3, 4, 5 };
+        int[] array = new[] { 1, 2, 3, 4, 5 };
         var span = new ReadOnlySpan<int>(array);
-        var slice = span.Slice(2);
+        ReadOnlySpan<int> slice = span.Slice(2);
         Assert.Equal(3, slice.Length);
         Assert.Equal(3, slice[0]);
         Assert.Equal(4, slice[1]);
@@ -67,9 +74,9 @@ public class ReadOnlySpanTests
     [Fact]
     public void ReadOnlySpan_Slice_WithStartAndLength_CreatesSlice()
     {
-        var array = new[] { 1, 2, 3, 4, 5 };
+        int[] array = new[] { 1, 2, 3, 4, 5 };
         var span = new ReadOnlySpan<int>(array);
-        var slice = span.Slice(1, 3);
+        ReadOnlySpan<int> slice = span.Slice(1, 3);
         Assert.Equal(3, slice.Length);
         Assert.Equal(2, slice[0]);
         Assert.Equal(3, slice[1]);
@@ -79,25 +86,33 @@ public class ReadOnlySpanTests
     [Fact]
     public void ReadOnlySpan_Slice_OutOfRange_Throws()
     {
-        var array = new[] { 1, 2, 3 };
+        int[] array = new[] { 1, 2, 3 };
         var span = new ReadOnlySpan<int>(array);
 
-        var caught1 = false;
-        try { var x = span.Slice(5); }
+        bool caught1 = false;
+        try
+        {
+            ReadOnlySpan<int> x = span.Slice(5);
+        }
         catch (ArgumentOutOfRangeException) { caught1 = true; }
+
         Assert.True(caught1);
 
-        var caught2 = false;
-        try { var x = span.Slice(1, 10); }
+        bool caught2 = false;
+        try
+        {
+            ReadOnlySpan<int> x = span.Slice(1, 10);
+        }
         catch (ArgumentOutOfRangeException) { caught2 = true; }
+
         Assert.True(caught2);
     }
 
     [Fact]
     public void ReadOnlySpan_CopyTo_CopiesElements()
     {
-        var source = new[] { 1, 2, 3 };
-        var destination = new int[3];
+        int[] source = new[] { 1, 2, 3 };
+        int[] destination = new int[3];
         var sourceSpan = new ReadOnlySpan<int>(source);
         var destSpan = new Span<int>(destination);
 
@@ -109,26 +124,27 @@ public class ReadOnlySpanTests
     [Fact]
     public void ReadOnlySpan_CopyTo_DestinationTooShort_Throws()
     {
-        var source = new[] { 1, 2, 3, 4, 5 };
-        var destination = new int[3];
+        int[] source = new[] { 1, 2, 3, 4, 5 };
+        int[] destination = new int[3];
         var sourceSpan = new ReadOnlySpan<int>(source);
         var destSpan = new Span<int>(destination);
 
-        var caught = false;
+        bool caught = false;
         try { sourceSpan.CopyTo(destSpan); }
         catch (ArgumentException) { caught = true; }
+
         Assert.True(caught);
     }
 
     [Fact]
     public void ReadOnlySpan_TryCopyTo_Success_ReturnsTrue()
     {
-        var source = new[] { 1, 2, 3 };
-        var destination = new int[5];
+        int[] source = new[] { 1, 2, 3 };
+        int[] destination = new int[5];
         var sourceSpan = new ReadOnlySpan<int>(source);
         var destSpan = new Span<int>(destination);
 
-        var result = sourceSpan.TryCopyTo(destSpan);
+        bool result = sourceSpan.TryCopyTo(destSpan);
 
         Assert.True(result);
         Assert.Equal(1, destination[0]);
@@ -139,12 +155,12 @@ public class ReadOnlySpanTests
     [Fact]
     public void ReadOnlySpan_TryCopyTo_DestinationTooShort_ReturnsFalse()
     {
-        var source = new[] { 1, 2, 3, 4, 5 };
-        var destination = new int[3];
+        int[] source = new[] { 1, 2, 3, 4, 5 };
+        int[] destination = new int[3];
         var sourceSpan = new ReadOnlySpan<int>(source);
         var destSpan = new Span<int>(destination);
 
-        var result = sourceSpan.TryCopyTo(destSpan);
+        bool result = sourceSpan.TryCopyTo(destSpan);
 
         Assert.False(result);
     }
@@ -152,9 +168,9 @@ public class ReadOnlySpanTests
     [Fact]
     public void ReadOnlySpan_ToArray_CreatesNewArray()
     {
-        var array = new[] { 1, 2, 3 };
+        int[] array = new[] { 1, 2, 3 };
         var span = new ReadOnlySpan<int>(array);
-        var newArray = span.ToArray();
+        int[]? newArray = span.ToArray();
 
         Assert.Equal(array, newArray);
         Assert.NotSame(array, newArray);
@@ -164,7 +180,7 @@ public class ReadOnlySpanTests
     public void ReadOnlySpan_ToArray_EmptySpan_ReturnsEmptyArray()
     {
         var span = new ReadOnlySpan<int>(new int[0]);
-        var array = span.ToArray();
+        int[]? array = span.ToArray();
 
         Assert.Empty(array);
     }
@@ -172,7 +188,7 @@ public class ReadOnlySpanTests
     [Fact]
     public void ReadOnlySpan_ImplicitConversion_FromArray()
     {
-        var array = new[] { 1, 2, 3 };
+        int[] array = new[] { 1, 2, 3 };
         ReadOnlySpan<int> span = array;
 
         Assert.Equal(3, span.Length);
@@ -182,7 +198,7 @@ public class ReadOnlySpanTests
     [Fact]
     public void ReadOnlySpan_ImplicitConversion_FromSpan()
     {
-        var array = new[] { 1, 2, 3 };
+        int[] array = new[] { 1, 2, 3 };
         var mutableSpan = new Span<int>(array);
         ReadOnlySpan<int> readOnlySpan = mutableSpan;
 
@@ -193,7 +209,7 @@ public class ReadOnlySpanTests
     [Fact]
     public void ReadOnlySpan_Empty_CreatesEmptySpan()
     {
-        var span = ReadOnlySpan<int>.Empty;
+        ReadOnlySpan<int> span = ReadOnlySpan<int>.Empty;
         Assert.Equal(0, span.Length);
         Assert.True(span.IsEmpty);
     }
@@ -201,11 +217,11 @@ public class ReadOnlySpanTests
     [Fact]
     public void ReadOnlySpan_Enumerator_IteratesElements()
     {
-        var array = new[] { 1, 2, 3 };
+        int[] array = new[] { 1, 2, 3 };
         var span = new ReadOnlySpan<int>(array);
-        var sum = 0;
+        int sum = 0;
 
-        foreach (ref readonly var item in span)
+        foreach (ref readonly int item in span)
         {
             sum += item;
         }
@@ -224,7 +240,7 @@ public class ReadOnlySpanTests
     [Fact]
     public void ReadOnlySpan_FromString_WorksWithCharSpan()
     {
-        var text = "Hello";
+        string text = "Hello";
         var span = new ReadOnlySpan<char>(text.ToCharArray());
 
         Assert.Equal(5, span.Length);

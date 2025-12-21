@@ -1,0 +1,88 @@
+# PR 자동 라벨링 설정
+
+# 소스 코드 영역별
+'area: threading':
+  - changed-files:
+    - any-glob-to-any-file:
+      - 'src/**/Threading/**/*'
+      - 'tests/**/Threading/**/*'
+
+'area: linq':
+  - changed-files:
+    - any-glob-to-any-file:
+      - 'src/**/Linq/**/*'
+      - 'tests/**/Linq/**/*'
+
+'area: collections':
+  - changed-files:
+    - any-glob-to-any-file:
+      - 'src/**/Collections/**/*'
+      - 'tests/**/Collections/**/*'
+
+'area: async':
+  - changed-files:
+    - any-glob-to-any-file:
+      - 'src/**/Async*.cs'
+      - 'src/**/Task*.cs'
+      - 'src/**/CompilerServices/**/*'
+      - 'tests/**/Async*.cs'
+      - 'tests/**/Task*.cs'
+
+'area: delegates':
+  - changed-files:
+    - any-glob-to-any-file:
+      - 'src/**/Action.cs'
+      - 'src/**/Func.cs'
+      - 'src/**/Predicate.cs'
+
+'area: tuples':
+  - changed-files:
+    - any-glob-to-any-file:
+      - 'src/**/Tuple*.cs'
+      - 'src/**/ValueTuple*.cs'
+      - 'tests/**/Tuple*.cs'
+
+'area: memory':
+  - changed-files:
+    - any-glob-to-any-file:
+      - 'src/**/Span*.cs'
+      - 'src/**/Memory*.cs'
+      - 'src/**/Buffers/**/*'
+      - 'tests/**/Span*.cs'
+      - 'tests/**/Memory*.cs'
+
+'area: compiler':
+  - changed-files:
+    - any-glob-to-any-file:
+      - 'src/**/CompilerServices/**/*'
+      - 'src/**/Attributes/**/*'
+
+# 변경 타입
+'type: feature':
+  - changed-files:
+    - any-glob-to-any-file: 'src/**/*.cs'
+    - all-globs-to-all-files: '!tests/**/*.cs'
+
+'type: tests':
+  - changed-files:
+    - any-glob-to-any-file: 'tests/**/*'
+
+'type: docs':
+  - changed-files:
+    - any-glob-to-any-file:
+      - '**/*.md'
+      - 'docs/**/*'
+
+'type: ci':
+  - changed-files:
+    - any-glob-to-any-file:
+      - '.github/workflows/**/*'
+      - '.github/**/*.yml'
+
+'type: build':
+  - changed-files:
+    - any-glob-to-any-file:
+      - '**/*.csproj'
+      - '**/*.props'
+      - '**/*.targets'
+      - 'Directory.Build.*'

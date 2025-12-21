@@ -8,10 +8,10 @@ public partial class StringExTests
     public void Split_WithChar_ShouldSplitString()
     {
         // Arrange
-        var text = "a,b,c";
+        string text = "a,b,c";
 
         // Act
-        var result = text.Split(',');
+        string[] result = text.Split(',');
 
         // Assert
         Assert.Equal(new[] { "a", "b", "c" }, result);
@@ -21,10 +21,10 @@ public partial class StringExTests
     public void Split_WithChar_NoDelimiter_ShouldReturnOriginal()
     {
         // Arrange
-        var text = "abc";
+        string text = "abc";
 
         // Act
-        var result = text.Split(',');
+        string[] result = text.Split(',');
 
         // Assert
         Assert.Equal(new[] { "abc" }, result);
@@ -34,10 +34,10 @@ public partial class StringExTests
     public void Split_WithChar_EmptyString_ShouldReturnEmptyArray()
     {
         // Arrange
-        var text = "";
+        string text = "";
 
         // Act
-        var result = text.Split(',');
+        string[] result = text.Split(',');
 
         // Assert
         Assert.Equal(new[] { "" }, result);
@@ -192,10 +192,10 @@ public partial class StringExTests
     public void Split_WithCharArray_ShouldSplitOnAnyChar()
     {
         // Arrange
-        var text = "a,b;c:d";
+        string text = "a,b;c:d";
 
         // Act
-        var result = text.Split(new[] { ',', ';', ':' });
+        string[] result = text.Split(new[] { ',', ';', ':' });
 
         // Assert
         Assert.Equal(new[] { "a", "b", "c", "d" }, result);
@@ -205,10 +205,10 @@ public partial class StringExTests
     public void Split_WithStringArray_ShouldSplitOnAnyString()
     {
         // Arrange
-        var text = "a::b;;c::d";
+        string text = "a::b;;c::d";
 
         // Act
-        var result = text.Split(new[] { "::", ";;" }, StringSplitOptions.None);
+        string[] result = text.Split(new[] { "::", ";;" }, StringSplitOptions.None);
 
         // Assert
         Assert.Equal(new[] { "a", "b", "c", "d" }, result);

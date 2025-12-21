@@ -1,0 +1,94 @@
+<Project>
+  <!-- 공통 빌드 속성 -->
+  <PropertyGroup>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>false</ImplicitUsings>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <WarningsAsErrors>CS8600;CS8601;CS8602;CS8603;CS8604;CS8625</WarningsAsErrors>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <NoWarn>$(NoWarn);CS1591;CS1573</NoWarn>
+    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+  </PropertyGroup>
+
+  <!-- 패키지 메타데이터 -->
+  <PropertyGroup>
+    <Authors>Jinho Park</Authors>
+    <Company>Jinobald</Company>
+    <Product>Jinobald.Polyfill</Product>
+    <Copyright>Copyright © 2025 Jinho Park</Copyright>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/Jinobald/Polyfill</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/Jinobald/Polyfill</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageTags>polyfill;netframework;backport;compatibility;dotnet;csharp</PackageTags>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageIcon>icon.png</PackageIcon>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <DebugType>embedded</DebugType>
+    <ContinuousIntegrationBuild Condition="'$(CI)' == 'true'">true</ContinuousIntegrationBuild>
+  </PropertyGroup>
+
+  <!-- 소스 링크 (디버깅용) -->
+  <ItemGroup>
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All"/>
+  </ItemGroup>
+
+  <!-- 코드 분석 -->
+  <ItemGroup>
+    <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.556" PrivateAssets="All"/>
+    <PackageReference Include="Roslynator.Analyzers" Version="4.12.0" PrivateAssets="All"/>
+    <PackageReference Include="SonarAnalyzer.CSharp" Version="9.32.0.97167" PrivateAssets="All"/>
+  </ItemGroup>
+
+  <!-- .editorconfig 강제 -->
+  <ItemGroup>
+    <AdditionalFiles Include="$(MSBuildThisFileDirectory).editorconfig"/>
+  </ItemGroup>
+
+  <!-- 프레임워크별 조건부 컴파일 심볼 -->
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net20'">
+    <DefineConstants>$(DefineConstants);NET20;FEATURE_NO_GENERICS</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net35'">
+    <DefineConstants>$(DefineConstants);NET35;FEATURE_NO_TPL;FEATURE_NO_ASYNC</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net40'">
+    <DefineConstants>$(DefineConstants);NET40;FEATURE_TPL;FEATURE_NO_ASYNC</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net45'">
+    <DefineConstants>$(DefineConstants);NET45;FEATURE_TPL;FEATURE_ASYNC</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net451'">
+    <DefineConstants>$(DefineConstants);NET451;FEATURE_TPL;FEATURE_ASYNC</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net452'">
+    <DefineConstants>$(DefineConstants);NET452;FEATURE_TPL;FEATURE_ASYNC</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net46'">
+    <DefineConstants>$(DefineConstants);NET46;FEATURE_TPL;FEATURE_ASYNC</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net461'">
+    <DefineConstants>$(DefineConstants);NET461;FEATURE_TPL;FEATURE_ASYNC;FEATURE_VALUETUPLE</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net462' or '$(TargetFramework)' == 'net47' or '$(TargetFramework)' == 'net471' or '$(TargetFramework)' == 'net472' or '$(TargetFramework)' == 'net48' or '$(TargetFramework)' == 'net481'">
+    <DefineConstants>$(DefineConstants);FEATURE_MEMORY;FEATURE_TPL;FEATURE_ASYNC;FEATURE_VALUETUPLE;AllowUnsafeBlocks</DefineConstants>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net6.0' or '$(TargetFramework)' == 'net7.0' or '$(TargetFramework)' == 'net8.0' or '$(TargetFramework)' == 'net9.0' or '$(TargetFramework)' == 'net10.0'">
+    <DefineConstants>$(DefineConstants);FEATURE_MEMORY;FEATURE_TPL;FEATURE_ASYNC;FEATURE_VALUETUPLE;FEATURE_SPAN;AllowUnsafeBlocks</DefineConstants>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+</Project>
