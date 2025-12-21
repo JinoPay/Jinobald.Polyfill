@@ -304,7 +304,7 @@ public class Task : IDisposable
             return false;
 
         if (cancellationToken.CanBeCanceled && index == 1)
-            throw new OperationCanceledException("The operation was canceled.");
+            throw new OperationCanceledException("작업이 취소되었습니다.");
 
         if (_exception != null)
             throw new AggregateException(_exception);
@@ -323,7 +323,7 @@ public class Task : IDisposable
         foreach (var task in tasks)
         {
             if (task == null)
-                throw new ArgumentException("Task array contains null element", nameof(tasks));
+                throw new ArgumentException("Task 배열에 null 요소가 포함되어 있습니다", nameof(tasks));
             task.Wait();
         }
     }
@@ -336,13 +336,13 @@ public class Task : IDisposable
         if (tasks == null)
             throw new ArgumentNullException(nameof(tasks));
         if (tasks.Length == 0)
-            throw new ArgumentException("Task array is empty", nameof(tasks));
+            throw new ArgumentException("Task 배열이 비어 있습니다", nameof(tasks));
 
         var handles = new WaitHandle[tasks.Length];
         for (int i = 0; i < tasks.Length; i++)
         {
             if (tasks[i] == null)
-                throw new ArgumentException("Task array contains null element", nameof(tasks));
+                throw new ArgumentException("Task 배열에 null 요소가 포함되어 있습니다", nameof(tasks));
             handles[i] = tasks[i].GetCompletionEvent();
         }
 
@@ -362,7 +362,7 @@ public class Task : IDisposable
             foreach (var task in tasks)
             {
                 if (task == null)
-                    throw new ArgumentException("Task array contains null element", nameof(tasks));
+                    throw new ArgumentException("Task 배열에 null 요소가 포함되어 있습니다", nameof(tasks));
                 task.Wait();
             }
         });
@@ -382,7 +382,7 @@ public class Task : IDisposable
             for (int i = 0; i < tasks.Length; i++)
             {
                 if (tasks[i] == null)
-                    throw new ArgumentException("Task array contains null element", nameof(tasks));
+                    throw new ArgumentException("Task 배열에 null 요소가 포함되어 있습니다", nameof(tasks));
                 results[i] = tasks[i].Result;
             }
             return results;
@@ -397,7 +397,7 @@ public class Task : IDisposable
         if (tasks == null)
             throw new ArgumentNullException(nameof(tasks));
         if (tasks.Length == 0)
-            throw new ArgumentException("Task array is empty", nameof(tasks));
+            throw new ArgumentException("Task 배열이 비어 있습니다", nameof(tasks));
 
         return Run(() =>
         {
@@ -448,7 +448,7 @@ public class Task : IDisposable
         lock (_lock)
         {
             if (_status != TaskStatus.Created)
-                throw new InvalidOperationException("Task already started");
+                throw new InvalidOperationException("Task가 이미 시작되었습니다");
 
             _status = TaskStatus.WaitingToRun;
         }

@@ -2,7 +2,7 @@
 namespace System;
 
 /// <summary>
-/// Provides a hash code for a type.
+/// 형식에 대한 해시 코드를 제공합니다.
 /// </summary>
 public struct HashCode
 {
@@ -11,7 +11,7 @@ public struct HashCode
     private const uint FnvOffsetBasis = 2166136261u;
 
     /// <summary>
-    /// Initializes a new instance of the HashCode struct.
+    /// HashCode 구조체의 새 인스턴스를 초기화합니다.
     /// </summary>
     public HashCode()
     {
@@ -19,10 +19,10 @@ public struct HashCode
     }
 
     /// <summary>
-    /// Adds a single value to the hash code.
+    /// 해시 코드에 단일 값을 추가합니다.
     /// </summary>
-    /// <typeparam name="T">The type of the value to add.</typeparam>
-    /// <param name="value">The value to add to the hash code.</param>
+    /// <typeparam name="T">추가할 값의 형식입니다.</typeparam>
+    /// <param name="value">해시 코드에 추가할 값입니다.</param>
     public void Add<T>(T value)
     {
         var hashCode = value?.GetHashCode() ?? 0;
@@ -30,11 +30,11 @@ public struct HashCode
     }
 
     /// <summary>
-    /// Adds a single value with a comparer to the hash code.
+    /// 비교자를 사용하여 해시 코드에 단일 값을 추가합니다.
     /// </summary>
-    /// <typeparam name="T">The type of the value to add.</typeparam>
-    /// <param name="value">The value to add to the hash code.</param>
-    /// <param name="comparer">The comparer to use when hashing the value.</param>
+    /// <typeparam name="T">추가할 값의 형식입니다.</typeparam>
+    /// <param name="value">해시 코드에 추가할 값입니다.</param>
+    /// <param name="comparer">값을 해시할 때 사용할 비교자입니다.</param>
     public void Add<T>(T value, IEqualityComparer<T> comparer)
     {
         var hashCode = value == null ? 0 : comparer.GetHashCode(value);
@@ -42,16 +42,16 @@ public struct HashCode
     }
 
     /// <summary>
-    /// Returns the hash code for the current instance.
+    /// 현재 인스턴스에 대한 해시 코드를 반환합니다.
     /// </summary>
-    /// <returns>The hash code for the current instance.</returns>
+    /// <returns>현재 인스턴스에 대한 해시 코드입니다.</returns>
     public override int GetHashCode()
     {
         return (int)_hash;
     }
 
     /// <summary>
-    /// Combines the hash codes of up to eight values.
+    /// 최대 8개 값의 해시 코드를 결합합니다.
     /// </summary>
     public static int Combine<T1>(T1 value1)
     {
@@ -61,7 +61,7 @@ public struct HashCode
     }
 
     /// <summary>
-    /// Combines the hash codes of up to eight values.
+    /// 최대 8개 값의 해시 코드를 결합합니다.
     /// </summary>
     public static int Combine<T1, T2>(T1 value1, T2 value2)
     {
@@ -72,7 +72,7 @@ public struct HashCode
     }
 
     /// <summary>
-    /// Combines the hash codes of up to eight values.
+    /// 최대 8개 값의 해시 코드를 결합합니다.
     /// </summary>
     public static int Combine<T1, T2, T3>(T1 value1, T2 value2, T3 value3)
     {
@@ -84,7 +84,7 @@ public struct HashCode
     }
 
     /// <summary>
-    /// Combines the hash codes of up to eight values.
+    /// 최대 8개 값의 해시 코드를 결합합니다.
     /// </summary>
     public static int Combine<T1, T2, T3, T4>(T1 value1, T2 value2, T3 value3, T4 value4)
     {
@@ -97,7 +97,7 @@ public struct HashCode
     }
 
     /// <summary>
-    /// Combines the hash codes of up to eight values.
+    /// 최대 8개 값의 해시 코드를 결합합니다.
     /// </summary>
     public static int Combine<T1, T2, T3, T4, T5>(T1 value1, T2 value2, T3 value3, T4 value4, T5 value5)
     {
@@ -111,7 +111,7 @@ public struct HashCode
     }
 
     /// <summary>
-    /// Combines the hash codes of up to eight values.
+    /// 최대 8개 값의 해시 코드를 결합합니다.
     /// </summary>
     public static int Combine<T1, T2, T3, T4, T5, T6>(T1 value1, T2 value2, T3 value3, T4 value4, T5 value5, T6 value6)
     {
@@ -126,7 +126,7 @@ public struct HashCode
     }
 
     /// <summary>
-    /// Combines the hash codes of up to eight values.
+    /// 최대 8개 값의 해시 코드를 결합합니다.
     /// </summary>
     public static int Combine<T1, T2, T3, T4, T5, T6, T7>(T1 value1, T2 value2, T3 value3, T4 value4, T5 value5, T6 value6, T7 value7)
     {
@@ -142,7 +142,7 @@ public struct HashCode
     }
 
     /// <summary>
-    /// Combines the hash codes of up to eight values.
+    /// 최대 8개 값의 해시 코드를 결합합니다.
     /// </summary>
     public static int Combine<T1, T2, T3, T4, T5, T6, T7, T8>(T1 value1, T2 value2, T3 value3, T4 value4, T5 value5, T6 value6, T7 value7, T8 value8)
     {
@@ -159,7 +159,7 @@ public struct HashCode
     }
 
     /// <summary>
-    /// Returns the hash code for the current instance.
+    /// 현재 인스턴스에 대한 해시 코드를 반환합니다.
     /// </summary>
     public int ToHashCode()
     {

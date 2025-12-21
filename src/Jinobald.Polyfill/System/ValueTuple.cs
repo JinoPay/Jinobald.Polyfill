@@ -6,7 +6,7 @@ using System.Collections.Generic;
 #if NET40_OR_GREATER
 
 /// <summary>
-/// Provides static methods for creating value tuple objects.
+/// 값 튜플 개체를 만들기 위한 정적 메서드를 제공합니다.
 /// </summary>
 public static class ValueTuple
 {
@@ -37,7 +37,7 @@ public static class ValueTuple
 }
 
 /// <summary>
-/// Represents a 1-tuple, or singleton, as a value type.
+/// 1-튜플 또는 싱글톤을 값 형식으로 나타냅니다.
 /// </summary>
 public struct ValueTuple<T1> : IEquatable<ValueTuple<T1>>, IStructuralEquatable,
     IStructuralComparable, IComparable, ITuple
@@ -98,7 +98,7 @@ public struct ValueTuple<T1> : IEquatable<ValueTuple<T1>>, IStructuralEquatable,
 }
 
 /// <summary>
-/// Represents a 2-tuple, or pair, as a value type.
+/// 2-튜플 또는 쌍을 값 형식으로 나타냅니다.
 /// </summary>
 public struct ValueTuple<T1, T2> : IEquatable<ValueTuple<T1, T2>>, IStructuralEquatable,
     IStructuralComparable, IComparable, ITuple
@@ -169,7 +169,7 @@ public struct ValueTuple<T1, T2> : IEquatable<ValueTuple<T1, T2>>, IStructuralEq
 }
 
 /// <summary>
-/// Represents a 3-tuple, or triple, as a value type.
+/// 3-튜플을 값 형식으로 나타냅니다.
 /// </summary>
 public struct ValueTuple<T1, T2, T3> : IEquatable<ValueTuple<T1, T2, T3>>,
     IStructuralEquatable, IStructuralComparable, IComparable, ITuple
@@ -248,7 +248,7 @@ public struct ValueTuple<T1, T2, T3> : IEquatable<ValueTuple<T1, T2, T3>>,
 }
 
 /// <summary>
-/// Represents a 4-tuple, or quadruple, as a value type.
+/// 4-튜플을 값 형식으로 나타냅니다.
 /// </summary>
 public struct ValueTuple<T1, T2, T3, T4> : IEquatable<ValueTuple<T1, T2, T3, T4>>,
     IStructuralEquatable, IStructuralComparable, IComparable, ITuple
@@ -335,7 +335,7 @@ public struct ValueTuple<T1, T2, T3, T4> : IEquatable<ValueTuple<T1, T2, T3, T4>
 }
 
 /// <summary>
-/// Represents a 5-tuple, or quintuple, as a value type.
+/// 5-튜플을 값 형식으로 나타냅니다.
 /// </summary>
 public struct ValueTuple<T1, T2, T3, T4, T5> : IEquatable<ValueTuple<T1, T2, T3, T4, T5>>,
     IStructuralEquatable, IStructuralComparable, IComparable, ITuple
@@ -430,7 +430,7 @@ public struct ValueTuple<T1, T2, T3, T4, T5> : IEquatable<ValueTuple<T1, T2, T3,
 }
 
 /// <summary>
-/// Represents a 6-tuple, or sextuple, as a value type.
+/// 6-튜플을 값 형식으로 나타냅니다.
 /// </summary>
 public struct ValueTuple<T1, T2, T3, T4, T5, T6> : IEquatable<ValueTuple<T1, T2, T3, T4, T5,
     T6>>, IStructuralEquatable, IStructuralComparable, IComparable, ITuple
@@ -534,7 +534,7 @@ public struct ValueTuple<T1, T2, T3, T4, T5, T6> : IEquatable<ValueTuple<T1, T2,
 }
 
 /// <summary>
-/// Represents a 7-tuple, or septuple, as a value type.
+/// 7-튜플을 값 형식으로 나타냅니다.
 /// </summary>
 public struct ValueTuple<T1, T2, T3, T4, T5, T6, T7> : IEquatable<ValueTuple<T1, T2, T3, T4,
     T5, T6, T7>>, IStructuralEquatable, IStructuralComparable, IComparable, ITuple
@@ -646,7 +646,7 @@ public struct ValueTuple<T1, T2, T3, T4, T5, T6, T7> : IEquatable<ValueTuple<T1,
 }
 
 /// <summary>
-/// Represents an 8-tuple, or octuple, as a value type.
+/// 8-튜플을 값 형식으로 나타냅니다.
 /// </summary>
 public struct ValueTuple<T1, T2, T3, T4, T5, T6, T7, T8> : IEquatable<ValueTuple<T1, T2, T3,
     T4, T5, T6, T7, T8>>, IStructuralEquatable, IStructuralComparable, IComparable, ITuple
