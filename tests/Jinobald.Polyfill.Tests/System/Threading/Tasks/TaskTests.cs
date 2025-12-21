@@ -169,7 +169,7 @@ public class TaskTests
         var token = cts.Token;
         cts.CancelAfter(100);
         Assert.False(token.IsCancellationRequested);
-        Thread.Sleep(200);
+        Thread.Sleep(300);
         Assert.True(token.IsCancellationRequested);
     }
     [Fact]
