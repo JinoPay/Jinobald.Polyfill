@@ -13,7 +13,7 @@ public struct CancellationToken
     /// </summary>
     public static CancellationToken None
     {
-        get { return new CancellationToken(); }
+        get { return default; }
     }
 
     /// <summary>
@@ -68,7 +68,7 @@ public struct CancellationToken
             throw new ArgumentNullException(nameof(callback));
 
         if (_source == null)
-            return new CancellationTokenRegistration();
+            return default;
 
         return _source.Register(callback);
     }
@@ -82,7 +82,7 @@ public struct CancellationToken
             throw new ArgumentNullException(nameof(callback));
 
         if (_source == null)
-            return new CancellationTokenRegistration();
+            return default;
 
         return _source.Register(callback, state);
     }

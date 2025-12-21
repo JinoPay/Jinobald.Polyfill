@@ -77,7 +77,7 @@ public struct SpinWait
         if (millisecondsTimeout < -1)
             throw new ArgumentOutOfRangeException(nameof(millisecondsTimeout));
 
-        SpinWait spinner = new SpinWait();
+        SpinWait spinner = default;
         DateTime endTime = DateTime.UtcNow.AddMilliseconds(millisecondsTimeout == Timeout.Infinite ? 0 : millisecondsTimeout);
 
         while (!condition())
