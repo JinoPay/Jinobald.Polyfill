@@ -43,6 +43,7 @@ public partial class StringExTests
         Assert.False(result);
     }
 
+#if NETCOREAPP3_0_OR_GREATER
     [Fact]
     public void Contains_WithStringAndComparison_OrdinalShouldWork()
     {
@@ -143,4 +144,5 @@ public partial class StringExTests
         // Act & Assert
         Assert.Throws<ArgumentNullException>(() => text.Contains(null!, StringComparison.Ordinal));
     }
+#endif
 }

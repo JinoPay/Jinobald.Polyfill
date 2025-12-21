@@ -1,3 +1,4 @@
+#if NET5_0_OR_GREATER
 using System.Threading.Tasks;
 using Xunit;
 
@@ -81,3 +82,4 @@ public class TaskCompletionSourceExTests
         await Assert.ThrowsAnyAsync<OperationCanceledException>(async () => await tcs.Task);
     }
 }
+#endif

@@ -43,6 +43,7 @@ public partial class StringExTests
         Assert.Equal(new[] { "" }, result);
     }
 
+#if NET5_0_OR_GREATER
     [Fact]
     public void Split_WithChar_AndOptions_RemoveEmptyEntries()
     {
@@ -185,6 +186,7 @@ public partial class StringExTests
         // Assert
         Assert.Equal(new[] { "a", "", "b::c" }, result);
     }
+#endif
 
     [Fact]
     public void Split_WithCharArray_ShouldSplitOnAnyChar()

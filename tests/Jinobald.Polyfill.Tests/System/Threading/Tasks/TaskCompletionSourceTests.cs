@@ -67,7 +67,11 @@ public class TaskCompletionSourceTests
 
         // Assert
         Assert.True(tcs.Task.IsCompleted);
+#if NETCOREAPP
         Assert.True(tcs.Task.IsCompletedSuccessfully);
+#else
+        Assert.True(tcs.Task.Status == TaskStatus.RanToCompletion);
+#endif
     }
 
     [Fact]

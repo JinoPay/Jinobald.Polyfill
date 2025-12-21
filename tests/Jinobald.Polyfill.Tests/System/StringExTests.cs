@@ -4,6 +4,7 @@ namespace Jinobald.Polyfill.Tests.System;
 
 public partial class StringExTests
 {
+#if !NETFRAMEWORK
     [Fact]
     public void Join_WithCharSeparator_ShouldJoinStrings()
     {
@@ -81,7 +82,9 @@ public partial class StringExTests
         // Assert
         Assert.Equal("1,2,3", result);
     }
+#endif
 
+#if NETCOREAPP && !NET8_0_OR_GREATER
     [Fact]
     public void Join_WithCharSeparator_ReadOnlySpan_ShouldJoinStrings()
     {
@@ -159,4 +162,5 @@ public partial class StringExTests
         // Assert
         Assert.Equal("a,,c", result);
     }
+#endif
 }
