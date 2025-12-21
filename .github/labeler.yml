@@ -2,81 +2,87 @@
 
 # 소스 코드 영역별
 'area: threading':
-  - src/**/Threading/**/*
-  - tests/**/Threading/**/*
+  - changed-files:
+    - any-glob-to-any-file:
+      - 'src/**/Threading/**/*'
+      - 'tests/**/Threading/**/*'
 
 'area: linq':
-  - src/**/Linq/**/*
-  - tests/**/Linq/**/*
+  - changed-files:
+    - any-glob-to-any-file:
+      - 'src/**/Linq/**/*'
+      - 'tests/**/Linq/**/*'
 
 'area: collections':
-  - src/**/Collections/**/*
-  - tests/**/Collections/**/*
+  - changed-files:
+    - any-glob-to-any-file:
+      - 'src/**/Collections/**/*'
+      - 'tests/**/Collections/**/*'
 
 'area: async':
-  - src/**/Async*.cs
-  - src/**/Task*.cs
-  - src/**/CompilerServices/**/*
-  - tests/**/Async*.cs
-  - tests/**/Task*.cs
+  - changed-files:
+    - any-glob-to-any-file:
+      - 'src/**/Async*.cs'
+      - 'src/**/Task*.cs'
+      - 'src/**/CompilerServices/**/*'
+      - 'tests/**/Async*.cs'
+      - 'tests/**/Task*.cs'
 
 'area: delegates':
-  - src/**/Action.cs
-  - src/**/Func.cs
-  - src/**/Predicate.cs
+  - changed-files:
+    - any-glob-to-any-file:
+      - 'src/**/Action.cs'
+      - 'src/**/Func.cs'
+      - 'src/**/Predicate.cs'
 
 'area: tuples':
-  - src/**/Tuple*.cs
-  - src/**/ValueTuple*.cs
-  - tests/**/Tuple*.cs
+  - changed-files:
+    - any-glob-to-any-file:
+      - 'src/**/Tuple*.cs'
+      - 'src/**/ValueTuple*.cs'
+      - 'tests/**/Tuple*.cs'
 
 'area: memory':
-  - src/**/Span*.cs
-  - src/**/Memory*.cs
-  - src/**/Buffers/**/*
-  - tests/**/Span*.cs
-  - tests/**/Memory*.cs
+  - changed-files:
+    - any-glob-to-any-file:
+      - 'src/**/Span*.cs'
+      - 'src/**/Memory*.cs'
+      - 'src/**/Buffers/**/*'
+      - 'tests/**/Span*.cs'
+      - 'tests/**/Memory*.cs'
 
 'area: compiler':
-  - src/**/CompilerServices/**/*
-  - src/**/Attributes/**/*
+  - changed-files:
+    - any-glob-to-any-file:
+      - 'src/**/CompilerServices/**/*'
+      - 'src/**/Attributes/**/*'
 
 # 변경 타입
 'type: feature':
-  - any: ['src/**/*.cs']
-    all: ['!tests/**/*.cs']
+  - changed-files:
+    - any-glob-to-any-file: 'src/**/*.cs'
+    - all-globs-to-all-files: '!tests/**/*.cs'
 
 'type: tests':
-  - tests/**/*
+  - changed-files:
+    - any-glob-to-any-file: 'tests/**/*'
 
 'type: docs':
-  - '**/*.md'
-  - docs/**/*
+  - changed-files:
+    - any-glob-to-any-file:
+      - '**/*.md'
+      - 'docs/**/*'
 
 'type: ci':
-  - .github/workflows/**/*
-  - .github/**/*.yml
+  - changed-files:
+    - any-glob-to-any-file:
+      - '.github/workflows/**/*'
+      - '.github/**/*.yml'
 
 'type: build':
-  - '**/*.csproj'
-  - '**/*.props'
-  - '**/*.targets'
-  - Directory.Build.*
-
-# 프레임워크 타겟
-'framework: net35':
-  - any: ['**/*']
-    all:
-      - '**/#if NET35'
-      - '**/#elif NET35'
-
-'framework: net40':
-  - any: ['**/*']
-    all:
-      - '**/#if NET40'
-      - '**/#elif NET40'
-
-'framework: netstandard':
-  - any: ['**/*']
-    all:
-      - '**/#if NETSTANDARD'
+  - changed-files:
+    - any-glob-to-any-file:
+      - '**/*.csproj'
+      - '**/*.props'
+      - '**/*.targets'
+      - 'Directory.Build.*'
