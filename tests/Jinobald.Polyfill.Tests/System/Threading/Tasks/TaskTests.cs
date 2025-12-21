@@ -43,7 +43,8 @@ public class TaskTests
         task.Wait();
         var elapsed = DateTime.UtcNow - startTime;
         Assert.True(task.IsCompleted);
-        Assert.True(elapsed.TotalMilliseconds >= 100);
+        // Allow small tolerance for timing precision (95ms minimum to account for clock granularity)
+        Assert.True(elapsed.TotalMilliseconds >= 95);
     }
     [Fact]
     public void Task_WhenAll_WaitsForAllTasks()
