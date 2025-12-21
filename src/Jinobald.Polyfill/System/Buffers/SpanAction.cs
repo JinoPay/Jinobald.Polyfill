@@ -1,4 +1,4 @@
-#if NETFRAMEWORK || NETSTANDARD2_0 || NETCOREAPP2X
+#if FeatureMemory
 
 namespace System.Buffers;
 

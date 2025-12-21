@@ -19,10 +19,10 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <!-- Required packages for .NET Framework to support Span<T>, Memory<T>, and other modern APIs -->
-        <PackageReference Condition="$(TargetFramework.StartsWith('net4'))" Include="System.Memory" Version="4.5.5" />
-        <PackageReference Condition="$(TargetFramework.StartsWith('net4'))" Include="System.Buffers" Version="4.5.1" />
-        <PackageReference Condition="$(TargetFramework.StartsWith('net4'))" Include="System.Runtime.CompilerServices.Unsafe" Version="6.0.0" />
-        <PackageReference Condition="$(TargetFramework.StartsWith('net4'))" Include="System.IO.Compression" Version="4.3.0" />
+        <!-- Required packages for .NET Framework 4.6.1+ to support Span<T>, Memory<T>, and other modern APIs -->
+        <PackageReference Condition="'$(TargetFramework)' == 'net461' Or '$(TargetFramework)' == 'net462' Or '$(TargetFramework)' == 'net47' Or '$(TargetFramework)' == 'net471' Or '$(TargetFramework)' == 'net472' Or '$(TargetFramework)' == 'net48' Or '$(TargetFramework)' == 'net481'" Include="System.Memory" Version="4.5.5" />
+        <PackageReference Condition="'$(TargetFramework)' == 'net461' Or '$(TargetFramework)' == 'net462' Or '$(TargetFramework)' == 'net47' Or '$(TargetFramework)' == 'net471' Or '$(TargetFramework)' == 'net472' Or '$(TargetFramework)' == 'net48' Or '$(TargetFramework)' == 'net481'" Include="System.Buffers" Version="4.5.1" />
+        <PackageReference Condition="'$(TargetFramework)' == 'net461' Or '$(TargetFramework)' == 'net462' Or '$(TargetFramework)' == 'net47' Or '$(TargetFramework)' == 'net471' Or '$(TargetFramework)' == 'net472' Or '$(TargetFramework)' == 'net48' Or '$(TargetFramework)' == 'net481'" Include="System.Runtime.CompilerServices.Unsafe" Version="6.0.0" />
+        <PackageReference Condition="'$(TargetFramework)' == 'net462' Or '$(TargetFramework)' == 'net47' Or '$(TargetFramework)' == 'net471' Or '$(TargetFramework)' == 'net472' Or '$(TargetFramework)' == 'net48' Or '$(TargetFramework)' == 'net481'" Include="System.IO.Compression" Version="4.3.0" />
     </ItemGroup>
 </Project>
