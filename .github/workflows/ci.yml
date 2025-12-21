@@ -25,6 +25,16 @@ jobs:
           7.0.x
           ${{ matrix.dotnet-version }}
 
+    - name: Install .NET Framework targeting packs (Windows)
+      if: runner.os == 'Windows'
+      shell: pwsh
+      run: |
+        # .NET Framework 3.5는 Windows에 기본 포함
+        # .NET Framework 4.x targeting packs 설치
+        choco install netfx-4.6.2-devpack -y
+        choco install netfx-4.7.2-devpack -y
+        choco install netfx-4.8.1-devpack -y
+
     - name: Restore dependencies
       run: dotnet restore
 
