@@ -114,6 +114,17 @@ Jinobald.Polyfill은 오래된 .NET Framework 버전에서 최신 .NET의 타입
 - **SecurityProtocolType** - TLS 1.2/1.3 지원
 - **ServicePointManagerEx** - 보안 프로토콜 설정 헬퍼
 
+### ✅ Concurrent Collections (완전 구현)
+- **ConcurrentQueue\<T\>** - 스레드 안전 FIFO 큐
+  - `Enqueue`, `TryDequeue`, `TryPeek`
+  - Lock-free 알고리즘, Segment-based 구조
+- **ConcurrentStack\<T\>** - 스레드 안전 LIFO 스택
+  - `Push`, `TryPop`, `TryPeek`
+  - `PushRange`, `TryPopRange` - 배치 처리
+- **ConcurrentBag\<T\>** - 스레드 안전 순서 없는 컬렉션
+  - `Add`, `TryTake`, `TryPeek`
+  - Thread-local storage, Work-stealing 메커니즘
+
 ### ✅ 스레딩 유틸리티 (완전 구현)
 - **CancellationToken / CancellationTokenSource** - 작업 취소
 - **CancellationTokenRegistration** - 취소 콜백
@@ -299,6 +310,37 @@ Console.WriteLine($"{person.Name} is {person.Age} years old");
 var info = GetInfo();
 ```
 
+### Concurrent Collections 사용 (.NET 3.5에서도 가능)
+
+```csharp
+using System.Collections.Concurrent;
+
+// ConcurrentQueue - FIFO 큐
+var queue = new ConcurrentQueue<int>();
+queue.Enqueue(1);
+queue.Enqueue(2);
+queue.Enqueue(3);
+
+if (queue.TryDequeue(out int item))
+    Console.WriteLine($"Dequeued: {item}"); // 1
+
+// ConcurrentStack - LIFO 스택
+var stack = new ConcurrentStack<int>();
+stack.Push(1);
+stack.Push(2);
+stack.PushRange(new[] { 3, 4, 5 });
+
+if (stack.TryPop(out int value))
+    Console.WriteLine($"Popped: {value}"); // 5
+
+// ConcurrentBag - 순서 없는 컬렉션
+var bag = new ConcurrentBag<int>();
+Parallel.For(0, 100, i => bag.Add(i));
+
+int count = bag.Count;
+Console.WriteLine($"Bag contains {count} items");
+```
+
 ### Caller Info 사용
 
 ```csharp
@@ -334,12 +376,13 @@ dotnet test --framework net48
 ```
 Jinobald.Polyfill/
 ├── src/
-│   └── Jinobald.Polyfill/           # 메인 라이브러리 (82개 소스 파일)
+│   └── Jinobald.Polyfill/           # 메인 라이브러리 (85개 소스 파일)
 │       ├── Properties/
 │       │   └── AssemblyInfo.cs      # InternalsVisibleTo 설정
 │       └── System/                  # System 네임스페이스 확장
 │           ├── Buffers/             # SpanAction 등
 │           ├── Collections/         # 컬렉션 인터페이스
+│           │   ├── Concurrent/      # Concurrent Collections (3개 파일)
 │           │   └── Generic/         # IReadOnlyCollection 등
 │           ├── Linq/                # LINQ 연산자 (10개 파일)
 │           ├── Net/                 # 네트워킹
@@ -349,8 +392,9 @@ Jinobald.Polyfill/
 │           └── Threading/           # 스레딩 관련
 │               └── Tasks/           # Task, Parallel 등 (10개 파일)
 ├── tests/
-│   └── Jinobald.Polyfill.Tests/     # 단위 테스트 (39개 파일)
+│   └── Jinobald.Polyfill.Tests/     # 단위 테스트 (42개 파일)
 │       └── System/
+│           ├── Collections/Concurrent/ # Concurrent 테스트 (3개 파일)
 │           ├── Linq/                # LINQ 테스트 (7개 파일)
 │           ├── Net/Http/            # HttpClient 테스트 (6개 파일)
 │           ├── Runtime/             # 컴파일러 속성 테스트
@@ -392,7 +436,13 @@ GitHub Actions를 통한 자동화된 빌드 및 테스트:
 
 Copyright (c) 2025 Jinho Park
 
-## 최근 업데이트 (2025-12-22)
+## 최근 업데이트 (2025-12-21)
+
+### 🚀 Concurrent Collections 구현 완료
+.NET Framework 3.5 이상에서 스레드 안전 컬렉션을 사용할 수 있습니다:
+- **ConcurrentQueue\<T\>**: Lock-free FIFO 큐, Segment-based 구조
+- **ConcurrentStack\<T\>**: Lock-free LIFO 스택, PushRange/TryPopRange
+- **ConcurrentBag\<T\>**: Thread-local storage + Work-stealing
 
 ### 🚀 HttpClient 구현 완료
 .NET Framework 3.5 이상에서 현대적인 HttpClient API를 사용할 수 있습니다:
@@ -415,18 +465,19 @@ Copyright (c) 2025 Jinho Park
 - 집계 (Sum, Average, Min, Max, Aggregate)
 
 ### 📊 현재 진행 상황
-- **구현 완료**: 약 80개 타입 (전체의 약 50%)
+- **구현 완료**: 약 83개 타입 (전체의 약 60%)
 - **Phase 1 (기초 인프라)**: 100% 완료
-- **Phase 2 (핵심 기능)**: 80% 완료
+- **Phase 2 (핵심 기능)**: 100% 완료
 - **Phase 3 (LINQ)**: 100% 완료
-- **테스트 커버리지**: 473개 테스트 통과
+- **Phase 4 (동시성 컬렉션)**: 50% 완료
+- **테스트 커버리지**: 525개 테스트 이상
 
 ### �� 상세 분석 보고서
 전체 분석 결과 및 권장사항은 [POLYFILL_ANALYSIS_REPORT.md](POLYFILL_ANALYSIS_REPORT.md)를 참조하세요.
 
 ### 다음 단계
-1. Index & Range 구현 (C# 8.0 `[^1]`, `[1..^1]` 구문 지원)
-2. Concurrent Collections 구현 (ConcurrentDictionary, ConcurrentQueue 등)
+1. ConcurrentDictionary\<K,V\> 구현 (스레드 안전 딕셔너리)
+2. BlockingCollection\<T\> 구현 (Producer-Consumer 패턴)
 3. IAsyncEnumerable 지원 (async foreach)
 
 ## 참고
