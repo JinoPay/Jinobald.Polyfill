@@ -1,4 +1,6 @@
-#if NET35 || NET40 || NET45 || NET451 || NET452 || NET46 || NET461 || NET462 || NET47
+// Jinobald.Polyfill - HashCode 폴리필
+// .NET Core 2.1 이전 버전을 위한 System.HashCode 구현
+#if NET35 || NET40 || NET45 || NET451 || NET452 || NET46 || NET461 || NET462 || NET47 || NET471 || NET472 || NET48 || NET481
 namespace System;
 
 /// <summary>

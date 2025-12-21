@@ -1042,10 +1042,11 @@
 
 LINQ는 델리게이트에 의존하므로 워크스페이스 1 완료 후 시작.
 
-- ✅ **워크스페이스 11**: LINQ Part 1 - 기본 연산자
+- ✅ **워크스페이스 11**: LINQ Part 1 - 기본 연산자 ✅ **완료** (2025-12-21)
 - ⏸️ **워크스페이스 12**: LINQ Part 2 - 정렬/그룹화 (Part 1과 병렬 가능)
 - ⏸️ **워크스페이스 13**: LINQ Part 3 - 집계/변환 (Part 1, 2 완료 후)
 
+**완료 상태**: 1/3 (33%)
 **예상 기간**: 2-3주
 
 ---
@@ -1291,14 +1292,33 @@ LINQ는 델리게이트에 의존하므로 워크스페이스 1 완료 후 시�
 - [ ] await using 테스트
 - [ ] XML 문서 주석 추가
 
-### **워크스페이스 11: LINQ Part 1**
-- [ ] Where, Select, SelectMany 구현
-- [ ] First/Last/Single 계열 구현
-- [ ] Any, All, Contains 구현
-- [ ] Count, ElementAt 구현
-- [ ] 지연 실행 검증 테스트
-- [ ] Null 인자 테스트
-- [ ] XML 문서 주석 추가
+### **워크스페이스 11: LINQ Part 1** ✅ **완료** (2025-12-21)
+- [x] Where, Select, SelectMany 구현 ✅
+- [x] First/Last/Single 계열 구현 ✅
+- [x] Any, All, Contains 구현 ✅
+- [x] Count, ElementAt 구현 ✅
+- [x] ToArray, ToList, ToDictionary 구현 ✅
+- [x] Empty, Range, Repeat 구현 ✅
+- [x] Concat, Distinct, Skip, Take 구현 ✅
+- [x] SkipWhile, TakeWhile, Reverse 구현 ✅
+- [x] Cast, OfType, SequenceEqual 구현 ✅
+- [x] DefaultIfEmpty, Append, Prepend 구현 ✅
+- [x] IGrouping, IOrderedEnumerable, ILookup, Lookup 구현 ✅
+- [x] 지연 실행 검증 테스트 ✅
+- [x] Null 인자 테스트 ✅
+- [x] XML 문서 주석 추가 (한글) ✅
+- [x] 조건부 컴파일 (#if NET20) ✅
+
+**구현 파일**:
+- `src/Jinobald.Polyfill/System/Linq/Enumerable.cs` (~1200줄)
+- `src/Jinobald.Polyfill/System/Linq/IGrouping.cs`
+- `src/Jinobald.Polyfill/System/Linq/IOrderedEnumerable.cs`
+- `src/Jinobald.Polyfill/System/Linq/ILookup.cs`
+- `src/Jinobald.Polyfill/System/Linq/Lookup.cs`
+
+**테스트 파일**:
+- `tests/.../System/Linq/EnumerableBasicTests.cs`
+- `tests/.../System/Linq/EnumerableConversionTests.cs`
 
 ### **워크스페이스 12: LINQ Part 2**
 - [ ] OrderBy/ThenBy 계열 구현
@@ -1415,8 +1435,10 @@ LINQ는 델리게이트에 의존하므로 워크스페이스 1 완료 후 시�
   - ❌ WS9: HashCode & FormattableString (구현 완료, 조건부 컴파일 수정 완료)
   - ❌ WS14: 컬렉션 확장 (0%)
 
-- [ ] Phase 3: LINQ 구현 (0/3 = 0%)
-  - ❌ WS11-13: 모두 미구현
+- [x] Phase 3: LINQ 구현 (1/3 = 33%)
+  - ✅ WS11: LINQ Part 1 (100%) - 완료
+  - ❌ WS12: LINQ Part 2 (0%)
+  - ❌ WS13: LINQ Part 3 (0%)
 
 - [ ] Phase 4: 동시성 라이브러리 (0/2 = 0%)
   - ❌ WS4-5: 완전 미구현
@@ -1432,10 +1454,11 @@ LINQ는 델리게이트에 의존하므로 워크스페이스 1 완료 후 시�
 **핵심 워크스페이스**: 18개
 **추가 워크스페이스** (선택적): 4개 (16-A, 16-B, 16-C, 16-D)
 **총 워크스페이스**: 22개
-**완료**: 5개 (WS1, WS2 부분, WS3 부분, WS6 부분, WS7 부분)
-**진행률**: 약 23% (구현된 타입 기준)
+**완료**: 6개 (WS1, WS2 부분, WS3 부분, WS6 부분, WS7 부분, WS11)
+**진행률**: 약 27% (구현된 타입 기준)
 
 **Phase 1 진행률**: 75% (3/4 완료)
+**Phase 3 진행률**: 33% (1/3 완료)
 
 ---
 
@@ -1506,5 +1529,24 @@ System.Linq/Enumerable.cs에 다음 메서드를 구현해줘:
 ---
 
 **마지막 업데이트**: 2025-12-21
-**문서 버전**: 1.0
+**문서 버전**: 1.1
 **작성자**: Claude Code Agent
+
+---
+
+## 📝 변경 이력
+
+### v1.1 (2025-12-21)
+- ✅ **워크스페이스 11 (LINQ Part 1) 완료**
+  - Enumerable 클래스에 ~30개 연산자 구현
+  - IGrouping, IOrderedEnumerable, ILookup, Lookup 인터페이스/클래스 구현
+  - EnumerableBasicTests.cs, EnumerableConversionTests.cs 테스트 작성
+  - 모든 주석 한글화
+- HashCode.cs 조건부 컴파일 수정 (NET471, NET472, NET48, NET481 추가)
+- Append/Prepend 테스트 조건부 컴파일 추가 (NET471+)
+- 전체 진행률 27%로 업데이트
+
+### v1.0 (2025-12-21)
+- 초기 계획 문서 작성
+- 18개 워크스페이스 정의
+- Phase 1~7 작업 계획 수립

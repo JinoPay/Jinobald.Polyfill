@@ -29,7 +29,7 @@ public class PredicateTests
     [Fact]
     public void Predicate_WithNull_CanHandleNullCheck()
     {
-        Predicate<string> isNotNull = s => s != null;
+        Predicate<string?> isNotNull = s => s != null;
         Assert.True(isNotNull("test"));
         Assert.False(isNotNull(null));
     }

@@ -79,7 +79,7 @@ public class FuncTests
     [Fact]
     public void Func_NullParameter_ThrowsNullReferenceException()
     {
-        Func<string, int> func = s => s.Length;
+        Func<string?, int> func = s => s!.Length;
         Assert.Throws<NullReferenceException>(() => func(null));
     }
 }
