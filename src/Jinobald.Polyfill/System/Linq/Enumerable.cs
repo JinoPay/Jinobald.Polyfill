@@ -11,7 +11,7 @@ namespace System.Linq
     /// <summary>
     /// <see cref="IEnumerable{T}"/>를 구현하는 객체를 쿼리하기 위한 정적 메서드 집합을 제공합니다.
     /// </summary>
-    public static class Enumerable
+    public static partial class Enumerable
     {
         #region Where - 필터링
 
