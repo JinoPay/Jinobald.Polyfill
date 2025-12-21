@@ -18,11 +18,11 @@
 - [x] **Tuple & ValueTuple**: Tuple<T1~T8>, ValueTuple<T1~T8>, ITuple
 - [x] **컴파일러 속성**: CallerInfo 속성들, IsExternalInit, RequiredMember 속성들
 
-#### Phase 2: 핵심 기능 (80% 완료)
+#### Phase 2: 핵심 기능 (100% 완료)
 - [x] **Lazy<T> & 스레딩 유틸리티**: Lazy<T>, ManualResetEventSlim, SemaphoreSlim, CountdownEvent, SpinWait
 - [x] **Progress & ReadOnly Collections**: IProgress<T>, Progress<T>, IReadOnlyCollection<T>, IReadOnlyList<T>, IReadOnlyDictionary<K,V>
 - [x] **HashCode & FormattableString**: HashCode, FormattableString, FormattableStringFactory (조건부 컴파일 수정 완료)
-- [ ] **Index & Range**: Index, Range (미구현)
+- [x] **Index & Range**: Index, Range (NET35+ 지원)
 
 #### Phase 3: LINQ (100% 완료)
 - [x] **LINQ Part 1**: Where, Select, First, Last, Single, Any, All, Count, Skip, Take 등
@@ -184,25 +184,35 @@
 
 ---
 
-### **워크스페이스 8: Index & Range** ⏸️ 미구현
+### **워크스페이스 8: Index & Range** ✅ 완료
 
 **목표**: C# 8.0 인덱스/범위 연산자 지원
 
-**구현 항목**:
-1. **System/Index.cs**
-   - `Index` struct - NET46+
-   - FromStart(), FromEnd()
-   - ^ 연산자 지원
-   - GetOffset() 메서드
+**상태**: 100% 완료
 
-2. **System/Range.cs**
-   - `Range` struct - NET46+
-   - StartAt(), EndAt(), All()
+**구현 파일**:
+- `src/Jinobald.Polyfill/System/Index.cs` - Index 구조체 (NET35+)
+- `src/Jinobald.Polyfill/System/Range.cs` - Range 구조체 (NET35+)
+
+**테스트 파일**:
+- `tests/Jinobald.Polyfill.Tests/System/IndexTests.cs` (28개 테스트)
+- `tests/Jinobald.Polyfill.Tests/System/RangeTests.cs` (22개 테스트)
+
+**구현된 기능**:
+1. **Index 구조체**
+   - FromStart(), FromEnd() 정적 메서드
+   - ^ 연산자 지원 (암시적 변환)
+   - GetOffset() 메서드
+   - IsFromEnd, Value 속성
+   - Start, End 정적 속성
+   - IEquatable<Index> 구현
+
+2. **Range 구조체**
+   - StartAt(), EndAt(), All() 정적 메서드
    - .. 연산자 지원
    - GetOffsetAndLength() 메서드
-
-**예상 작업량**: 🟡 중형
-**난이도**: 🟡 중
+   - Start, End 속성
+   - IEquatable<Range> 구현
 
 ---
 
@@ -349,11 +359,11 @@
 - ✅ 워크스페이스 7: Compiler Attributes
 - ✅ 워크스페이스 17: 프로젝트 설정
 
-### **Phase 2: 핵심 기능** 🟡 80% 완료
+### **Phase 2: 핵심 기능** ✅ 100% 완료
 - ✅ 워크스페이스 3: Lazy<T> & 스레딩 유틸리티
 - ✅ 워크스페이스 6: Progress & ReadOnly Collections
 - ✅ 워크스페이스 9: HashCode & FormattableString
-- ⏸️ 워크스페이스 8: Index & Range (다음 우선순위)
+- ✅ 워크스페이스 8: Index & Range
 
 ### **Phase 3: LINQ** ✅ 100% 완료
 - ✅ 워크스페이스 11: LINQ Part 1 - 기본 연산자
@@ -388,18 +398,18 @@
 | Phase | 설명 | 완료 | 미완료 | 진행률 |
 |-------|------|------|--------|--------|
 | Phase 1 | 기초 인프라 | 4 | 0 | 100% |
-| Phase 2 | 핵심 기능 | 4 | 1 | 80% |
+| Phase 2 | 핵심 기능 | 5 | 0 | 100% |
 | Phase 3 | LINQ | 3 | 0 | 100% |
 | Phase 4 | 동시성 | 0 | 2 | 0% |
 | Phase 5 | 고급 기능 | 2 | 1 | 67% |
 | Phase 6 | 실용적 확장 | 0 | 4 | 0% |
 | Phase 7 | 통합 및 배포 | 0 | 1 | 0% |
-| **전체** | | **13** | **9** | **59%** |
+| **전체** | | **14** | **8** | **64%** |
 
 ### **구현 통계**
-- **소스 파일**: 82개
-- **테스트 파일**: 39개
-- **테스트 케이스**: 473개 이상
+- **소스 파일**: 84개
+- **테스트 파일**: 41개
+- **테스트 케이스**: 523개 이상
 - **지원 프레임워크**: 17개 (NET35 ~ NET10.0)
 
 ---
@@ -412,6 +422,7 @@
 - [x] **WS3**: Lazy<T> & 스레딩 유틸리티
 - [x] **WS6**: Progress & ReadOnly Collections
 - [x] **WS7**: Compiler Attributes
+- [x] **WS8**: Index & Range (C# 8.0 지원)
 - [x] **WS9**: HashCode & FormattableString
 - [x] **WS11**: LINQ Part 1 (기본 연산자)
 - [x] **WS12**: LINQ Part 2 (정렬/그룹화/집합)
@@ -420,13 +431,25 @@
 - [x] **WS16-B**: Parallel 클래스
 
 ### 다음 우선순위 작업
-- [ ] **WS8**: Index & Range (C# 8.0 지원)
 - [ ] **WS4-5**: Concurrent Collections
 - [ ] **WS10**: IAsyncEnumerable
 
 ---
 
 ## 📝 변경 이력
+
+### v1.5 (2025-12-22)
+- ✅ **워크스페이스 8 (Index & Range) 완료**
+  - Index 구조체 구현 (NET35+ 지원)
+  - Range 구조체 구현 (NET35+ 지원)
+  - FromStart, FromEnd, GetOffset 메서드
+  - StartAt, EndAt, All, GetOffsetAndLength 메서드
+  - ^ 및 .. 연산자 지원
+  - Index 테스트 28개 작성
+  - Range 테스트 22개 작성
+- 🎉 **Phase 2 (핵심 기능) 100% 완료**
+- 📊 전체 진행률 64%로 업데이트
+- 📊 테스트 케이스 523개 이상
 
 ### v1.4 (2025-12-22)
 - ✅ **HttpClient 구현 완료**
@@ -460,5 +483,5 @@
 ---
 
 **마지막 업데이트**: 2025-12-22
-**문서 버전**: 1.4
+**문서 버전**: 1.5
 **작성자**: Claude Code Agent
