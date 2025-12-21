@@ -308,6 +308,27 @@
 
 ---
 
+### **워크스페이스 14: LINQ Part 4 (Modern)** ✅ 완료
+
+**목표**: .NET 6.0+ 최신 LINQ 메서드
+
+**상태**: 100% 완료
+
+**구현 파일**:
+- `src/Jinobald.Polyfill/System/Linq/Enumerable.Modern.cs` - Chunk, Index, TryGetNonEnumeratedCount
+
+**테스트 파일**:
+- `tests/Jinobald.Polyfill.Tests/System/Linq/EnumerableModernTests.cs` (32개 테스트)
+
+**구현된 메서드**:
+1. **Chunk** - 시퀀스를 지정된 크기의 청크로 분할 (.NET 6.0+)
+2. **Index** - 인덱스와 함께 열거 (.NET 6.0+)
+   - NET40+: ValueTuple<int, T> 반환
+   - NET20-35: Tuple<int, T> 반환
+3. **TryGetNonEnumeratedCount** - 열거하지 않고 카운트 시도 (.NET 6.0+)
+
+---
+
 ### **워크스페이스 16-A: HttpClient & HTTP** ✅ 완료
 
 **구현 파일**:
@@ -369,6 +390,7 @@
 - ✅ 워크스페이스 11: LINQ Part 1 - 기본 연산자
 - ✅ 워크스페이스 12: LINQ Part 2 - 정렬/그룹화/집합
 - ✅ 워크스페이스 13: LINQ Part 3 - 집계/변환
+- ✅ 워크스페이스 14: LINQ Part 4 - Modern (.NET 6.0+)
 
 ### **Phase 4: 동시성 라이브러리** ⏸️ 0% 완료
 - ⏸️ 워크스페이스 4: 동시성 컬렉션 Part 1
@@ -379,10 +401,10 @@
 - ✅ 워크스페이스 16-B: Parallel 클래스
 - ⏸️ 워크스페이스 10: IAsyncEnumerable & IAsyncDisposable
 
-### **Phase 6: 실용적 확장** ⏸️ 미구현
+### **Phase 6: 실용적 확장** 🟡 33% 완료
 - ⏸️ JSON 직렬화
 - ⏸️ DateOnly / TimeOnly
-- ⏸️ 최신 LINQ 메서드 (Chunk, Index, CountBy 등)
+- ✅ 최신 LINQ 메서드 (Chunk, Index, TryGetNonEnumeratedCount)
 
 ### **Phase 7: 통합 및 배포**
 - ⏸️ 통합 테스트 프로젝트
@@ -393,24 +415,24 @@
 
 ## 📈 진행 상황 추적
 
-### **전체 진행률** (최종 업데이트: 2025-12-22)
+### **전체 진행률** (최종 업데이트: 2025-12-21)
 
 | Phase | 설명 | 완료 | 미완료 | 진행률 |
 |-------|------|------|--------|--------|
 | Phase 1 | 기초 인프라 | 4 | 0 | 100% |
 | Phase 2 | 핵심 기능 | 5 | 0 | 100% |
-| Phase 3 | LINQ | 3 | 0 | 100% |
+| Phase 3 | LINQ | 4 | 0 | 100% |
 | Phase 4 | 동시성 | 0 | 2 | 0% |
 | Phase 5 | 고급 기능 | 2 | 1 | 67% |
-| Phase 6 | 실용적 확장 | 0 | 4 | 0% |
+| Phase 6 | 실용적 확장 | 1 | 2 | 33% |
 | Phase 7 | 통합 및 배포 | 0 | 1 | 0% |
-| **전체** | | **14** | **8** | **64%** |
+| **전체** | | **16** | **6** | **73%** |
 
 ### **구현 통계**
-- **소스 파일**: 84개
-- **테스트 파일**: 41개
-- **테스트 케이스**: 523개 이상
-- **지원 프레임워크**: 17개 (NET35 ~ NET10.0)
+- **소스 파일**: 85개
+- **테스트 파일**: 42개
+- **테스트 케이스**: 555개 이상
+- **지원 프레임워크**: 18개 (NET20, NET30, NET35 ~ NET10.0)
 
 ---
 
@@ -427,16 +449,28 @@
 - [x] **WS11**: LINQ Part 1 (기본 연산자)
 - [x] **WS12**: LINQ Part 2 (정렬/그룹화/집합)
 - [x] **WS13**: LINQ Part 3 (집계)
+- [x] **WS14**: LINQ Part 4 (Modern - Chunk, Index, TryGetNonEnumeratedCount)
 - [x] **WS16-A**: HttpClient & HTTP
 - [x] **WS16-B**: Parallel 클래스
 
 ### 다음 우선순위 작업
-- [ ] **WS4-5**: Concurrent Collections
-- [ ] **WS10**: IAsyncEnumerable
+- [ ] **DateOnly/TimeOnly**: .NET 6.0 날짜/시간 타입 (간단, 의존성 없음)
+- [ ] **WS4-5**: Concurrent Collections (복잡, 대형 작업)
+- [ ] **WS10**: IAsyncEnumerable (복잡, 대형 작업)
 
 ---
 
 ## 📝 변경 이력
+
+### v1.6 (2025-12-21)
+- ✅ **워크스페이스 14 (LINQ Part 4 - Modern) 완료**
+  - Chunk - 시퀀스를 청크로 분할 (.NET 6.0+)
+  - Index - 인덱스와 함께 열거 (.NET 6.0+)
+  - TryGetNonEnumeratedCount - 열거하지 않고 카운트 시도 (.NET 6.0+)
+  - EnumerableModernTests 32개 테스트 작성
+- 🎉 **Phase 6 (실용적 확장) 33% 완료**
+- 📊 전체 진행률 73%로 업데이트
+- 📊 테스트 케이스 555개 이상
 
 ### v1.5 (2025-12-22)
 - ✅ **워크스페이스 8 (Index & Range) 완료**
