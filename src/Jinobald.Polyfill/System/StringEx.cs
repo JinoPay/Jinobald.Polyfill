@@ -1,16 +1,14 @@
+using System.Globalization;
+
 #if !NET9_0_OR_GREATER
 
 namespace System;
 
-using System;
-using System.Collections.Generic;
-
-static partial class StringEx
+internal static partial class StringEx
 {
     extension(string)
     {
 #if FeatureMemory
-
 #if !NET9_0_OR_GREATER
 
         /// <summary>
@@ -192,7 +190,7 @@ static partial class StringEx
 #if NETSTANDARD2_0 || NETFRAMEWORK
 
         /// <summary>
-        /// Concatenates an array of strings, using the specified separator between each member.
+        ///     Concatenates an array of strings, using the specified separator between each member.
         /// </summary>
         //Link: https://learn.microsoft.com/en-us/dotnet/api/system.string.join?view=net-10.0#system-string-join(system-char-system-string())
         public static string Join(char separator, params string?[] values) =>
@@ -203,7 +201,7 @@ static partial class StringEx
 #endif
 
         /// <summary>
-        /// Concatenates the string representations of an array of objects, using the specified separator between each member.
+        ///     Concatenates the string representations of an array of objects, using the specified separator between each member.
         /// </summary>
         //Link: https://learn.microsoft.com/en-us/dotnet/api/system.string.join?view=net-10.0#system-string-join(system-char-system-object())
         public static string Join(char separator, params object?[] values)
@@ -221,7 +219,7 @@ static partial class StringEx
         }
 
         /// <summary>
-        /// Concatenates the specified elements of a string array, using the specified separator between each element.
+        ///     Concatenates the specified elements of a string array, using the specified separator between each element.
         /// </summary>
         //Link: https://learn.microsoft.com/en-us/dotnet/api/system.string.join?view=net-10.0#system-string-join(system-char-system-string()-system-int32-system-int32)
         public static string Join(char separator, string?[] value, int startIndex, int count) =>
@@ -232,7 +230,7 @@ static partial class StringEx
 #endif
 
         /// <summary>
-        /// Concatenates the specified elements of a string array, using the specified separator between each element.
+        ///     Concatenates the specified elements of a string array, using the specified separator between each element.
         /// </summary>
         //Link: https://learn.microsoft.com/en-us/dotnet/api/system.string.join?view=net-10.0#system-string-join-1(system-char-system-collections-generic-ienumerable((-0)))
         public static string Join<T>(char separator, IEnumerable<T> values)
@@ -305,45 +303,57 @@ static partial class StringEx
 
 #if !NETCOREAPP2_1_OR_GREATER
         /// <summary>
-        /// Returns a value indicating whether a specified character occurs within this string.
+        ///     Returns a value indicating whether a specified character occurs within this string.
         /// </summary>
-        public static bool Contains(string str, char value) =>
-            str.IndexOf(value) >= 0;
+        public static bool Contains(string str, char value)
+        {
+            return str.IndexOf(value) >= 0;
+        }
 
 #if !NETCOREAPP3_0_OR_GREATER
         /// <summary>
-        /// Returns a value indicating whether a specified substring occurs within this string, using the specified comparison rules.
+        ///     Returns a value indicating whether a specified substring occurs within this string, using the specified comparison
+        ///     rules.
         /// </summary>
-        public static bool Contains(string str, string value, StringComparison comparisonType) =>
-            str.IndexOf(value, comparisonType) >= 0;
+        public static bool Contains(string str, string value, StringComparison comparisonType)
+        {
+            return str.IndexOf(value, comparisonType) >= 0;
+        }
 #endif
 
         /// <summary>
-        /// Returns a value indicating whether a specified character occurs within this string, using the specified comparison rules.
+        ///     Returns a value indicating whether a specified character occurs within this string, using the specified comparison
+        ///     rules.
         /// </summary>
-        public static bool Contains(string str, char value, StringComparison comparisonType) =>
-            str.IndexOf(value.ToString(), comparisonType) >= 0;
+        public static bool Contains(string str, char value, StringComparison comparisonType)
+        {
+            return str.IndexOf(value.ToString(), comparisonType) >= 0;
+        }
 #endif
 
 #if !NETCOREAPP3_0_OR_GREATER
         /// <summary>
-        /// Determines whether this string instance starts with the specified character.
+        ///     Determines whether this string instance starts with the specified character.
         /// </summary>
-        public static bool StartsWith(string str, char value) =>
-            str.Length > 0 && str[0] == value;
+        public static bool StartsWith(string str, char value)
+        {
+            return str.Length > 0 && str[0] == value;
+        }
 
         /// <summary>
-        /// Determines whether the end of this string instance matches the specified character.
+        ///     Determines whether the end of this string instance matches the specified character.
         /// </summary>
-        public static bool EndsWith(string str, char value) =>
-            str.Length > 0 && str[str.Length - 1] == value;
+        public static bool EndsWith(string str, char value)
+        {
+            return str.Length > 0 && str[str.Length - 1] == value;
+        }
 
         /// <summary>
-        /// Returns the hash code for this string using the specified comparison rules.
+        ///     Returns the hash code for this string using the specified comparison rules.
         /// </summary>
         public static int GetHashCode(string str, StringComparison comparisonType)
         {
-            var s = comparisonType switch
+            string s = comparisonType switch
             {
                 StringComparison.CurrentCultureIgnoreCase => str.ToLower(),
                 StringComparison.OrdinalIgnoreCase => str.ToUpperInvariant(),
@@ -356,103 +366,153 @@ static partial class StringEx
 
 #if !NETCOREAPP2_1_OR_GREATER
         /// <summary>
-        /// Returns a new string in which all occurrences of a specified string are replaced with another specified string, using the provided comparison type.
+        ///     Returns a new string in which all occurrences of a specified string are replaced with another specified string,
+        ///     using the provided comparison type.
         /// </summary>
         public static string Replace(string str, string oldValue, string? newValue, StringComparison comparisonType)
         {
-            if (oldValue == null) throw new ArgumentNullException(nameof(oldValue));
-            if (oldValue.Length == 0) throw new ArgumentException("String cannot be of zero length.", nameof(oldValue));
+            if (oldValue == null)
+            {
+                throw new ArgumentNullException(nameof(oldValue));
+            }
+
+            if (oldValue.Length == 0)
+            {
+                throw new ArgumentException("String cannot be of zero length.", nameof(oldValue));
+            }
 
             newValue ??= string.Empty;
-            if (comparisonType == StringComparison.Ordinal) return str.Replace(oldValue, newValue);
+            if (comparisonType == StringComparison.Ordinal)
+            {
+                return str.Replace(oldValue, newValue);
+            }
 
-            var result = str;
-            var index = 0;
+            string result = str;
+            int index = 0;
             while ((index = result.IndexOf(oldValue, index, comparisonType)) != -1)
             {
                 result = result.Remove(index, oldValue.Length).Insert(index, newValue);
                 index += newValue.Length;
             }
+
             return result;
         }
 
         /// <summary>
-        /// Returns a new string in which all occurrences of a specified string are replaced with another specified string, using the provided culture and case sensitivity.
+        ///     Returns a new string in which all occurrences of a specified string are replaced with another specified string,
+        ///     using the provided culture and case sensitivity.
         /// </summary>
-        public static string Replace(string str, string oldValue, string? newValue, bool ignoreCase, System.Globalization.CultureInfo? culture)
+        public static string Replace(string str, string oldValue, string? newValue, bool ignoreCase,
+            CultureInfo? culture)
         {
-            if (oldValue == null) throw new ArgumentNullException(nameof(oldValue));
-            if (oldValue.Length == 0) throw new ArgumentException("String cannot be of zero length.", nameof(oldValue));
+            if (oldValue == null)
+            {
+                throw new ArgumentNullException(nameof(oldValue));
+            }
+
+            if (oldValue.Length == 0)
+            {
+                throw new ArgumentException("String cannot be of zero length.", nameof(oldValue));
+            }
 
             newValue ??= string.Empty;
-            culture ??= System.Globalization.CultureInfo.CurrentCulture;
+            culture ??= CultureInfo.CurrentCulture;
 
-            var result = str;
-            var index = 0;
-            while ((index = culture.CompareInfo.IndexOf(result, oldValue, index, ignoreCase ? System.Globalization.CompareOptions.IgnoreCase : System.Globalization.CompareOptions.None)) != -1)
+            string result = str;
+            int index = 0;
+            while ((index = culture.CompareInfo.IndexOf(result, oldValue, index,
+                       ignoreCase ? CompareOptions.IgnoreCase : CompareOptions.None)) != -1)
             {
                 result = result.Remove(index, oldValue.Length).Insert(index, newValue);
                 index += newValue.Length;
             }
+
             return result;
         }
 #endif
 
 #if !NET5_0_OR_GREATER
         /// <summary>
-        /// Splits a string into substrings based on a specified delimiting character.
+        ///     Splits a string into substrings based on a specified delimiting character.
         /// </summary>
-        public static string[] Split(string str, char separator, StringSplitOptions options = StringSplitOptions.None) =>
-            str.Split(new[] { separator }, options);
+        public static string[] Split(string str, char separator, StringSplitOptions options = StringSplitOptions.None)
+        {
+            return str.Split(new[] { separator }, options);
+        }
 
         /// <summary>
-        /// Splits a string into a maximum number of substrings based on a specified delimiting character.
+        ///     Splits a string into a maximum number of substrings based on a specified delimiting character.
         /// </summary>
-        public static string[] Split(string str, char separator, int count, StringSplitOptions options = StringSplitOptions.None) =>
-            str.Split(new[] { separator }, count, options);
+        public static string[] Split(string str, char separator, int count,
+            StringSplitOptions options = StringSplitOptions.None)
+        {
+            return str.Split(new[] { separator }, count, options);
+        }
 
         /// <summary>
-        /// Splits a string into substrings based on a specified delimiting string.
+        ///     Splits a string into substrings based on a specified delimiting string.
         /// </summary>
-        public static string[] Split(string str, string? separator, StringSplitOptions options = StringSplitOptions.None) =>
-            string.IsNullOrEmpty(separator) ? str.Split((char[]?)null, options) : str.Split(new[] { separator }, options);
+        public static string[] Split(string str, string? separator,
+            StringSplitOptions options = StringSplitOptions.None)
+        {
+            return string.IsNullOrEmpty(separator)
+                ? str.Split((char[]?)null, options)
+                : str.Split(new[] { separator }, options);
+        }
 
         /// <summary>
-        /// Splits a string into a maximum number of substrings based on a specified delimiting string.
+        ///     Splits a string into a maximum number of substrings based on a specified delimiting string.
         /// </summary>
-        public static string[] Split(string str, string? separator, int count, StringSplitOptions options = StringSplitOptions.None) =>
-            string.IsNullOrEmpty(separator) ? str.Split((char[]?)null, count, options) : str.Split(new[] { separator }, count, options);
+        public static string[] Split(string str, string? separator, int count,
+            StringSplitOptions options = StringSplitOptions.None)
+        {
+            return string.IsNullOrEmpty(separator)
+                ? str.Split((char[]?)null, count, options)
+                : str.Split(new[] { separator }, count, options);
+        }
 
         /// <summary>
-        /// Removes all leading and trailing instances of a character from the current string.
+        ///     Removes all leading and trailing instances of a character from the current string.
         /// </summary>
-        public static string Trim(string str, char trimChar) =>
-            str.Trim(new[] { trimChar });
+        public static string Trim(string str, char trimChar)
+        {
+            return str.Trim(new[] { trimChar });
+        }
 
         /// <summary>
-        /// Removes all leading instances of a character from the current string.
+        ///     Removes all leading instances of a character from the current string.
         /// </summary>
-        public static string TrimStart(string str, char trimChar) =>
-            str.TrimStart(new[] { trimChar });
+        public static string TrimStart(string str, char trimChar)
+        {
+            return str.TrimStart(new[] { trimChar });
+        }
 
         /// <summary>
-        /// Removes all trailing instances of a character from the current string.
+        ///     Removes all trailing instances of a character from the current string.
         /// </summary>
-        public static string TrimEnd(string str, char trimChar) =>
-            str.TrimEnd(new[] { trimChar });
+        public static string TrimEnd(string str, char trimChar)
+        {
+            return str.TrimEnd(new[] { trimChar });
+        }
 
         /// <summary>
-        /// Replaces all newline sequences in the current string with Environment.NewLine.
+        ///     Replaces all newline sequences in the current string with Environment.NewLine.
         /// </summary>
-        public static string ReplaceLineEndings(string str) =>
-            ReplaceLineEndings(str, Environment.NewLine);
+        public static string ReplaceLineEndings(string str)
+        {
+            return ReplaceLineEndings(str, Environment.NewLine);
+        }
 
         /// <summary>
-        /// Replaces all newline sequences in the current string with the specified replacement text.
+        ///     Replaces all newline sequences in the current string with the specified replacement text.
         /// </summary>
         public static string ReplaceLineEndings(string str, string replacementText)
         {
-            if (replacementText == null) throw new ArgumentNullException(nameof(replacementText));
+            if (replacementText == null)
+            {
+                throw new ArgumentNullException(nameof(replacementText));
+            }
+
             return str.Replace("\r\n", replacementText).Replace("\n", replacementText).Replace("\r", replacementText);
         }
 #endif

@@ -38,14 +38,14 @@
 
   <!-- 코드 분석 -->
   <ItemGroup>
-    <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.556" PrivateAssets="All" />
-    <PackageReference Include="Roslynator.Analyzers" Version="4.12.0" PrivateAssets="All" />
-    <PackageReference Include="SonarAnalyzer.CSharp" Version="9.32.0.97167" PrivateAssets="All" />
+    <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.556" PrivateAssets="All"/>
+    <PackageReference Include="Roslynator.Analyzers" Version="4.12.0" PrivateAssets="All"/>
+    <PackageReference Include="SonarAnalyzer.CSharp" Version="9.32.0.97167" PrivateAssets="All"/>
   </ItemGroup>
 
   <!-- .editorconfig 강제 -->
   <ItemGroup>
-    <AdditionalFiles Include="$(MSBuildThisFileDirectory).editorconfig" />
+    <AdditionalFiles Include="$(MSBuildThisFileDirectory).editorconfig"/>
   </ItemGroup>
 
   <!-- 프레임워크별 조건부 컴파일 심볼 -->

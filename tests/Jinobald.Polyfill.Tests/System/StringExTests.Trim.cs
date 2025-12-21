@@ -8,10 +8,10 @@ public partial class StringExTests
     public void Trim_WithChar_ShouldRemoveFromBothEnds()
     {
         // Arrange
-        var text = "xHello Worldx";
+        string text = "xHello Worldx";
 
         // Act
-        var result = text.Trim('x');
+        string result = text.Trim('x');
 
         // Assert
         Assert.Equal("Hello World", result);
@@ -21,10 +21,10 @@ public partial class StringExTests
     public void Trim_WithChar_NoMatch_ShouldReturnOriginal()
     {
         // Arrange
-        var text = "Hello World";
+        string text = "Hello World";
 
         // Act
-        var result = text.Trim('x');
+        string result = text.Trim('x');
 
         // Assert
         Assert.Equal("Hello World", result);
@@ -34,10 +34,10 @@ public partial class StringExTests
     public void Trim_WithChar_MultipleChars_ShouldRemoveAll()
     {
         // Arrange
-        var text = "xxxHello Worldxxx";
+        string text = "xxxHello Worldxxx";
 
         // Act
-        var result = text.Trim('x');
+        string result = text.Trim('x');
 
         // Assert
         Assert.Equal("Hello World", result);
@@ -47,10 +47,10 @@ public partial class StringExTests
     public void Trim_WithChar_OnlyTrimChar_ShouldReturnEmpty()
     {
         // Arrange
-        var text = "xxxx";
+        string text = "xxxx";
 
         // Act
-        var result = text.Trim('x');
+        string result = text.Trim('x');
 
         // Assert
         Assert.Equal(string.Empty, result);
@@ -60,10 +60,10 @@ public partial class StringExTests
     public void Trim_WithChar_EmptyString_ShouldReturnEmpty()
     {
         // Arrange
-        var text = "";
+        string text = "";
 
         // Act
-        var result = text.Trim('x');
+        string result = text.Trim('x');
 
         // Assert
         Assert.Equal(string.Empty, result);
@@ -73,10 +73,10 @@ public partial class StringExTests
     public void TrimStart_WithChar_ShouldRemoveFromStart()
     {
         // Arrange
-        var text = "xHello Worldx";
+        string text = "xHello Worldx";
 
         // Act
-        var result = text.TrimStart('x');
+        string result = text.TrimStart('x');
 
         // Assert
         Assert.Equal("Hello Worldx", result);
@@ -86,10 +86,10 @@ public partial class StringExTests
     public void TrimStart_WithChar_NoMatch_ShouldReturnOriginal()
     {
         // Arrange
-        var text = "Hello World";
+        string text = "Hello World";
 
         // Act
-        var result = text.TrimStart('x');
+        string result = text.TrimStart('x');
 
         // Assert
         Assert.Equal("Hello World", result);
@@ -99,10 +99,10 @@ public partial class StringExTests
     public void TrimStart_WithChar_MultipleChars_ShouldRemoveAll()
     {
         // Arrange
-        var text = "xxxHello World";
+        string text = "xxxHello World";
 
         // Act
-        var result = text.TrimStart('x');
+        string result = text.TrimStart('x');
 
         // Assert
         Assert.Equal("Hello World", result);
@@ -112,10 +112,10 @@ public partial class StringExTests
     public void TrimStart_WithChar_OnlyTrimChar_ShouldReturnEmpty()
     {
         // Arrange
-        var text = "xxxx";
+        string text = "xxxx";
 
         // Act
-        var result = text.TrimStart('x');
+        string result = text.TrimStart('x');
 
         // Assert
         Assert.Equal(string.Empty, result);
@@ -125,10 +125,10 @@ public partial class StringExTests
     public void TrimStart_WithChar_EmptyString_ShouldReturnEmpty()
     {
         // Arrange
-        var text = "";
+        string text = "";
 
         // Act
-        var result = text.TrimStart('x');
+        string result = text.TrimStart('x');
 
         // Assert
         Assert.Equal(string.Empty, result);
@@ -138,10 +138,10 @@ public partial class StringExTests
     public void TrimEnd_WithChar_ShouldRemoveFromEnd()
     {
         // Arrange
-        var text = "xHello Worldx";
+        string text = "xHello Worldx";
 
         // Act
-        var result = text.TrimEnd('x');
+        string result = text.TrimEnd('x');
 
         // Assert
         Assert.Equal("xHello World", result);
@@ -151,10 +151,10 @@ public partial class StringExTests
     public void TrimEnd_WithChar_NoMatch_ShouldReturnOriginal()
     {
         // Arrange
-        var text = "Hello World";
+        string text = "Hello World";
 
         // Act
-        var result = text.TrimEnd('x');
+        string result = text.TrimEnd('x');
 
         // Assert
         Assert.Equal("Hello World", result);
@@ -164,10 +164,10 @@ public partial class StringExTests
     public void TrimEnd_WithChar_MultipleChars_ShouldRemoveAll()
     {
         // Arrange
-        var text = "Hello Worldxxx";
+        string text = "Hello Worldxxx";
 
         // Act
-        var result = text.TrimEnd('x');
+        string result = text.TrimEnd('x');
 
         // Assert
         Assert.Equal("Hello World", result);
@@ -177,10 +177,10 @@ public partial class StringExTests
     public void TrimEnd_WithChar_OnlyTrimChar_ShouldReturnEmpty()
     {
         // Arrange
-        var text = "xxxx";
+        string text = "xxxx";
 
         // Act
-        var result = text.TrimEnd('x');
+        string result = text.TrimEnd('x');
 
         // Assert
         Assert.Equal(string.Empty, result);
@@ -190,10 +190,10 @@ public partial class StringExTests
     public void TrimEnd_WithChar_EmptyString_ShouldReturnEmpty()
     {
         // Arrange
-        var text = "";
+        string text = "";
 
         // Act
-        var result = text.TrimEnd('x');
+        string result = text.TrimEnd('x');
 
         // Assert
         Assert.Equal(string.Empty, result);
@@ -203,10 +203,10 @@ public partial class StringExTests
     public void Trim_WithChar_WhitespaceNotAffected()
     {
         // Arrange
-        var text = "x Hello World x";
+        string text = "x Hello World x";
 
         // Act
-        var result = text.Trim('x');
+        string result = text.Trim('x');
 
         // Assert
         Assert.Equal(" Hello World ", result);
@@ -216,10 +216,10 @@ public partial class StringExTests
     public void TrimStart_WithChar_WhitespaceNotAffected()
     {
         // Arrange
-        var text = "x Hello World";
+        string text = "x Hello World";
 
         // Act
-        var result = text.TrimStart('x');
+        string result = text.TrimStart('x');
 
         // Assert
         Assert.Equal(" Hello World", result);
@@ -229,10 +229,10 @@ public partial class StringExTests
     public void TrimEnd_WithChar_WhitespaceNotAffected()
     {
         // Arrange
-        var text = "Hello World x";
+        string text = "Hello World x";
 
         // Act
-        var result = text.TrimEnd('x');
+        string result = text.TrimEnd('x');
 
         // Assert
         Assert.Equal("Hello World ", result);

@@ -1,5 +1,4 @@
 #if NET35
-
 namespace System;
 
 using System.Collections.Generic;
