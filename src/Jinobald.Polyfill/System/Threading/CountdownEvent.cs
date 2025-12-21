@@ -83,7 +83,7 @@ public class CountdownEvent : IDisposable
         lock (_lock)
         {
             if (_count < signalCount)
-                throw new InvalidOperationException("CountdownEvent is already at zero");
+                throw new InvalidOperationException("CountdownEvent가 이미 0입니다");
 
             _count -= signalCount;
 
@@ -115,7 +115,7 @@ public class CountdownEvent : IDisposable
         lock (_lock)
         {
             if (IsSet)
-                throw new InvalidOperationException("CountdownEvent is already at zero");
+                throw new InvalidOperationException("CountdownEvent가 이미 0입니다");
 
             _count += signalCount;
         }

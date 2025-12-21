@@ -101,7 +101,7 @@ public readonly ref struct Span<T>
     {
         if (Length > destination.Length)
         {
-            throw new ArgumentException("Destination too short.");
+            throw new ArgumentException("대상이 너무 짧습니다.");
         }
 
         for (int i = 0; i < Length; i++)

@@ -24,7 +24,7 @@ public class SemaphoreSlim : IDisposable
             throw new ArgumentOutOfRangeException(nameof(maxCount));
 
         if (initialCount > maxCount)
-            throw new ArgumentOutOfRangeException(nameof(initialCount), "initialCount must be less than or equal to maxCount");
+            throw new ArgumentOutOfRangeException(nameof(initialCount), "initialCount는 maxCount보다 작거나 같아야 합니다");
 
         _currentCount = initialCount;
         _maxCount = maxCount;
@@ -152,7 +152,7 @@ public class SemaphoreSlim : IDisposable
             int previousCount = _currentCount;
 
             if (_currentCount + releaseCount > _maxCount)
-                throw new SemaphoreFullException("Semaphore is full");
+                throw new SemaphoreFullException("세마포어가 가득 찼습니다");
 
             _currentCount += releaseCount;
 

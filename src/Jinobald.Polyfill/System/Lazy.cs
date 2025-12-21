@@ -69,7 +69,7 @@ namespace System
         {
             if (!this.IsValueCreated)
             {
-                return "Value is not created";
+                return "값이 생성되지 않았습니다";
             }
 
             T val = this.Value;

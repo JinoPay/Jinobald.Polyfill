@@ -12,14 +12,14 @@ internal static partial class StringEx
 #if !NET9_0_OR_GREATER
 
         /// <summary>
-        /// Concatenates the string representations of a span of objects, using the specified separator between each member.
+        /// 지정된 구분 기호를 각 멤버 사이에 사용하여 개체 범위의 문자열 표현을 연결합니다.
         /// </summary>
         //Link: https://learn.microsoft.com/en-us/dotnet/api/system.string.join?view=net-10.0#system-string-join(system-char-system-readonlyspan((system-object)))
         public static string Join(char separator, scoped ReadOnlySpan<object?> values) =>
             Join(separator, values.ToArray());
 
         /// <summary>
-        /// Concatenates a span of strings, using the specified separator between each member.
+        /// 지정된 구분 기호를 각 멤버 사이에 사용하여 문자열 범위를 연결합니다.
         /// </summary>
         //Link: https://learn.microsoft.com/en-us/dotnet/api/system.string.join?view=net-10.0#system-string-join(system-char-system-readonlyspan((system-string)))
         public static string Join(char separator, scoped ReadOnlySpan<string?> values)
@@ -81,7 +81,7 @@ internal static partial class StringEx
         }
 
         /// <summary>
-        /// Concatenates a span of strings, using the specified separator between each member.
+        /// 지정된 구분 기호를 각 멤버 사이에 사용하여 문자열 범위를 연결합니다.
         /// </summary>
         //Link: https://learn.microsoft.com/en-us/dotnet/api/system.string.join?view=net-10.0#system-string-join(system-string-system-readonlyspan((system-string)))
         public static string Join(string? separator, scoped ReadOnlySpan<string?> values)
@@ -153,14 +153,14 @@ internal static partial class StringEx
 
 #if !NETCOREAPP3_0_OR_GREATER
         /// <summary>
-        /// Returns the hash code for the provided read-only character span.
+        /// 제공된 읽기 전용 문자 범위에 대한 해시 코드를 반환합니다.
         /// </summary>
         //Link: https://learn.microsoft.com/en-us/dotnet/api/system.string.gethashcode?view=net-10.0#system-string-gethashcode(system-readonlyspan((system-char)))
         public static int GetHashCode(ReadOnlySpan<char> value) =>
             value.ToString().GetHashCode();
 
         /// <summary>
-        /// Returns the hash code for the provided read-only character span using the specified rules.
+        /// 지정된 규칙을 사용하여 제공된 읽기 전용 문자 범위에 대한 해시 코드를 반환합니다.
         /// </summary>
         //Link: https://learn.microsoft.com/en-us/dotnet/api/system.string.gethashcode?view=net-10.0#system-string-gethashcode(system-readonlyspan((system-char))-system-stringcomparison)
         public static int GetHashCode(ReadOnlySpan<char> value,StringComparison comparisonType)
@@ -180,7 +180,7 @@ internal static partial class StringEx
 
 #if !NET9_0_OR_GREATER && FeatureMemory
         /// <summary>
-        /// Concatenates the string representations of a span of objects, using the specified separator between each member.
+        /// 지정된 구분 기호를 각 멤버 사이에 사용하여 개체 범위의 문자열 표현을 연결합니다.
         /// </summary>
         //Link: https://learn.microsoft.com/en-us/dotnet/api/system.string.join?view=net-10.0#system-string-join(system-string-system-readonlyspan((system-object)))
         public static string Join(string? separator, scoped ReadOnlySpan<object?> values) =>
@@ -190,7 +190,7 @@ internal static partial class StringEx
 #if NETSTANDARD2_0 || NETFRAMEWORK
 
         /// <summary>
-        ///     Concatenates an array of strings, using the specified separator between each member.
+        ///     지정된 구분 기호를 각 멤버 사이에 사용하여 문자열 배열을 연결합니다.
         /// </summary>
         //Link: https://learn.microsoft.com/en-us/dotnet/api/system.string.join?view=net-10.0#system-string-join(system-char-system-string())
         public static string Join(char separator, params string?[] values) =>
@@ -201,7 +201,7 @@ internal static partial class StringEx
 #endif
 
         /// <summary>
-        ///     Concatenates the string representations of an array of objects, using the specified separator between each member.
+        ///     지정된 구분 기호를 각 멤버 사이에 사용하여 개체 배열의 문자열 표현을 연결합니다.
         /// </summary>
         //Link: https://learn.microsoft.com/en-us/dotnet/api/system.string.join?view=net-10.0#system-string-join(system-char-system-object())
         public static string Join(char separator, params object?[] values)
@@ -219,7 +219,7 @@ internal static partial class StringEx
         }
 
         /// <summary>
-        ///     Concatenates the specified elements of a string array, using the specified separator between each element.
+        ///     지정된 구분 기호를 각 요소 사이에 사용하여 문자열 배열의 지정된 요소를 연결합니다.
         /// </summary>
         //Link: https://learn.microsoft.com/en-us/dotnet/api/system.string.join?view=net-10.0#system-string-join(system-char-system-string()-system-int32-system-int32)
         public static string Join(char separator, string?[] value, int startIndex, int count) =>
@@ -230,7 +230,7 @@ internal static partial class StringEx
 #endif
 
         /// <summary>
-        ///     Concatenates the specified elements of a string array, using the specified separator between each element.
+        ///     지정된 구분 기호를 각 요소 사이에 사용하여 문자열 배열의 지정된 요소를 연결합니다.
         /// </summary>
         //Link: https://learn.microsoft.com/en-us/dotnet/api/system.string.join?view=net-10.0#system-string-join-1(system-char-system-collections-generic-ienumerable((-0)))
         public static string Join<T>(char separator, IEnumerable<T> values)
@@ -251,7 +251,7 @@ internal static partial class StringEx
 #if NETFRAMEWORK || NETSTANDARD2_0 || NETCOREAPP2X
 #if FeatureMemory
         /// <summary>
-        /// Creates a new string with a specific length and initializes it after creation by using the specified callback.
+        /// 지정된 길이로 새 문자열을 만들고 지정된 콜백을 사용하여 만든 후 초기화합니다.
         /// </summary>
         //Link: https://learn.microsoft.com/en-us/dotnet/api/system.string.create?view=net-10.0#system-string-create-1(system-int32-0-system-buffers-spanaction((system-char-0)))
         public static string Create<TState>(int length, TState state, System.Buffers.SpanAction<char, TState> action)
@@ -303,7 +303,7 @@ internal static partial class StringEx
 
 #if !NETCOREAPP2_1_OR_GREATER
         /// <summary>
-        ///     Returns a value indicating whether a specified character occurs within this string.
+        ///     지정된 문자가 이 문자열 내에 있는지 여부를 나타내는 값을 반환합니다.
         /// </summary>
         public static bool Contains(string str, char value)
         {
@@ -312,8 +312,7 @@ internal static partial class StringEx
 
 #if !NETCOREAPP3_0_OR_GREATER
         /// <summary>
-        ///     Returns a value indicating whether a specified substring occurs within this string, using the specified comparison
-        ///     rules.
+        ///     지정된 비교 규칙을 사용하여 지정된 부분 문자열이 이 문자열 내에 있는지 여부를 나타내는 값을 반환합니다.
         /// </summary>
         public static bool Contains(string str, string value, StringComparison comparisonType)
         {
@@ -322,8 +321,7 @@ internal static partial class StringEx
 #endif
 
         /// <summary>
-        ///     Returns a value indicating whether a specified character occurs within this string, using the specified comparison
-        ///     rules.
+        ///     지정된 비교 규칙을 사용하여 지정된 문자가 이 문자열 내에 있는지 여부를 나타내는 값을 반환합니다.
         /// </summary>
         public static bool Contains(string str, char value, StringComparison comparisonType)
         {
@@ -333,7 +331,7 @@ internal static partial class StringEx
 
 #if !NETCOREAPP3_0_OR_GREATER
         /// <summary>
-        ///     Determines whether this string instance starts with the specified character.
+        ///     이 문자열 인스턴스가 지정된 문자로 시작하는지 여부를 확인합니다.
         /// </summary>
         public static bool StartsWith(string str, char value)
         {
@@ -341,7 +339,7 @@ internal static partial class StringEx
         }
 
         /// <summary>
-        ///     Determines whether the end of this string instance matches the specified character.
+        ///     이 문자열 인스턴스의 끝이 지정된 문자와 일치하는지 여부를 확인합니다.
         /// </summary>
         public static bool EndsWith(string str, char value)
         {
@@ -349,7 +347,7 @@ internal static partial class StringEx
         }
 
         /// <summary>
-        ///     Returns the hash code for this string using the specified comparison rules.
+        ///     지정된 비교 규칙을 사용하여 이 문자열의 해시 코드를 반환합니다.
         /// </summary>
         public static int GetHashCode(string str, StringComparison comparisonType)
         {
@@ -366,8 +364,7 @@ internal static partial class StringEx
 
 #if !NETCOREAPP2_1_OR_GREATER
         /// <summary>
-        ///     Returns a new string in which all occurrences of a specified string are replaced with another specified string,
-        ///     using the provided comparison type.
+        ///     제공된 비교 형식을 사용하여 지정된 문자열의 모든 항목을 다른 지정된 문자열로 바꾼 새 문자열을 반환합니다.
         /// </summary>
         public static string Replace(string str, string oldValue, string? newValue, StringComparison comparisonType)
         {
@@ -378,7 +375,7 @@ internal static partial class StringEx
 
             if (oldValue.Length == 0)
             {
-                throw new ArgumentException("String cannot be of zero length.", nameof(oldValue));
+                throw new ArgumentException("문자열 길이가 0일 수 없습니다.", nameof(oldValue));
             }
 
             newValue ??= string.Empty;
@@ -399,8 +396,7 @@ internal static partial class StringEx
         }
 
         /// <summary>
-        ///     Returns a new string in which all occurrences of a specified string are replaced with another specified string,
-        ///     using the provided culture and case sensitivity.
+        ///     제공된 문화권 및 대/소문자 구분을 사용하여 지정된 문자열의 모든 항목을 다른 지정된 문자열로 바꾼 새 문자열을 반환합니다.
         /// </summary>
         public static string Replace(string str, string oldValue, string? newValue, bool ignoreCase,
             CultureInfo? culture)
@@ -412,7 +408,7 @@ internal static partial class StringEx
 
             if (oldValue.Length == 0)
             {
-                throw new ArgumentException("String cannot be of zero length.", nameof(oldValue));
+                throw new ArgumentException("문자열 길이가 0일 수 없습니다.", nameof(oldValue));
             }
 
             newValue ??= string.Empty;
@@ -433,7 +429,7 @@ internal static partial class StringEx
 
 #if !NET5_0_OR_GREATER
         /// <summary>
-        ///     Splits a string into substrings based on a specified delimiting character.
+        ///     지정된 구분 문자를 기준으로 문자열을 부분 문자열로 분할합니다.
         /// </summary>
         public static string[] Split(string str, char separator, StringSplitOptions options = StringSplitOptions.None)
         {
@@ -441,7 +437,7 @@ internal static partial class StringEx
         }
 
         /// <summary>
-        ///     Splits a string into a maximum number of substrings based on a specified delimiting character.
+        ///     지정된 구분 문자를 기준으로 문자열을 최대 개수의 부분 문자열로 분할합니다.
         /// </summary>
         public static string[] Split(string str, char separator, int count,
             StringSplitOptions options = StringSplitOptions.None)
@@ -450,7 +446,7 @@ internal static partial class StringEx
         }
 
         /// <summary>
-        ///     Splits a string into substrings based on a specified delimiting string.
+        ///     지정된 구분 문자열을 기준으로 문자열을 부분 문자열로 분할합니다.
         /// </summary>
         public static string[] Split(string str, string? separator,
             StringSplitOptions options = StringSplitOptions.None)
@@ -461,7 +457,7 @@ internal static partial class StringEx
         }
 
         /// <summary>
-        ///     Splits a string into a maximum number of substrings based on a specified delimiting string.
+        ///     지정된 구분 문자열을 기준으로 문자열을 최대 개수의 부분 문자열로 분할합니다.
         /// </summary>
         public static string[] Split(string str, string? separator, int count,
             StringSplitOptions options = StringSplitOptions.None)
@@ -472,7 +468,7 @@ internal static partial class StringEx
         }
 
         /// <summary>
-        ///     Removes all leading and trailing instances of a character from the current string.
+        ///     현재 문자열에서 문자의 모든 선행 및 후행 인스턴스를 제거합니다.
         /// </summary>
         public static string Trim(string str, char trimChar)
         {
@@ -480,7 +476,7 @@ internal static partial class StringEx
         }
 
         /// <summary>
-        ///     Removes all leading instances of a character from the current string.
+        ///     현재 문자열에서 문자의 모든 선행 인스턴스를 제거합니다.
         /// </summary>
         public static string TrimStart(string str, char trimChar)
         {
@@ -488,7 +484,7 @@ internal static partial class StringEx
         }
 
         /// <summary>
-        ///     Removes all trailing instances of a character from the current string.
+        ///     현재 문자열에서 문자의 모든 후행 인스턴스를 제거합니다.
         /// </summary>
         public static string TrimEnd(string str, char trimChar)
         {
@@ -496,7 +492,7 @@ internal static partial class StringEx
         }
 
         /// <summary>
-        ///     Replaces all newline sequences in the current string with Environment.NewLine.
+        ///     현재 문자열의 모든 줄 바꿈 시퀀스를 Environment.NewLine으로 바꿉니다.
         /// </summary>
         public static string ReplaceLineEndings(string str)
         {
@@ -504,7 +500,7 @@ internal static partial class StringEx
         }
 
         /// <summary>
-        ///     Replaces all newline sequences in the current string with the specified replacement text.
+        ///     현재 문자열의 모든 줄 바꿈 시퀀스를 지정된 대체 텍스트로 바꿉니다.
         /// </summary>
         public static string ReplaceLineEndings(string str, string replacementText)
         {
@@ -519,7 +515,7 @@ internal static partial class StringEx
 
 #if NETFRAMEWORK && !NET40_OR_GREATER
         /// <summary>
-        /// Indicates whether a specified string is null, empty, or consists only of white-space characters.
+        /// 지정된 문자열이 null이거나, 비어 있거나, 공백 문자로만 구성되어 있는지 여부를 나타냅니다.
         /// </summary>
         public static bool IsNullOrWhiteSpace(string? value)
         {

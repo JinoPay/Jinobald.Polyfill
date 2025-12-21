@@ -24,7 +24,7 @@ public class AggregateException : Exception
     /// 오류를 설명하는 시스템 제공 메시지로 AggregateException 클래스의 새 인스턴스를 초기화합니다.
     /// </summary>
     public AggregateException()
-        : base("One or more errors occurred.")
+        : base("하나 이상의 오류가 발생했습니다.")
     {
         _innerExceptions = new ReadOnlyCollection<Exception>(new Exception[0]);
     }
@@ -33,7 +33,7 @@ public class AggregateException : Exception
     /// 오류를 설명하는 지정된 메시지로 AggregateException 클래스의 새 인스턴스를 초기화합니다.
     /// </summary>
     public AggregateException(string? message)
-        : base(message ?? "One or more errors occurred.")
+        : base(message ?? "하나 이상의 오류가 발생했습니다.")
     {
         _innerExceptions = new ReadOnlyCollection<Exception>(new Exception[0]);
     }
@@ -42,7 +42,7 @@ public class AggregateException : Exception
     /// 이 예외의 원인인 내부 예외에 대한 참조로 AggregateException 클래스의 새 인스턴스를 초기화합니다.
     /// </summary>
     public AggregateException(params Exception[] innerExceptions)
-        : this("One or more errors occurred.", innerExceptions)
+        : this("하나 이상의 오류가 발생했습니다.", innerExceptions)
     {
     }
 
@@ -50,7 +50,7 @@ public class AggregateException : Exception
     /// 이 예외의 원인인 내부 예외에 대한 참조로 AggregateException 클래스의 새 인스턴스를 초기화합니다.
     /// </summary>
     public AggregateException(IEnumerable<Exception> innerExceptions)
-        : this("One or more errors occurred.", innerExceptions)
+        : this("하나 이상의 오류가 발생했습니다.", innerExceptions)
     {
     }
 
@@ -58,7 +58,7 @@ public class AggregateException : Exception
     /// 지정된 오류 메시지 및 이 예외의 원인인 내부 예외에 대한 참조로 AggregateException 클래스의 새 인스턴스를 초기화합니다.
     /// </summary>
     public AggregateException(string? message, params Exception[] innerExceptions)
-        : base(message ?? "One or more errors occurred.", innerExceptions != null && innerExceptions.Length > 0 ? innerExceptions[0] : null)
+        : base(message ?? "하나 이상의 오류가 발생했습니다.", innerExceptions != null && innerExceptions.Length > 0 ? innerExceptions[0] : null)
     {
         if (innerExceptions == null)
             throw new ArgumentNullException(nameof(innerExceptions));
@@ -67,7 +67,7 @@ public class AggregateException : Exception
         foreach (var exception in innerExceptions)
         {
             if (exception == null)
-                throw new ArgumentException("An element of innerExceptions is null.");
+                throw new ArgumentException("innerExceptions의 요소가 null입니다.");
             exceptions.Add(exception);
         }
 
@@ -86,7 +86,7 @@ public class AggregateException : Exception
     /// 지정된 오류 메시지 및 이 예외의 원인인 내부 예외에 대한 참조로 AggregateException 클래스의 새 인스턴스를 초기화합니다.
     /// </summary>
     public AggregateException(string? message, Exception innerException)
-        : base(message ?? "One or more errors occurred.", innerException)
+        : base(message ?? "하나 이상의 오류가 발생했습니다.", innerException)
     {
         if (innerException == null)
             throw new ArgumentNullException(nameof(innerException));
