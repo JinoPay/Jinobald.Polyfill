@@ -2,45 +2,70 @@
 
 ## 테스트 프로젝트 구조
 
-Jinobald.Polyfill은 두 가지 테스트 접근 방식을 지원합니다:
+Jinobald.Polyfill은 외부 테스트 프로젝트를 사용하며, `InternalsVisibleTo`를 통해 internal 타입에도 접근할 수 있습니다.
 
-### 1. 외부 테스트 프로젝트 (현재 구조)
+### 프로젝트 위치
 
-**위치**: `tests/Jinobald.Polyfill.Tests/`
+**테스트 프로젝트**: `tests/Jinobald.Polyfill.Tests/`
 
-**장점**:
-- 프로덕션 코드와 테스트 코드의 명확한 분리
-- 일반적인 .NET 프로젝트 구조 패턴
-- NuGet 패키지 배포 시 테스트 코드가 포함되지 않음
-- 여러 프레임워크에서 동일한 테스트 실행 가능
+**테스트 파일**: 39개
+**테스트 케이스**: 473개 이상
 
-**사용 시기**:
-- Public API 테스트
-- 통합 테스트
-- 일반적인 기능 테스트
+### 테스트 파일 구조
 
-**접근 가능한 타입**:
-- Public 타입 및 멤버
-- Internal 타입 (AssemblyInfo.cs의 InternalsVisibleTo 덕분)
-
-```csharp
-// tests/Jinobald.Polyfill.Tests/System/StringExTests.cs
-namespace Jinobald.Polyfill.Tests.System
-{
-    public class StringExTests
-    {
-        [Fact]
-        public void IsNullOrWhiteSpace_Should_Return_True_For_Null()
-        {
-            Assert.True(StringEx.IsNullOrWhiteSpace(null));
-        }
-    }
-}
+```
+tests/Jinobald.Polyfill.Tests/
+├── GlobalUsings.cs
+└── System/
+    ├── ActionTests.cs
+    ├── FuncTests.cs
+    ├── HashCodeTests.cs
+    ├── MemoryTests.cs
+    ├── PredicateTests.cs
+    ├── ProgressTests.cs
+    ├── ReadOnlyMemoryTests.cs
+    ├── ReadOnlySpanTests.cs
+    ├── SpanTests.cs
+    ├── TupleTests.cs
+    ├── ValueTupleTests.cs
+    ├── StringExTests.cs
+    ├── StringExTests.Contains.cs
+    ├── StringExTests.Create.cs
+    ├── StringExTests.EndsWith.cs
+    ├── StringExTests.GetHashCode.cs
+    ├── StringExTests.Replace.cs
+    ├── StringExTests.Split.cs
+    ├── StringExTests.StartsWith.cs
+    ├── StringExTests.Trim.cs
+    ├── Linq/
+    │   ├── EnumerableAggregateTests.cs
+    │   ├── EnumerableBasicTests.cs
+    │   ├── EnumerableConversionTests.cs
+    │   ├── EnumerableGroupingTests.cs
+    │   ├── EnumerableJoinTests.cs
+    │   ├── EnumerableSetTests.cs
+    │   └── EnumerableSortingTests.cs
+    ├── Net/Http/
+    │   ├── HttpClientTests.cs
+    │   ├── HttpContentTests.cs
+    │   ├── HttpHeadersTests.cs
+    │   ├── HttpMessageTests.cs
+    │   ├── HttpMethodTests.cs
+    │   └── MultipartContentTests.cs
+    ├── Runtime/CompilerServices/
+    │   ├── CallerInfoTests.cs
+    │   └── CompilerAttributesTests.cs
+    └── Threading/Tasks/
+        ├── ParallelTests.cs
+        ├── TaskTests.cs
+        └── ThreadingUtilitiesTests.cs
 ```
 
-### 2. 내부 테스트 (InternalsVisibleTo 활용)
+---
 
-**설정**: `src/Jinobald.Polyfill/Properties/AssemblyInfo.cs`
+## InternalsVisibleTo 설정
+
+**설정 파일**: `src/Jinobald.Polyfill/Properties/AssemblyInfo.cs`
 
 ```csharp
 using System.Runtime.CompilerServices;
@@ -49,93 +74,13 @@ using System.Runtime.CompilerServices;
 [assembly: InternalsVisibleTo("Jinobald.Polyfill.InternalTests")]
 ```
 
-**테스트 가능한 타입**:
-- `internal class IsExternalInit` - 컴파일러 전용 타입
-- `internal static class InternalHelpers` - 내부 헬퍼 메서드
-- `internal sealed class MemoryManager<T>` - 내부 구현 세부사항
-
-**예제**:
-
-```csharp
-// tests/Jinobald.Polyfill.Tests/System/Runtime/CompilerServices/CompilerAttributesTests.cs
-namespace Jinobald.Polyfill.Tests.System.Runtime.CompilerServices
-{
-    public class CompilerAttributesTests
-    {
-        [Fact]
-        public void IsExternalInit_Should_Exist_Via_Reflection()
-        {
-            // IsExternalInit은 internal이므로 리플렉션으로 접근
-            var assembly = typeof(CompilerAttributesTests).Assembly;
-            var polyfillAssembly = assembly.GetReferencedAssemblies()
-                .Where(a => a.Name.Contains("Jinobald.Polyfill"))
-                .FirstOrDefault();
-
-            if (polyfillAssembly != null)
-            {
-                var asm = Assembly.Load(polyfillAssembly);
-                var type = asm.GetType("System.Runtime.CompilerServices.IsExternalInit");
-                Assert.NotNull(type);
-            }
-        }
-    }
-}
-```
+이 설정으로 테스트 프로젝트에서 internal 타입에 직접 접근할 수 있습니다.
 
 ---
 
-## Internal 타입 테스트 시 권장사항
+## 테스트 접근 방식
 
-### 1. Internal 타입이 필요한 경우
-
-다음과 같은 타입들은 internal로 유지해야 합니다:
-
-- **컴파일러 전용 타입**: `IsExternalInit`, `AsyncMethodBuilder` 등
-- **내부 구현 세부사항**: 사용자가 직접 사용하지 않는 헬퍼 클래스
-- **성능 최적화 타입**: 내부적으로만 사용되는 캐시나 풀
-
-### 2. InternalsVisibleTo를 통한 테스트
-
-**장점**:
-- Internal 타입에 직접 접근 가능
-- 외부 테스트 프로젝트 구조 유지
-- 프로덕션 코드에서 불필요한 public API 노출 방지
-
-**단점**:
-- 리플렉션보다는 낫지만, 여전히 내부 구현에 의존
-- InternalsVisibleTo 설정 필요
-
-### 3. 리플렉션을 통한 테스트
-
-Internal 타입을 리플렉션으로 테스트할 때:
-
-```csharp
-[Fact]
-public void Internal_Type_Should_Exist()
-{
-    var assembly = typeof(SomePublicType).Assembly;
-    var internalType = assembly.GetType("Namespace.InternalType");
-
-    Assert.NotNull(internalType);
-    Assert.False(internalType.IsPublic);
-    Assert.True(internalType.IsNotPublic); // internal or private
-}
-```
-
-**장점**:
-- InternalsVisibleTo 불필요
-- 타입의 존재와 접근성만 검증
-
-**단점**:
-- 타입 안정성 없음
-- 메서드 호출이 복잡함
-- 테스트 유지보수 어려움
-
----
-
-## 테스트 작성 가이드라인
-
-### 1. Public API 우선
+### 1. Public API 테스트 (권장)
 
 가능하면 public API를 통해 테스트하세요:
 
@@ -154,15 +99,17 @@ private string GetCallerMemberName([CallerMemberName] string memberName = null)
 }
 ```
 
-### 2. Internal 타입은 필요한 경우에만
+### 2. Internal 타입 테스트
+
+Internal 타입은 InternalsVisibleTo를 통해 직접 접근하거나 리플렉션을 사용합니다:
 
 ```csharp
-// Acceptable: Internal 타입의 존재 확인
+// Internal 타입 존재 확인 (리플렉션)
 [Fact]
-public void IsExternalInit_Should_Exist_Via_Reflection()
+public void IsExternalInit_Should_Exist()
 {
-    // 리플렉션을 통해 존재만 확인
-    var type = GetInternalType("System.Runtime.CompilerServices.IsExternalInit");
+    var assembly = typeof(SomePublicType).Assembly;
+    var type = assembly.GetType("System.Runtime.CompilerServices.IsExternalInit");
     Assert.NotNull(type);
 }
 ```
@@ -172,11 +119,11 @@ public void IsExternalInit_Should_Exist_Via_Reflection()
 프레임워크별로 다른 테스트:
 
 ```csharp
-#if NET40 || NET35 || NET20
+#if NET35 || NET40
 [Fact]
 public void CallerInfo_Should_Work_In_Old_Framework()
 {
-    // .NET 2.0-4.0에서만 실행되는 테스트
+    // .NET 3.5-4.0에서만 실행되는 테스트
 }
 #else
 [Fact]
@@ -190,15 +137,90 @@ public void CallerInfo_Should_Use_BuiltIn_In_New_Framework()
 
 ---
 
-## 프로젝트별 테스트 권장사항
+## 테스트 영역별 가이드
 
-| 구현 타입 | 접근 수준 | 테스트 방법 | 이유 |
-|----------|----------|-----------|-----|
-| Caller Info Attributes | Public | 외부 테스트 | 사용자가 직접 사용 |
-| IsExternalInit | Internal | 리플렉션 | 컴파일러 전용 |
-| Task/TaskFactory | Public | 외부 테스트 | Public API |
-| Internal Helpers | Internal | InternalsVisibleTo | 복잡한 로직 검증 필요 |
-| Extension Methods | Public | 외부 테스트 | 사용자가 직접 사용 |
+### LINQ 테스트 (7개 파일)
+
+**테스트 파일**:
+- `EnumerableBasicTests.cs` - 기본 연산자 (Where, Select, First 등)
+- `EnumerableConversionTests.cs` - 변환 연산자 (ToArray, ToList 등)
+- `EnumerableSortingTests.cs` - 정렬 연산자 (OrderBy, ThenBy)
+- `EnumerableGroupingTests.cs` - 그룹화 연산자 (GroupBy, ToLookup)
+- `EnumerableJoinTests.cs` - 조인 연산자 (Join, GroupJoin)
+- `EnumerableSetTests.cs` - 집합 연산자 (Union, Intersect, Except)
+- `EnumerableAggregateTests.cs` - 집계 연산자 (Sum, Average, Min, Max)
+
+**테스트 패턴**:
+```csharp
+[Fact]
+public void Where_Should_Filter_Elements()
+{
+    var source = new[] { 1, 2, 3, 4, 5 };
+    var result = source.Where(x => x % 2 == 0).ToArray();
+    Assert.Equal(new[] { 2, 4 }, result);
+}
+
+[Fact]
+public void Where_Should_Throw_On_Null_Source()
+{
+    int[] source = null;
+    Assert.Throws<ArgumentNullException>(() => source.Where(x => true).ToArray());
+}
+```
+
+### HttpClient 테스트 (6개 파일)
+
+**테스트 파일**:
+- `HttpClientTests.cs` - HttpClient 기본 동작
+- `HttpContentTests.cs` - StringContent, ByteArrayContent 등
+- `HttpHeadersTests.cs` - HTTP 헤더 관리
+- `HttpMessageTests.cs` - Request/Response 메시지
+- `HttpMethodTests.cs` - HTTP 메서드
+- `MultipartContentTests.cs` - 멀티파트 콘텐츠
+
+**테스트 패턴**:
+```csharp
+[Fact]
+public void HttpMethod_Get_Should_Be_GET()
+{
+    Assert.Equal("GET", HttpMethod.Get.Method);
+}
+
+[Fact]
+public async Task StringContent_ReadAsStringAsync_Should_Return_Content()
+{
+    var content = new StringContent("test content");
+    var result = await content.ReadAsStringAsync();
+    Assert.Equal("test content", result);
+}
+```
+
+### Threading 테스트 (3개 파일)
+
+**테스트 파일**:
+- `ParallelTests.cs` - Parallel.For, Parallel.ForEach
+- `TaskTests.cs` - Task, Task.Run, Task.WhenAll
+- `ThreadingUtilitiesTests.cs` - CancellationToken, SpinWait 등
+
+**테스트 패턴**:
+```csharp
+[Fact]
+public void ParallelFor_Should_Execute_All_Iterations()
+{
+    var count = 0;
+    Parallel.For(0, 100, i => Interlocked.Increment(ref count));
+    Assert.Equal(100, count);
+}
+
+[Fact]
+public async Task TaskWhenAll_Should_Wait_For_All()
+{
+    var task1 = Task.Run(() => 1);
+    var task2 = Task.Run(() => 2);
+    var results = await Task.WhenAll(task1, task2);
+    Assert.Equal(new[] { 1, 2 }, results);
+}
+```
 
 ---
 
@@ -213,33 +235,54 @@ dotnet test
 ### 특정 프레임워크에서만 실행
 
 ```bash
+dotnet test --framework net8.0
 dotnet test --framework net48
-dotnet test --framework net9.0
+dotnet test --framework net462
 ```
 
 ### 특정 테스트 클래스만 실행
 
 ```bash
-dotnet test --filter "FullyQualifiedName~CompilerAttributesTests"
+dotnet test --filter "FullyQualifiedName~EnumerableBasicTests"
+dotnet test --filter "FullyQualifiedName~HttpClientTests"
 ```
 
-### Internal 테스트만 실행
+### 특정 테스트 메서드만 실행
 
 ```bash
-dotnet test --filter "FullyQualifiedName~Internal"
+dotnet test --filter "FullyQualifiedName~Where_Should_Filter_Elements"
+```
+
+### 코드 커버리지 수집
+
+```bash
+dotnet test --collect:"XPlat Code Coverage"
 ```
 
 ---
 
-## 체크리스트
+## 테스트 작성 체크리스트
 
 새로운 기능 추가 시:
 
-- [ ] Public API는 외부 테스트 프로젝트에 테스트 추가
-- [ ] Internal 타입이 필수인 경우 AssemblyInfo.cs 확인
-- [ ] 조건부 컴파일이 필요한 경우 #if 지시문 사용
+- [ ] 정상 케이스 테스트 작성
+- [ ] 경계값 테스트 작성 (빈 컬렉션, null, 최대/최소값)
+- [ ] 예외 케이스 테스트 작성 (ArgumentNullException 등)
+- [ ] 조건부 컴파일이 필요한 경우 `#if` 지시문 사용
 - [ ] 모든 타겟 프레임워크에서 빌드 및 테스트 성공 확인
 - [ ] XML 문서 주석 추가 (public API만)
+
+---
+
+## 프레임워크별 테스트 타겟
+
+테스트 프로젝트는 다음 프레임워크를 지원합니다:
+
+### .NET Framework
+- NET462, NET47, NET471, NET472, NET48, NET481
+
+### Modern .NET
+- NET6.0, NET7.0, NET8.0, NET9.0, NET10.0
 
 ---
 
@@ -247,6 +290,11 @@ dotnet test --filter "FullyQualifiedName~Internal"
 
 - [InternalsVisibleTo 공식 문서](https://learn.microsoft.com/en-us/dotnet/api/system.runtime.compilerservices.internalsvisibletoattribute)
 - [.NET 테스트 베스트 프랙티스](https://learn.microsoft.com/en-us/dotnet/core/testing/unit-testing-best-practices)
+- [xUnit 문서](https://xunit.net/)
 - [조건부 컴파일](https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/preprocessor-directives)
 
-**마지막 업데이트**: 2025-12-21
+---
+
+**마지막 업데이트**: 2025-12-22
+**테스트 케이스**: 473개+
+**테스트 파일**: 39개
