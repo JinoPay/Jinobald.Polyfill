@@ -1,3 +1,4 @@
+#if NET35 || NET40 || NET45 || NET451 || NET452 || NET46 || NET461 || NET462 || NET47
 namespace System;
 
 /// <summary>
@@ -165,3 +166,4 @@ public struct HashCode
         return GetHashCode();
     }
 }
+#endif

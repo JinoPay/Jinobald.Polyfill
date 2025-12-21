@@ -1,3 +1,4 @@
+#if NET35 || NET40 || NET45 || NET451 || NET452
 namespace System.Runtime.CompilerServices;
 
 /// <summary>
@@ -52,3 +53,4 @@ public static class FormattableStringFactory
         }
     }
 }
+#endif
