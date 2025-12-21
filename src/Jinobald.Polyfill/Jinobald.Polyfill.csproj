@@ -10,6 +10,34 @@
     </PropertyGroup>
 
     <!-- Define conditional compilation symbols based on framework -->
+    <PropertyGroup Condition="'$(TargetFramework)' == 'net35'">
+        <DefineConstants>$(DefineConstants);NET35</DefineConstants>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(TargetFramework)' == 'net40'">
+        <DefineConstants>$(DefineConstants);NET40</DefineConstants>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(TargetFramework)' == 'net45'">
+        <DefineConstants>$(DefineConstants);NET45</DefineConstants>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(TargetFramework)' == 'net451'">
+        <DefineConstants>$(DefineConstants);NET451</DefineConstants>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(TargetFramework)' == 'net452'">
+        <DefineConstants>$(DefineConstants);NET452</DefineConstants>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(TargetFramework)' == 'net46'">
+        <DefineConstants>$(DefineConstants);NET46</DefineConstants>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(TargetFramework)' == 'net461'">
+        <DefineConstants>$(DefineConstants);NET461</DefineConstants>
+    </PropertyGroup>
+
     <PropertyGroup Condition="'$(TargetFramework)' == 'net462' or '$(TargetFramework)' == 'net47' or '$(TargetFramework)' == 'net471' or '$(TargetFramework)' == 'net472' or '$(TargetFramework)' == 'net48' or '$(TargetFramework)' == 'net481'">
         <DefineConstants>$(DefineConstants);FeatureMemory;AllowUnsafeBlocks</DefineConstants>
     </PropertyGroup>
