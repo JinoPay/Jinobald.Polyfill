@@ -9,6 +9,12 @@ Jinobald.Polyfill은 오래된 .NET Framework 버전에서 최신 .NET의 타입
 ## 지원 타겟 프레임워크
 
 - .NET Framework 3.5
+- .NET Framework 4.0
+- .NET Framework 4.5
+- .NET Framework 4.5.1
+- .NET Framework 4.5.2
+- .NET Framework 4.6
+- .NET Framework 4.6.1
 - .NET Framework 4.6.2
 - .NET Framework 4.7.2
 - .NET Framework 4.8
@@ -39,7 +45,14 @@ Jinobald.Polyfill은 오래된 .NET Framework 버전에서 최신 .NET의 타입
 - **StringEx.Implode** - 배열을 문자열로 변환
 - **StringEx.IsNullOrWhiteSpace** - 공백 문자열 검사
 
-### 스레딩
+### 스레딩 (.NET 3.5용)
+- **Task** - 비동기 작업 표현
+- **Task<TResult>** - 결과를 반환하는 비동기 작업
+- **TaskFactory** - Task 생성 및 스케줄링 지원
+- **CancellationToken** - 작업 취소 알림 전파
+- **CancellationTokenSource** - CancellationToken 신호
+- **TaskAwaiter** - async/await 지원 (NET35, NET40)
+- **AsyncTaskMethodBuilder** - async 메서드 빌더 (NET35)
 - **Volatile** - Volatile 읽기/쓰기 작업
 - **InterlockedEx** - Interlocked 확장
 
@@ -59,15 +72,34 @@ dotnet add package Jinobald.Polyfill
 
 ```csharp
 using System;
+using System.Threading;
+using System.Threading.Tasks;
+
+// Task 사용 (.NET 3.5에서도 가능)
+var task = Task.Run(() => {
+    Console.WriteLine("Running in background");
+    return 42;
+});
+Console.WriteLine($"Result: {task.Result}");
+
+// Task.WhenAll 사용
+var task1 = Task.Run(() => 1);
+var task2 = Task.Run(() => 2);
+var task3 = Task.Run(() => 3);
+var results = Task.WhenAll(task1, task2, task3).Result;
+
+// CancellationToken 사용
+var cts = new CancellationTokenSource();
+var cancelableTask = Task.Run(() => {
+    while (!cts.Token.IsCancellationRequested) {
+        Thread.Sleep(100);
+    }
+}, cts.Token);
+cts.CancelAfter(1000);
 
 // ValueTuple 사용 (.NET 3.5에서도 가능)
 var tuple = (Name: "John", Age: 30);
 Console.WriteLine($"{tuple.Name} is {tuple.Age} years old");
-
-// Index와 Range 사용
-var array = new[] { 1, 2, 3, 4, 5 };
-var lastItem = array[^1];  // 5
-var range = array[1..3];   // { 2, 3 }
 
 // StringEx 사용
 var isEmpty = StringEx.IsNullOrWhiteSpace("   ");  // true

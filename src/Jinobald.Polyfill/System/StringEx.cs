@@ -194,8 +194,19 @@ static partial class StringEx
         /// Concatenates the string representations of an array of objects, using the specified separator between each member.
         /// </summary>
         //Link: https://learn.microsoft.com/en-us/dotnet/api/system.string.join?view=net-10.0#system-string-join(system-char-system-object())
-        public static string Join(char separator, params object?[] values) =>
-            string.Join(new string(separator, 1), values);
+        public static string Join(char separator, params object?[] values)
+        {
+#if NET35
+            var stringValues = new string?[values.Length];
+            for (int i = 0; i < values.Length; i++)
+            {
+                stringValues[i] = values[i]?.ToString();
+            }
+            return string.Join(new string(separator, 1), stringValues);
+#else
+            return string.Join(new string(separator, 1), values);
+#endif
+        }
 
         /// <summary>
         /// Concatenates the specified elements of a string array, using the specified separator between each element.
@@ -212,8 +223,19 @@ static partial class StringEx
         /// Concatenates the specified elements of a string array, using the specified separator between each element.
         /// </summary>
         //Link: https://learn.microsoft.com/en-us/dotnet/api/system.string.join?view=net-10.0#system-string-join-1(system-char-system-collections-generic-ienumerable((-0)))
-        public static string Join<T>(char separator, IEnumerable<T> values) =>
-            string.Join(new string(separator, 1), values);
+        public static string Join<T>(char separator, IEnumerable<T> values)
+        {
+#if NET35
+            var list = new List<string?>();
+            foreach (var value in values)
+            {
+                list.Add(value?.ToString());
+            }
+            return string.Join(new string(separator, 1), list.ToArray());
+#else
+            return string.Join(new string(separator, 1), values);
+#endif
+        }
 #endif
 
 #if NETFRAMEWORK || NETSTANDARD2_0 || NETCOREAPP2X
