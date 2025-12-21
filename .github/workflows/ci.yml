@@ -195,6 +195,10 @@ jobs:
     - uses: actions/setup-dotnet@v4
       with:
         dotnet-version: '8.0.x'
+    - name: Enable .NET Framework 3.5
+      run: |
+        Enable-WindowsOptionalFeature -Online -FeatureName NetFx3 -NoRestart
+      shell: pwsh
     - run: dotnet restore
     - run: dotnet build --no-restore --configuration Release --framework net35
     - run: dotnet test --no-build --configuration Release --verbosity normal --framework net35
@@ -207,6 +211,9 @@ jobs:
     - uses: actions/setup-dotnet@v4
       with:
         dotnet-version: '8.0.x'
+    - name: Install .NET Framework 4.0 targeting pack
+      run: choco install netfx-4.0-devpack -y
+      shell: pwsh
     - run: dotnet restore
     - run: dotnet build --no-restore --configuration Release --framework net40
     - run: dotnet test --no-build --configuration Release --verbosity normal --framework net40
@@ -219,6 +226,9 @@ jobs:
     - uses: actions/setup-dotnet@v4
       with:
         dotnet-version: '8.0.x'
+    - name: Install .NET Framework 4.5 targeting pack
+      run: choco install netfx-4.5.2-devpack -y
+      shell: pwsh
     - run: dotnet restore
     - run: dotnet build --no-restore --configuration Release --framework net45
     - run: dotnet test --no-build --configuration Release --verbosity normal --framework net45
