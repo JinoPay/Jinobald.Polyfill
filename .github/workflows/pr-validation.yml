@@ -1,0 +1,322 @@
+name: PR Validation
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    branches: [ main, develop ]
+
+env:
+  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
+  DOTNET_NOLOGO: true
+  DOTNET_CLI_TELEMETRY_OPTOUT: 1
+
+jobs:
+  # PR 기본 검증
+  pr-checks:
+    name: PR Basic Checks
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: Check PR title format
+      uses: amannn/action-semantic-pull-request@v5
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        types: |
+          feat
+          fix
+          docs
+          style
+          refactor
+          perf
+          test
+          build
+          ci
+          chore
+          revert
+        scopes: |
+          core
+          threading
+          linq
+          collections
+          async
+          delegates
+          tuples
+          memory
+          compiler
+          tests
+          ci
+          docs
+
+    - name: Check for merge conflicts
+      run: |
+        git fetch origin ${{ github.base_ref }}
+        if git merge-base --is-ancestor origin/${{ github.base_ref }} HEAD; then
+          echo "No merge conflicts detected"
+        else
+          echo "Branch needs to be rebased"
+          exit 1
+        fi
+
+    - name: Check file changes
+      id: changes
+      uses: dorny/paths-filter@v3
+      with:
+        filters: |
+          source:
+            - 'src/**/*.cs'
+          tests:
+            - 'tests/**/*.cs'
+          docs:
+            - '**.md'
+          ci:
+            - '.github/workflows/**'
+
+    - name: Validate test coverage for source changes
+      if: steps.changes.outputs.source == 'true' && steps.changes.outputs.tests == 'false'
+      run: |
+        echo "::warning::Source code changed but no test changes detected"
+        echo "Please add tests for your changes"
+
+  # 빠른 빌드 검증 (Windows만)
+  quick-build:
+    name: Quick Build Check
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup .NET SDK
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '8.0.x'
+
+    - name: Restore
+      run: dotnet restore
+
+    - name: Build
+      run: dotnet build --configuration Release --no-restore
+
+  # 변경된 프레임워크만 테스트
+  test-changed:
+    name: Test Changed Code
+    runs-on: windows-latest
+    needs: quick-build
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: Setup .NET SDK
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: |
+          6.0.x
+          7.0.x
+          8.0.x
+          9.0.x
+
+    - name: Get changed files
+      id: changed-files
+      uses: tj-actions/changed-files@v44
+      with:
+        files: |
+          src/**/*.cs
+          tests/**/*.cs
+
+    - name: Restore
+      run: dotnet restore
+
+    - name: Run tests with coverage
+      if: steps.changed-files.outputs.any_changed == 'true'
+      run: |
+        dotnet test tests/Jinobald.Polyfill.Tests/Jinobald.Polyfill.Tests.csproj `
+          --configuration Release `
+          --verbosity normal `
+          --logger "trx;LogFileName=pr-test-results.trx" `
+          --collect:"XPlat Code Coverage" `
+          -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover
+
+    - name: Upload test results
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: pr-test-results
+        path: |
+          **/TestResults/*.trx
+          **/TestResults/**/coverage.opencover.xml
+
+  # 코드 스타일 검사
+  code-style:
+    name: Code Style Check
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup .NET SDK
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '8.0.x'
+
+    - name: Restore
+      run: dotnet restore
+
+    - name: Check code formatting
+      run: dotnet format --verify-no-changes --verbosity diagnostic
+
+    - name: Run Roslynator analyzers
+      run: |
+        dotnet tool install -g Roslynator.DotNet.Cli
+        roslynator analyze --severity-level info
+
+  # 문서 검증
+  docs-validation:
+    name: Documentation Validation
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Check for XML documentation
+      shell: bash
+      run: |
+        # 새로운 public API에 XML 문서 주석이 있는지 확인
+        git fetch origin ${{ github.base_ref }}
+
+        CHANGED_CS_FILES=$(git diff --name-only origin/${{ github.base_ref }}...HEAD | grep "\.cs$" || true)
+
+        if [ -n "$CHANGED_CS_FILES" ]; then
+          echo "Checking XML documentation in changed files..."
+
+          MISSING_DOCS=0
+          for file in $CHANGED_CS_FILES; do
+            if [ -f "$file" ]; then
+              # public 클래스/메서드가 있는지 확인하고 /// 주석이 있는지 체크
+              PUBLIC_COUNT=$(grep -c "public " "$file" || true)
+              DOC_COUNT=$(grep -c "/// <summary>" "$file" || true)
+
+              if [ $PUBLIC_COUNT -gt 0 ] && [ $DOC_COUNT -eq 0 ]; then
+                echo "::warning file=$file::Missing XML documentation comments"
+                MISSING_DOCS=1
+              fi
+            fi
+          done
+
+          if [ $MISSING_DOCS -eq 1 ]; then
+            echo "::warning::Some files are missing XML documentation. Please add /// comments to public APIs."
+          fi
+        fi
+
+    - name: Validate markdown links
+      uses: gaurav-nelson/github-action-markdown-link-check@v1
+      with:
+        use-quiet-mode: 'yes'
+        config-file: '.markdown-link-check.json'
+
+  # PR 라벨 자동 추가
+  auto-label:
+    name: Auto Label PR
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Auto label based on files
+      uses: actions/labeler@v5
+      with:
+        repo-token: ${{ secrets.GITHUB_TOKEN }}
+        configuration-path: .github/labeler.yml
+
+  # PR 크기 체크
+  pr-size-check:
+    name: PR Size Check
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Check PR size
+      uses: actions/github-script@v7
+      with:
+        script: |
+          const pr = context.payload.pull_request;
+          const additions = pr.additions;
+          const deletions = pr.deletions;
+          const changedFiles = pr.changed_files;
+
+          let size = 'small';
+          let label = 'size/S';
+
+          if (additions + deletions > 1000 || changedFiles > 30) {
+            size = 'large';
+            label = 'size/L';
+
+            core.warning(`This PR is quite large (${additions + deletions} lines, ${changedFiles} files). Consider breaking it into smaller PRs.`);
+          } else if (additions + deletions > 500 || changedFiles > 15) {
+            size = 'medium';
+            label = 'size/M';
+          }
+
+          // Add size label
+          await github.rest.issues.addLabels({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            issue_number: pr.number,
+            labels: [label]
+          });
+
+          core.info(`PR size: ${size} (${additions + deletions} lines, ${changedFiles} files)`);
+
+  # 성공 요약
+  pr-summary:
+    name: PR Validation Summary
+    runs-on: ubuntu-latest
+    needs: [pr-checks, quick-build, test-changed, code-style, docs-validation]
+    if: always()
+
+    steps:
+    - name: Check all jobs
+      uses: actions/github-script@v7
+      with:
+        script: |
+          const jobs = [
+            { name: 'PR Checks', result: '${{ needs.pr-checks.result }}' },
+            { name: 'Quick Build', result: '${{ needs.quick-build.result }}' },
+            { name: 'Tests', result: '${{ needs.test-changed.result }}' },
+            { name: 'Code Style', result: '${{ needs.code-style.result }}' },
+            { name: 'Docs', result: '${{ needs.docs-validation.result }}' }
+          ];
+
+          const failed = jobs.filter(j => j.result === 'failure');
+          const skipped = jobs.filter(j => j.result === 'skipped');
+          const success = jobs.filter(j => j.result === 'success');
+
+          let summary = '## PR Validation Summary\n\n';
+          summary += `✅ Passed: ${success.length}\n`;
+          summary += `⏭️ Skipped: ${skipped.length}\n`;
+          summary += `❌ Failed: ${failed.length}\n\n`;
+
+          if (failed.length > 0) {
+            summary += '### Failed Jobs\n';
+            failed.forEach(j => {
+              summary += `- ❌ ${j.name}\n`;
+            });
+            core.setFailed('Some validation jobs failed');
+          } else {
+            summary += '### ✨ All validation checks passed!\n';
+          }
+
+          core.summary.addRaw(summary);
+          await core.summary.write();

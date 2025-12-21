@@ -1,0 +1,258 @@
+name: Release and Publish
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to release (e.g., 1.0.0)'
+        required: true
+        type: string
+
+env:
+  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
+  DOTNET_NOLOGO: true
+  DOTNET_CLI_TELEMETRY_OPTOUT: 1
+
+jobs:
+  # 릴리스 빌드 및 패키징
+  release-build:
+    name: Release Build
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: Setup .NET SDK
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: |
+          3.5.x
+          6.0.x
+          7.0.x
+          8.0.x
+          9.0.x
+
+    - name: Setup MSBuild
+      uses: microsoft/setup-msbuild@v2
+
+    - name: Determine version
+      id: version
+      shell: pwsh
+      run: |
+        if ("${{ github.event.inputs.version }}" -ne "") {
+          $version = "${{ github.event.inputs.version }}"
+        } else {
+          $version = "${{ github.ref_name }}".TrimStart('v')
+        }
+        echo "VERSION=$version" >> $env:GITHUB_OUTPUT
+        echo "Release version: $version"
+
+    - name: Update version in csproj
+      shell: pwsh
+      run: |
+        $version = "${{ steps.version.outputs.VERSION }}"
+        $csprojPath = "src/Jinobald.Polyfill/Jinobald.Polyfill.csproj"
+
+        [xml]$csproj = Get-Content $csprojPath
+        $csproj.Project.PropertyGroup[0].Version = $version
+        $csproj.Save($csprojPath)
+
+        Write-Host "Updated version to $version in $csprojPath"
+
+    - name: Restore dependencies
+      run: dotnet restore
+
+    - name: Build all frameworks
+      run: dotnet build --configuration Release --no-restore
+
+    - name: Run all tests
+      run: dotnet test --configuration Release --no-build --verbosity normal
+
+    - name: Pack NuGet packages
+      run: |
+        dotnet pack src/Jinobald.Polyfill/Jinobald.Polyfill.csproj `
+          --configuration Release `
+          --no-build `
+          --output ./nupkg `
+          /p:PackageVersion=${{ steps.version.outputs.VERSION }} `
+          /p:IncludeSymbols=true `
+          /p:SymbolPackageFormat=snupkg
+
+    - name: Upload packages as artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: nuget-packages
+        path: ./nupkg/*.nupkg
+
+    - name: Upload symbols as artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: symbol-packages
+        path: ./nupkg/*.snupkg
+
+  # NuGet.org에 퍼블리시
+  publish-nuget:
+    name: Publish to NuGet.org
+    runs-on: ubuntu-latest
+    needs: release-build
+    environment: production
+
+    steps:
+    - name: Download packages
+      uses: actions/download-artifact@v4
+      with:
+        name: nuget-packages
+        path: ./nupkg
+
+    - name: Download symbols
+      uses: actions/download-artifact@v4
+      with:
+        name: symbol-packages
+        path: ./nupkg
+
+    - name: Setup .NET SDK
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '8.0.x'
+
+    - name: Publish to NuGet.org
+      run: |
+        dotnet nuget push ./nupkg/*.nupkg \
+          --api-key ${{ secrets.NUGET_API_KEY }} \
+          --source https://api.nuget.org/v3/index.json \
+          --skip-duplicate
+
+    - name: Publish symbols to NuGet.org
+      run: |
+        dotnet nuget push ./nupkg/*.snupkg \
+          --api-key ${{ secrets.NUGET_API_KEY }} \
+          --source https://api.nuget.org/v3/index.json \
+          --skip-duplicate
+
+  # GitHub Packages에도 퍼블리시
+  publish-github:
+    name: Publish to GitHub Packages
+    runs-on: ubuntu-latest
+    needs: release-build
+    permissions:
+      packages: write
+
+    steps:
+    - name: Download packages
+      uses: actions/download-artifact@v4
+      with:
+        name: nuget-packages
+        path: ./nupkg
+
+    - name: Setup .NET SDK
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '8.0.x'
+
+    - name: Publish to GitHub Packages
+      run: |
+        dotnet nuget push ./nupkg/*.nupkg \
+          --api-key ${{ secrets.GITHUB_TOKEN }} \
+          --source "https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json" \
+          --skip-duplicate
+
+  # GitHub Release 생성
+  create-release:
+    name: Create GitHub Release
+    runs-on: ubuntu-latest
+    needs: [publish-nuget, publish-github]
+    permissions:
+      contents: write
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: Download packages
+      uses: actions/download-artifact@v4
+      with:
+        name: nuget-packages
+        path: ./nupkg
+
+    - name: Determine version
+      id: version
+      shell: bash
+      run: |
+        if [ -n "${{ github.event.inputs.version }}" ]; then
+          VERSION="${{ github.event.inputs.version }}"
+        else
+          VERSION="${GITHUB_REF_NAME#v}"
+        fi
+        echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
+        echo "TAG=v$VERSION" >> $GITHUB_OUTPUT
+
+    - name: Generate release notes
+      id: release_notes
+      shell: bash
+      run: |
+        # CHANGELOG.md에서 현재 버전의 변경사항 추출
+        VERSION="${{ steps.version.outputs.VERSION }}"
+
+        if [ -f "CHANGELOG.md" ]; then
+          # CHANGELOG에서 해당 버전 섹션 추출
+          awk "/## \[${VERSION}\]/,/## \[/" CHANGELOG.md | grep -v "^## \[" > release_notes.md
+        else
+          echo "Release $VERSION" > release_notes.md
+        fi
+
+        # 아티팩트 정보 추가
+        echo "" >> release_notes.md
+        echo "## Packages" >> release_notes.md
+        echo "" >> release_notes.md
+        echo "### NuGet Package" >> release_notes.md
+        echo '```' >> release_notes.md
+        echo "dotnet add package Jinobald.Polyfill --version $VERSION" >> release_notes.md
+        echo '```' >> release_notes.md
+        echo "" >> release_notes.md
+        echo "### Supported Frameworks" >> release_notes.md
+        echo "- .NET Framework 3.5 - 4.8.1" >> release_notes.md
+        echo "- .NET 6.0 - 10.0" >> release_notes.md
+
+    - name: Create GitHub Release
+      uses: softprops/action-gh-release@v2
+      with:
+        tag_name: ${{ steps.version.outputs.TAG }}
+        name: Release ${{ steps.version.outputs.VERSION }}
+        body_path: release_notes.md
+        draft: false
+        prerelease: false
+        files: |
+          ./nupkg/*.nupkg
+          ./nupkg/*.snupkg
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  # 릴리스 성공 알림
+  notify:
+    name: Notify Release Success
+    runs-on: ubuntu-latest
+    needs: [create-release]
+    if: success()
+
+    steps:
+    - name: Send success notification
+      run: |
+        echo "Release published successfully!"
+        echo "Version: ${{ needs.create-release.outputs.VERSION }}"
+        echo "NuGet: https://www.nuget.org/packages/Jinobald.Polyfill"
+
+    # Slack/Discord/Email 알림 추가 가능
+    # - name: Slack Notification
+    #   uses: 8398a7/action-slack@v3
+    #   with:
+    #     status: ${{ job.status }}
+    #     text: 'Jinobald.Polyfill ${{ steps.version.outputs.VERSION }} released!'
+    #     webhook_url: ${{ secrets.SLACK_WEBHOOK }}
