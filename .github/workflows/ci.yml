@@ -224,20 +224,10 @@ jobs:
   #   - run: dotnet build --no-restore --configuration Release --framework net45
   #   - run: dotnet test --no-build --configuration Release --verbosity normal --framework net45
 
-  # Windows - .NET Framework 4.5.1
-  # NET46 is skipped due to targeting pack issues on GitHub Actions
-  # Testing NET451 instead which is close and has better CI support
-  test-windows-net451:
-    runs-on: windows-latest
-    steps:
-    - uses: actions/checkout@v4
-    - uses: actions/setup-dotnet@v4
-      with:
-        dotnet-version: '8.0.x'
-    - run: choco install netfx-4.5.2-devpack -y
-    - run: dotnet restore
-    - run: dotnet build --no-restore --configuration Release --framework net451
-    - run: dotnet test --no-build --configuration Release --verbosity normal --framework net451
+  # Windows - .NET Framework 4.5.1, 4.5.2, 4.6, 4.6.1
+  # These are skipped in CI as GitHub Actions runners don't have reliable targeting packs
+  # The library still supports these frameworks - they must be tested locally
+  # Earliest testable .NET Framework version in CI is 4.6.2
 
   # Windows - .NET Framework 4.6.2
   test-windows-net462:
