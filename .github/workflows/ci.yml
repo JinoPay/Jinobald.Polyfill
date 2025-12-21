@@ -7,7 +7,8 @@ on:
     branches: [ main ]
 
 jobs:
-  build-and-test:
+  # .NET Core/Modern .NET (Linux, macOS, Windows)
+  test-modern-dotnet:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -25,26 +26,87 @@ jobs:
           7.0.x
           ${{ matrix.dotnet-version }}
 
-    - name: Install .NET Framework targeting packs (Windows)
-      if: runner.os == 'Windows'
-      shell: pwsh
-      run: |
-        # .NET Framework 3.5는 Windows에 기본 포함
-        # .NET Framework 4.x targeting packs 설치
-        choco install netfx-4.6.2-devpack -y
-        choco install netfx-4.7.2-devpack -y
-        choco install netfx-4.8.1-devpack -y
-
     - name: Restore dependencies
       run: dotnet restore
 
     - name: Build
       run: dotnet build --no-restore --configuration Release
 
-    - name: Test (Windows - All Frameworks)
-      if: runner.os == 'Windows'
-      run: dotnet test --no-build --configuration Release --verbosity normal
-
-    - name: Test (Linux/macOS - .NET Core only)
-      if: runner.os != 'Windows'
+    - name: Test
       run: dotnet test --no-build --configuration Release --verbosity normal --framework net${{ matrix.dotnet-version == '8.0.x' && '8.0' || matrix.dotnet-version == '9.0.x' && '9.0' || '10.0' }}
+
+  # .NET Framework 3.5 (Windows only)
+  test-net35:
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: |
+          6.0.x
+          7.0.x
+          8.0.x
+
+    - name: Restore dependencies
+      run: dotnet restore
+
+    - name: Build .NET 3.5
+      run: dotnet build --no-restore --configuration Release --framework net35
+
+    - name: Test .NET 3.5
+      run: dotnet test --no-build --configuration Release --verbosity normal --framework net35
+
+  # .NET Framework 4.0 (Windows only)
+  test-net40:
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: |
+          6.0.x
+          7.0.x
+          8.0.x
+
+    - name: Restore dependencies
+      run: dotnet restore
+
+    - name: Build .NET 4.0
+      run: dotnet build --no-restore --configuration Release --framework net40
+
+    - name: Test .NET 4.0
+      run: dotnet test --no-build --configuration Release --verbosity normal --framework net40
+
+  # .NET Framework 4.6 (Windows only)
+  test-net46:
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: |
+          6.0.x
+          7.0.x
+          8.0.x
+
+    - name: Install .NET Framework 4.6.2 targeting pack
+      shell: pwsh
+      run: choco install netfx-4.6.2-devpack -y
+
+    - name: Restore dependencies
+      run: dotnet restore
+
+    - name: Build .NET 4.6
+      run: dotnet build --no-restore --configuration Release --framework net46
+
+    - name: Test .NET 4.6
+      run: dotnet test --no-build --configuration Release --verbosity normal --framework net46
