@@ -146,7 +146,7 @@ public class CancellationTokenSource : IDisposable
         if (_cancellationRequested)
         {
             callback();
-            return new CancellationTokenRegistration();
+            return default;
         }
 
         lock (_lock)

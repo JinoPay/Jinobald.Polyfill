@@ -235,14 +235,14 @@ public class ThreadingUtilitiesTests
     [Fact]
     public void SpinWait_Count_StartsAtZero()
     {
-        var spinner = new SpinWait();
+        SpinWait spinner = default;
         Assert.Equal(0, spinner.Count);
     }
 
     [Fact]
     public void SpinWait_SpinOnce_IncrementsCount()
     {
-        var spinner = new SpinWait();
+        SpinWait spinner = default;
         spinner.SpinOnce();
         Assert.Equal(1, spinner.Count);
         spinner.SpinOnce();
@@ -252,7 +252,7 @@ public class ThreadingUtilitiesTests
     [Fact]
     public void SpinWait_Reset_ResetsCount()
     {
-        var spinner = new SpinWait();
+        SpinWait spinner = default;
         spinner.SpinOnce();
         spinner.SpinOnce();
         Assert.Equal(2, spinner.Count);
@@ -264,14 +264,14 @@ public class ThreadingUtilitiesTests
     [Fact]
     public void SpinWait_NextSpinWillYield_FalseInitially()
     {
-        var spinner = new SpinWait();
+        SpinWait spinner = default;
         Assert.False(spinner.NextSpinWillYield);
     }
 
     [Fact]
     public void SpinWait_NextSpinWillYield_TrueAfterThreshold()
     {
-        var spinner = new SpinWait();
+        SpinWait spinner = default;
         for (int i = 0; i < 10; i++)
         {
             spinner.SpinOnce();

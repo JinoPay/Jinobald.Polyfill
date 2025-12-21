@@ -43,9 +43,10 @@
     <PackageReference Include="SonarAnalyzer.CSharp" Version="9.32.0.97167" PrivateAssets="All"/>
   </ItemGroup>
 
-  <!-- .editorconfig 강제 -->
+  <!-- .editorconfig 및 stylecop.json 강제 -->
   <ItemGroup>
     <AdditionalFiles Include="$(MSBuildThisFileDirectory).editorconfig"/>
+    <AdditionalFiles Include="$(MSBuildThisFileDirectory)stylecop.json"/>
   </ItemGroup>
 
   <!-- 프레임워크별 조건부 컴파일 심볼 -->

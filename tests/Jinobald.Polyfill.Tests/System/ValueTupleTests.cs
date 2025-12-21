@@ -1,20 +1,25 @@
 // Jinobald.Polyfill - ValueTuple 테스트
 // ValueTuple 구조체에 대한 단위 테스트
 
+#if !NET462
 using System.Runtime.CompilerServices;
+#endif
 using Xunit;
 
 namespace Jinobald.Polyfill.Tests.System;
 
 public class ValueTupleTests
 {
+#if !NET462
     [Fact]
     public void ValueTuple_Create_OneTuple()
     {
         var tuple = ValueTuple.Create(42);
         Assert.Equal(42, tuple.Item1);
     }
+#endif
 
+#if !NET462
     [Fact]
     public void ValueTuple_Create_TwoTuple()
     {
@@ -104,7 +109,9 @@ public class ValueTupleTests
         Assert.Equal(7, tuple.Item7);
         Assert.Equal(8, tuple.Rest.Item1);
     }
+#endif
 
+#if !NET462 && !NET47
     [Fact]
     public void ValueTuple_ITuple_Length_IsCorrect()
     {
@@ -123,7 +130,9 @@ public class ValueTupleTests
         Assert.Equal("b", iTuple[1]);
         Assert.Equal("c", iTuple[2]);
     }
+#endif
 
+#if !NET462
     [Fact]
     public void ValueTuple_WithNullValues_HandlesCorrectly()
     {
@@ -142,4 +151,5 @@ public class ValueTupleTests
         Assert.Equal(2, outer.Item1.Item2);
         Assert.Equal(3, outer.Item2);
     }
+#endif
 }

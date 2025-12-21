@@ -30,7 +30,7 @@ public struct AsyncTaskMethodBuilder
     /// </summary>
     public static AsyncTaskMethodBuilder Create()
     {
-        return new AsyncTaskMethodBuilder();
+        return default;
     }
 
     /// <summary>
@@ -119,7 +119,7 @@ public struct AsyncTaskMethodBuilder<TResult>
     /// </summary>
     public static AsyncTaskMethodBuilder<TResult> Create()
     {
-        return new AsyncTaskMethodBuilder<TResult>();
+        return default;
     }
 
     /// <summary>

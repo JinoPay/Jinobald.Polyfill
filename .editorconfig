@@ -230,3 +230,42 @@ dotnet_naming_style.begins_with_i.required_prefix = I
 dotnet_naming_style.begins_with_i.required_suffix =
 dotnet_naming_style.begins_with_i.word_separator =
 dotnet_naming_style.begins_with_i.capitalization = pascal_case
+
+#### Polyfill 라이브러리에서 정당하게 억제해야 하는 규칙 ####
+
+# SA1141: Use tuple syntax instead of ValueTuple
+# .NET 3.5/4.0에서는 C# 7.0 튜플 구문을 사용할 수 없으므로 ValueTuple 직접 사용 필요
+dotnet_diagnostic.SA1141.severity = none
+
+# CS0436: Type conflicts with imported type
+# Polyfill 라이브러리 특성상 System.* 타입을 재정의하므로 충돌은 의도된 것
+dotnet_diagnostic.CS0436.severity = none
+
+# S3261: Namespaces should not be empty
+# 조건부 컴파일로 인해 특정 프레임워크에서 빈 namespace가 발생할 수 있음
+dotnet_diagnostic.S3261.severity = none
+
+#### 현대 C# 코딩 스타일에 맞게 비활성화하는 규칙 ####
+
+# SA1101: Prefix local calls with this
+# Microsoft .NET Runtime, ASP.NET Core 등 현대 C# 프로젝트에서는 this. 접두사를 사용하지 않음
+dotnet_diagnostic.SA1101.severity = none
+
+# SX1101: Do not prefix local calls with this (Roslynator counterpart)
+dotnet_diagnostic.SX1101.severity = none
+
+# SA1122: Use string.Empty for empty strings
+# 현대 C#에서는 "" 리터럴과 string.Empty 모두 허용됨 (컴파일러가 동일하게 최적화)
+dotnet_diagnostic.SA1122.severity = none
+
+# SA1309: Field names should not begin with underscore
+# 현대 C# 스타일에서는 private 필드에 underscore prefix 사용이 권장됨
+dotnet_diagnostic.SA1309.severity = none
+
+# SA1633: File should have header
+# 파일 헤더는 stylecop.json에서 xmlHeader=false로 설정하여 비활성화
+dotnet_diagnostic.SA1633.severity = none
+
+# SA1124: Do not use regions
+# LINQ 등 대규모 API 파일에서 가독성을 위해 region 사용 허용
+dotnet_diagnostic.SA1124.severity = none
