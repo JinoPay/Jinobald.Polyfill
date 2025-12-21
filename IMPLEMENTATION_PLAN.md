@@ -734,6 +734,187 @@
 
 ---
 
+### **워크스페이스 16-A: HttpClient & HTTP 관련 (추가)**
+**목표**: HttpClient 및 HTTP 관련 폴리필
+
+**타겟 프레임워크**: NET35, NET40, NET45
+
+**구현 항목**:
+1. **System.Net.Http/HttpClient.cs**
+   - `HttpClient` 클래스 - NET35+
+   - 비동기 HTTP 요청 지원
+   - GET, POST, PUT, DELETE 메서드
+   - 헤더 및 콘텐츠 관리
+
+2. **System.Net.Http/HttpRequestMessage.cs**
+   - `HttpRequestMessage` - 요청 메시지
+   - Method, RequestUri, Headers, Content
+
+3. **System.Net.Http/HttpResponseMessage.cs**
+   - `HttpResponseMessage` - 응답 메시지
+   - StatusCode, Headers, Content
+   - EnsureSuccessStatusCode()
+
+4. **System.Net.Http/HttpContent.cs**
+   - `HttpContent` 추상 클래스
+   - `StringContent`, `ByteArrayContent`
+   - `FormUrlEncodedContent`, `StreamContent`
+   - `MultipartFormDataContent`
+
+5. **System.Net.Http/HttpMethod.cs**
+   - `HttpMethod` 클래스 (GET, POST, PUT, DELETE 등)
+
+6. **System.Net.Http.Headers/HttpHeaders.cs**
+   - `HttpHeaders` 기본 클래스
+   - `HttpRequestHeaders`, `HttpResponseHeaders`
+   - `HttpContentHeaders`
+
+**테스트 파일**:
+- `tests/Jinobald.Polyfill.Tests/System/Net/Http/HttpClientTests.cs`
+- `tests/Jinobald.Polyfill.Tests/System/Net/Http/HttpContentTests.cs`
+- `tests/Jinobald.Polyfill.Tests/System/Net/Http/HttpMessageTests.cs`
+
+**테스트 범위**:
+- GET/POST 요청 테스트 (모의 서버)
+- 비동기 요청 처리
+- 헤더 관리
+- 콘텐츠 직렬화/역직렬화
+- 에러 처리 및 타임아웃
+
+**예상 작업량**: 🔴 대형
+
+**난이도**: 🔴 상
+
+**참고**: .NET 3.5/4.0에서는 WebRequest를 기반으로 구현
+
+---
+
+### **워크스페이스 16-B: JSON 직렬화 (추가)**
+**목표**: JSON 직렬화/역직렬화 지원
+
+**타겟 프레임워크**: NET20, NET35, NET40
+
+**구현 항목**:
+1. **System.Text.Json/JsonSerializer.cs**
+   - `JsonSerializer` 정적 클래스 - NET20+
+   - Serialize<T>() 메서드
+   - Deserialize<T>() 메서드
+   - SerializeAsync/DeserializeAsync
+
+2. **System.Text.Json/JsonSerializerOptions.cs**
+   - `JsonSerializerOptions` - 직렬화 옵션
+   - PropertyNamingPolicy (camelCase 등)
+   - WriteIndented (포맷팅)
+   - DefaultIgnoreCondition
+
+3. **System.Text.Json.Serialization/JsonPropertyNameAttribute.cs**
+   - 프로퍼티 이름 매핑
+
+4. **System.Text.Json.Serialization/JsonIgnoreAttribute.cs**
+   - 프로퍼티 무시
+
+**테스트 파일**:
+- `tests/Jinobald.Polyfill.Tests/System/Text/Json/JsonSerializerTests.cs`
+- `tests/Jinobald.Polyfill.Tests/System/Text/Json/JsonSerializerOptionsTests.cs`
+
+**테스트 범위**:
+- 기본 타입 직렬화/역직렬화
+- 복잡한 객체 그래프
+- 컬렉션 및 배열
+- 커스텀 네이밍 정책
+- Null 처리
+
+**예상 작업량**: 🔴 대형
+
+**난이도**: 🔴 상
+
+**참고**:
+- .NET 2.0-4.5용은 간단한 JSON 파서 직접 구현 또는 Newtonsoft.Json 래퍼
+- System.Text.Json API와 호환되는 인터페이스 제공
+
+---
+
+### **워크스페이스 16-C: 추가 유틸리티 타입 (추가)**
+**목표**: 자주 사용되는 유틸리티 타입들
+
+**타겟 프레임워크**: NET35, NET40, NET45
+
+**구현 항목**:
+1. **System/DateOnly.cs**
+   - `DateOnly` struct - NET45+
+   - 날짜만 표현 (시간 없음)
+   - Parse, TryParse, ToString
+
+2. **System/TimeOnly.cs**
+   - `TimeOnly` struct - NET45+
+   - 시간만 표현 (날짜 없음)
+
+3. **System/Half.cs**
+   - `Half` struct (16비트 부동소수점) - NET45+
+   - IEEE 754 표준
+
+4. **System.Diagnostics/UnreachableException.cs**
+   - `UnreachableException` - NET47+
+   - 도달할 수 없는 코드 표시
+
+5. **System.Diagnostics.CodeAnalysis/NotNullWhenAttribute.cs**
+   - Nullable 참조 타입 분석 속성들
+   - `MaybeNullAttribute`, `NotNullAttribute`
+   - `MemberNotNullAttribute`, `DoesNotReturnAttribute`
+
+6. **System/Environment.ProcessPath.cs**
+   - `Environment.ProcessPath` 프로퍼티 - NET47+
+
+**테스트 파일**:
+- `tests/Jinobald.Polyfill.Tests/System/DateOnlyTests.cs`
+- `tests/Jinobald.Polyfill.Tests/System/TimeOnlyTests.cs`
+- `tests/Jinobald.Polyfill.Tests/System/HalfTests.cs`
+
+**테스트 범위**:
+- DateOnly/TimeOnly 연산
+- Half 정밀도 테스트
+- 속성 존재 확인
+
+**예상 작업량**: 🟡 중형
+
+**난이도**: 🟡 중
+
+---
+
+### **워크스페이스 16-D: 추가 LINQ 메서드 (.NET 6+)**
+**목표**: 최신 .NET의 LINQ 메서드들
+
+**타겟 프레임워크**: NET45, NET46, NET47, NET48
+
+**구현 항목**:
+1. **System.Linq/Enumerable.cs** (최신 메서드)
+   - `Chunk<T>()` - 청크로 분할 (.NET 6+)
+   - `DistinctBy<T, TKey>()` - 키 기반 중복 제거 (.NET 6+)
+   - `ExceptBy<T, TKey>()` - 키 기반 차집합 (.NET 6+)
+   - `IntersectBy<T, TKey>()` - 키 기반 교집합 (.NET 6+)
+   - `UnionBy<T, TKey>()` - 키 기반 합집합 (.NET 6+)
+   - `MinBy<T, TKey>()`, `MaxBy<T, TKey>()` - 키 기반 최소/최대 (.NET 6+)
+   - `Index<T>()` - 인덱스와 함께 열거 (.NET 9+)
+   - `CountBy<T, TKey>()` - 키별 개수 (.NET 9+)
+   - `AggregateBy<T, TKey>()` - 키별 집계 (.NET 9+)
+
+2. **System.Linq/Queryable.cs** (최신 메서드)
+   - 위 메서드들의 IQueryable 버전
+
+**테스트 파일**:
+- `tests/Jinobald.Polyfill.Tests/System/Linq/EnumerableModernTests.cs`
+
+**테스트 범위**:
+- 각 메서드 기본 동작
+- 키 선택자 동작
+- 빈 시퀀스 처리
+
+**예상 작업량**: 🟡 중형
+
+**난이도**: 🟡 중
+
+---
+
 ### **워크스페이스 17: 프로젝트 구성 & 빌드 설정**
 **목표**: 타겟 프레임워크 추가 및 조건부 컴파일
 
@@ -752,6 +933,10 @@
      ```
    - NuGet 패키지 참조 조건 설정
    - LangVersion 설정 (프레임워크별)
+
+1-1. **AssemblyInfo.cs 추가**
+   - `InternalsVisibleTo` 속성 추가하여 테스트 프로젝트가 internal 타입에 접근 가능하도록 설정
+   - 외부 테스트 프로젝트와 내부 테스트 모두 지원
 
 2. **Global.cs** (또는 유사 파일)
    - 전역 using 정의 (NET6.0+)
@@ -831,12 +1016,13 @@
 ### **Phase 1: 기초 인프라 (병렬 실행 가능)**
 가장 먼저 시작해야 하며, 다른 작업의 기반이 됩니다.
 
-- ✅ **워크스페이스 17**: 프로젝트 구성 & 빌드 설정 (가장 먼저 실행)
+- ✅ **워크스페이스 17**: 프로젝트 구성 & 빌드 설정 (가장 먼저 실행, AssemblyInfo 포함)
 - ✅ **워크스페이스 1**: 델리게이트 패밀리 (LINQ 등에 필요)
 - ✅ **워크스페이스 2**: Tuple & ValueTuple (독립적)
-- ✅ **워크스페이스 7**: Caller Info & Compiler Attributes (독립적)
+- ✅ **워크스페이스 7**: Caller Info & Compiler Attributes (독립적) ✅ **완료**
 
-**예상 기간**: 1주
+**완료 상태**: 4/4 (100%)
+**실제 소요**: 1일 (2025-12-21)
 
 ---
 
@@ -885,7 +1071,22 @@ LINQ는 델리게이트에 의존하므로 워크스페이스 1 완료 후 시�
 
 ---
 
-### **Phase 6: 통합 및 배포 (모든 Phase 완료 후)**
+### **Phase 6: 실용적 확장 (선택적, 병렬 실행 가능)**
+
+최신 .NET API 호환성을 위한 추가 기능들
+
+- ⏸️ **워크스페이스 16-A**: HttpClient & HTTP 관련
+- ⏸️ **워크스페이스 16-B**: JSON 직렬화
+- ⏸️ **워크스페이스 16-C**: 추가 유틸리티 타입 (DateOnly, TimeOnly, Half 등)
+- ⏸️ **워크스페이스 16-D**: 최신 LINQ 메서드 (.NET 6~9)
+
+**예상 기간**: 3-4주
+
+**우선순위**: 중간 (실제 프로젝트 수요에 따라 결정)
+
+---
+
+### **Phase 7: 통합 및 배포 (모든 Phase 완료 후)**
 
 - ✅ **워크스페이스 18**: 통합 테스트 & 문서화
 
@@ -1044,16 +1245,17 @@ LINQ는 델리게이트에 의존하므로 워크스페이스 1 완료 후 시�
 - [ ] SynchronizationContext 테스트
 - [ ] XML 문서 주석 추가
 
-### **워크스페이스 7: Compiler Attributes**
-- [ ] CallerMemberNameAttribute 구현
-- [ ] CallerFilePathAttribute 구현
-- [ ] CallerLineNumberAttribute 구현
+### **워크스페이스 7: Compiler Attributes** ✅ 완료
+- [x] CallerMemberNameAttribute 구현
+- [x] CallerFilePathAttribute 구현
+- [x] CallerLineNumberAttribute 구현
 - [ ] CallerArgumentExpressionAttribute 구현
-- [ ] ExtensionAttribute 구현
-- [ ] IsExternalInit 구현
-- [ ] RequiredMemberAttribute 등 구현
-- [ ] 컴파일러 통합 테스트
-- [ ] XML 문서 주석 추가
+- [x] ExtensionAttribute 구현
+- [x] IsExternalInit 구현
+- [x] RequiredMemberAttribute 등 구현
+- [x] SetsRequiredMembersAttribute 구현
+- [x] 컴파일러 통합 테스트
+- [x] XML 문서 주석 추가
 
 ### **워크스페이스 8: Index & Range**
 - [ ] Index 구현
@@ -1134,9 +1336,45 @@ LINQ는 델리게이트에 의존하므로 워크스페이스 1 완료 후 시�
 - [ ] SynchronizationContext 테스트
 - [ ] XML 문서 주석 추가
 
+### **워크스페이스 16-A: HttpClient & HTTP**
+- [ ] HttpClient 구현
+- [ ] HttpRequestMessage/HttpResponseMessage 구현
+- [ ] HttpContent 및 파생 클래스 구현
+- [ ] HttpMethod 구현
+- [ ] HttpHeaders 구현
+- [ ] 단위 테스트 작성
+- [ ] XML 문서 주석 추가
+
+### **워크스페이스 16-B: JSON 직렬화**
+- [ ] JsonSerializer 구현
+- [ ] JsonSerializerOptions 구현
+- [ ] JsonPropertyNameAttribute 구현
+- [ ] JsonIgnoreAttribute 구현
+- [ ] 단위 테스트 작성
+- [ ] XML 문서 주석 추가
+
+### **워크스페이스 16-C: 추가 유틸리티 타입**
+- [ ] DateOnly 구현
+- [ ] TimeOnly 구현
+- [ ] Half 구현
+- [ ] UnreachableException 구현
+- [ ] Nullable 분석 속성 구현
+- [ ] Environment.ProcessPath 구현
+- [ ] 단위 테스트 작성
+- [ ] XML 문서 주석 추가
+
+### **워크스페이스 16-D: 최신 LINQ 메서드**
+- [ ] Chunk 구현
+- [ ] DistinctBy/ExceptBy/IntersectBy/UnionBy 구현
+- [ ] MinBy/MaxBy 구현
+- [ ] Index/CountBy/AggregateBy 구현
+- [ ] 단위 테스트 작성
+- [ ] XML 문서 주석 추가
+
 ### **워크스페이스 17: 프로젝트 설정**
 - [ ] net20, net35, net40 타겟 추가
 - [ ] 조건부 컴파일 심볼 정의
+- [x] AssemblyInfo.cs 추가 (InternalsVisibleTo)
 - [ ] NuGet 패키지 참조 설정
 - [ ] .editorconfig 작성
 - [ ] GitHub Actions CI/CD 설정
@@ -1144,7 +1382,8 @@ LINQ는 델리게이트에 의존하므로 워크스페이스 1 완료 후 시�
 
 ### **워크스페이스 18: 통합 & 문서**
 - [ ] 통합 테스트 프로젝트 생성
-- [ ] README.md 업데이트
+- [x] README.md 업데이트 (컴파일러 속성 섹션)
+- [x] TESTING_STRATEGY.md 작성
 - [ ] API 문서 생성 (DocFX)
 - [ ] MIGRATION_GUIDE.md 작성
 - [ ] CHANGELOG.md 작성
@@ -1156,16 +1395,21 @@ LINQ는 델리게이트에 의존하므로 워크스페이스 1 완료 후 시�
 ## 📈 진행 상황 추적
 
 ### **전체 진행률**
-- [ ] Phase 1: 기초 인프라 (0/4)
+- [x] Phase 1: 기초 인프라 (1/4) - **워크스페이스 7 완료**
 - [ ] Phase 2: 핵심 기능 (0/5)
 - [ ] Phase 3: LINQ 구현 (0/3)
 - [ ] Phase 4: 동시성 라이브러리 (0/2)
 - [ ] Phase 5: 고급 기능 (0/3)
-- [ ] Phase 6: 통합 및 배포 (0/1)
+- [ ] Phase 6: 실용적 확장 (0/4) - **새로 추가**
+- [ ] Phase 7: 통합 및 배포 (0/1)
 
-**총 워크스페이스**: 18개
-**완료**: 0개
-**진행률**: 0%
+**핵심 워크스페이스**: 18개
+**추가 워크스페이스** (선택적): 4개 (16-A, 16-B, 16-C, 16-D)
+**총 워크스페이스**: 22개
+**완료**: 1개 (워크스페이스 7)
+**진행률**: 4.5% (1/22)
+
+**Phase 1 진행률**: 25% (1/4 완료)
 
 ---
 

@@ -56,6 +56,39 @@ Jinobald.Polyfill은 오래된 .NET Framework 버전에서 최신 .NET의 타입
 - **Volatile** - Volatile 읽기/쓰기 작업
 - **InterlockedEx** - Interlocked 확장
 
+### 컴파일러 서비스 속성 ✅
+- **CallerMemberNameAttribute** - 호출자 멤버 이름 자동 전달 (.NET 2.0, 3.5, 4.0용)
+- **CallerFilePathAttribute** - 호출자 파일 경로 자동 전달 (.NET 2.0, 3.5, 4.0용)
+- **CallerLineNumberAttribute** - 호출자 라인 번호 자동 전달 (.NET 2.0, 3.5, 4.0용)
+- **ExtensionAttribute** - 확장 메서드 지원 (.NET 2.0용)
+- **IsExternalInit** - record 및 init-only 속성 지원 (.NET 4.6~4.8용)
+- **RequiredMemberAttribute** - 필수 멤버 지정 (.NET 4.7~4.8용)
+- **SetsRequiredMembersAttribute** - 생성자에서 필수 멤버 설정 (.NET 4.7~4.8용)
+
+### HTTP 및 네트워킹 (계획 중)
+- **HttpClient** - 비동기 HTTP 요청 (.NET 3.5~4.5용)
+- **HttpRequestMessage / HttpResponseMessage** - HTTP 메시지
+- **HttpContent** - StringContent, ByteArrayContent, FormUrlEncoded 등
+- **HttpMethod** - HTTP 메서드 정의 (GET, POST, PUT, DELETE)
+- **HttpHeaders** - HTTP 헤더 관리
+
+### JSON 직렬화 (계획 중)
+- **JsonSerializer** - System.Text.Json 스타일 직렬화 (.NET 2.0+용)
+- **JsonSerializerOptions** - 직렬화 옵션 (PropertyNamingPolicy, WriteIndented 등)
+- **JsonPropertyNameAttribute / JsonIgnoreAttribute** - JSON 속성 제어
+
+### 최신 유틸리티 타입 (계획 중)
+- **DateOnly / TimeOnly** - 날짜/시간 전용 타입 (.NET 4.5+용)
+- **Half** - 16비트 부동소수점 (.NET 4.5+용)
+- **UnreachableException** - 도달 불가 코드 표시 (.NET 4.7+용)
+- **Nullable 분석 속성** - NotNullWhen, MaybeNull, MemberNotNull 등
+
+### 최신 LINQ 메서드 (계획 중)
+- **Chunk** - 컬렉션 청크 분할 (.NET 6+용)
+- **DistinctBy / ExceptBy / IntersectBy / UnionBy** - 키 기반 집합 연산 (.NET 6+용)
+- **MinBy / MaxBy** - 키 기반 최소/최대 (.NET 6+용)
+- **Index / CountBy / AggregateBy** - 최신 LINQ 확장 (.NET 9+용)
+
 ### 기타
 - **AggregateException** - 집계 예외 처리
 - **WeakReference<T>** - 약한 참조
@@ -121,16 +154,32 @@ dotnet test
 ```
 Jinobald.Polyfill/
 ├── src/
-│   └── Jinobald.Polifill/          # 메인 라이브러리
+│   └── Jinobald.Polyfill/           # 메인 라이브러리
+│       ├── Properties/
+│       │   └── AssemblyInfo.cs      # InternalsVisibleTo 설정
 │       └── System/                  # System 네임스페이스 확장
 │           ├── Collections/         # 컬렉션 관련
 │           ├── Diagnostics/         # 진단 관련
 │           ├── Numerics/            # 숫자 관련
 │           ├── Runtime/             # 런타임 관련
+│           │   └── CompilerServices/ # 컴파일러 속성
 │           └── Threading/           # 스레딩 관련
-└── tests/
-    └── Jinobald.Polifill.Tests/    # 단위 테스트
+├── tests/
+│   └── Jinobald.Polyfill.Tests/     # 단위 테스트
+└── docs/
+    ├── IMPLEMENTATION_PLAN.md       # 구현 계획
+    └── TESTING_STRATEGY.md          # 테스트 전략
 ```
+
+## 테스트 전략
+
+이 라이브러리는 Internal 타입 테스트를 위해 `InternalsVisibleTo` 속성을 사용합니다:
+
+- **Public API**: 외부 테스트 프로젝트에서 직접 테스트
+- **Internal 타입**: AssemblyInfo.cs에 InternalsVisibleTo 설정으로 테스트 프로젝트 접근 허용
+- **컴파일러 전용 타입**: 리플렉션을 통한 존재 확인
+
+자세한 내용은 [docs/TESTING_STRATEGY.md](docs/TESTING_STRATEGY.md)를 참조하세요.
 
 ## 기여
 
