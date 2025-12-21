@@ -97,11 +97,11 @@ public partial class StringExTests
     public void Create_WithMultipleChars_ShouldWork()
     {
         // Act
-        var result = string.Create(5, (char: 'a', count: 0), (span, state) =>
+        var result = string.Create(5, ('a', 0), (span, state) =>
         {
             for (var i = 0; i < span.Length; i++)
             {
-                span[i] = (char)(state.@char + i);
+                span[i] = (char)(state.Item1 + i);
             }
         });
 
