@@ -102,11 +102,13 @@ public class ConcurrentQueueTests
             {
                 for (int i = 0; i < operationsPerThread; i++)
                 {
-                    while (!queue.TryDequeue(out int item))
+                    int item;
+                    while (!queue.TryDequeue(out item))
                     {
-                        dequeued.Add(item);
                         Thread.Sleep(0);
                     }
+
+                    dequeued.Add(item);
                 }
             });
         }
