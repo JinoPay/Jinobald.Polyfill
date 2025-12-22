@@ -76,6 +76,20 @@ public readonly struct Memory<T>
     }
 
     /// <summary>
+    ///     지정된 범위의 요소로 구성된 슬라이스를 반환합니다.
+    /// </summary>
+    /// <param name="range">Memory의 시작 및 끝 인덱스를 나타내는 범위입니다.</param>
+    /// <returns>지정된 범위의 요소를 포함하는 Memory입니다.</returns>
+    public Memory<T> this[Range range]
+    {
+        get
+        {
+            var (offset, length) = range.GetOffsetAndLength(Length);
+            return Slice(offset, length);
+        }
+    }
+
+    /// <summary>
     ///     지정된 오프셋에서 시작하는 이 Memory의 새 슬라이스를 형성합니다.
     /// </summary>
     public Memory<T> Slice(int start)

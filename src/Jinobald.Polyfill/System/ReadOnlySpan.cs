@@ -112,6 +112,20 @@ public readonly ref struct ReadOnlySpan<T>
     }
 
     /// <summary>
+    ///     지정된 범위의 요소로 구성된 슬라이스를 반환합니다.
+    /// </summary>
+    /// <param name="range">ReadOnlySpan의 시작 및 끝 인덱스를 나타내는 범위입니다.</param>
+    /// <returns>지정된 범위의 요소를 포함하는 ReadOnlySpan입니다.</returns>
+    public ReadOnlySpan<T> this[Range range]
+    {
+        get
+        {
+            var (offset, length) = range.GetOffsetAndLength(Length);
+            return Slice(offset, length);
+        }
+    }
+
+    /// <summary>
     ///     현재 ReadOnlySpan의 내용을 지정된 대상 Span에 복사합니다.
     /// </summary>
     public void CopyTo(Span<T> destination)
