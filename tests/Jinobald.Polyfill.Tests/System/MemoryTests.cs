@@ -1,9 +1,36 @@
-using NUnit.Framework;
-
 namespace Jinobald.Polyfill.Tests.System;
 
 public class MemoryTests
 {
+    [Test]
+    public void Memory_Empty_CreatesEmptyMemory()
+    {
+        Memory<int> memory = Memory<int>.Empty;
+        Assert.AreEqual(0, memory.Length);
+        Assert.IsTrue(memory.IsEmpty);
+    }
+
+    [Test]
+    public void Memory_Equals_DifferentBackingArray_ReturnsFalse()
+    {
+        int[] array1 = new[] { 1, 2, 3 };
+        int[] array2 = new[] { 1, 2, 3 };
+        var memory1 = new Memory<int>(array1);
+        var memory2 = new Memory<int>(array2);
+
+        Assert.IsFalse(memory1.Equals(memory2));
+    }
+
+    [Test]
+    public void Memory_Equals_SameBackingArray_ReturnsTrue()
+    {
+        int[] array = new[] { 1, 2, 3 };
+        var memory1 = new Memory<int>(array);
+        var memory2 = new Memory<int>(array);
+
+        Assert.IsTrue(memory1.Equals(memory2));
+    }
+
     [Test]
     public void Memory_FromArray_CreatesMemory()
     {
@@ -26,28 +53,51 @@ public class MemoryTests
     }
 
     [Test]
-    public void Memory_Span_ReturnsSpan()
+    public void Memory_FromNullArray_CreatesEmptyMemory()
     {
-        int[] array = new[] { 1, 2, 3 };
-        var memory = new Memory<int>(array);
-        Span<int> span = memory.Span;
-
-        Assert.AreEqual(3, span.Length);
-        Assert.AreEqual(1, span[0]);
-        Assert.AreEqual(2, span[1]);
-        Assert.AreEqual(3, span[2]);
+        var memory = new Memory<int>(null);
+        Assert.AreEqual(0, memory.Length);
+        Assert.IsTrue(memory.IsEmpty);
     }
 
     [Test]
-    public void Memory_Span_CanModifyElements()
+    public void Memory_GetHashCode_ReturnsHashCode()
     {
         int[] array = new[] { 1, 2, 3 };
         var memory = new Memory<int>(array);
-        Span<int> span = memory.Span;
+        int hashCode = memory.GetHashCode();
 
-        span[1] = 20;
+        Assert.AreNotEqual(0, hashCode);
+    }
 
-        Assert.AreEqual(20, array[1]);
+    [Test]
+    public void Memory_ImplicitConversion_FromArray()
+    {
+        int[] array = new[] { 1, 2, 3 };
+        Memory<int> memory = array;
+
+        Assert.AreEqual(3, memory.Length);
+        Assert.AreEqual(1, memory.Span[0]);
+    }
+
+    [Test]
+    public void Memory_ImplicitConversion_ToReadOnlyMemory()
+    {
+        int[] array = new[] { 1, 2, 3 };
+        var memory = new Memory<int>(array);
+        ReadOnlyMemory<int> readOnlyMemory = memory;
+
+        Assert.AreEqual(3, readOnlyMemory.Length);
+        Assert.AreEqual(1, readOnlyMemory.Span[0]);
+    }
+
+    [Test]
+    public void Memory_Slice_OutOfRange_Throws()
+    {
+        int[] array = new[] { 1, 2, 3 };
+        var memory = new Memory<int>(array);
+        Assert.Throws<ArgumentOutOfRangeException>(() => memory.Slice(5));
+        Assert.Throws<ArgumentOutOfRangeException>(() => memory.Slice(1, 10));
     }
 
     [Test]
@@ -79,12 +129,43 @@ public class MemoryTests
     }
 
     [Test]
-    public void Memory_Slice_OutOfRange_Throws()
+    public void Memory_SliceModification_AffectsOriginal()
+    {
+        int[] array = new[] { 1, 2, 3, 4, 5 };
+        var memory = new Memory<int>(array);
+        Memory<int> slice = memory.Slice(1, 3);
+        Span<int> span = slice.Span;
+
+        span[0] = 20;
+        span[1] = 30;
+
+        Assert.AreEqual(20, array[1]);
+        Assert.AreEqual(30, array[2]);
+    }
+
+    [Test]
+    public void Memory_Span_CanModifyElements()
     {
         int[] array = new[] { 1, 2, 3 };
         var memory = new Memory<int>(array);
-        Assert.Throws<ArgumentOutOfRangeException>(() => memory.Slice(5));
-        Assert.Throws<ArgumentOutOfRangeException>(() => memory.Slice(1, 10));
+        Span<int> span = memory.Span;
+
+        span[1] = 20;
+
+        Assert.AreEqual(20, array[1]);
+    }
+
+    [Test]
+    public void Memory_Span_ReturnsSpan()
+    {
+        int[] array = new[] { 1, 2, 3 };
+        var memory = new Memory<int>(array);
+        Span<int> span = memory.Span;
+
+        Assert.AreEqual(3, span.Length);
+        Assert.AreEqual(1, span[0]);
+        Assert.AreEqual(2, span[1]);
+        Assert.AreEqual(3, span[2]);
     }
 
     [Test]
@@ -105,88 +186,5 @@ public class MemoryTests
         int[]? array = memory.ToArray();
 
         Assert.IsEmpty(array);
-    }
-
-    [Test]
-    public void Memory_ImplicitConversion_FromArray()
-    {
-        int[] array = new[] { 1, 2, 3 };
-        Memory<int> memory = array;
-
-        Assert.AreEqual(3, memory.Length);
-        Assert.AreEqual(1, memory.Span[0]);
-    }
-
-    [Test]
-    public void Memory_ImplicitConversion_ToReadOnlyMemory()
-    {
-        int[] array = new[] { 1, 2, 3 };
-        var memory = new Memory<int>(array);
-        ReadOnlyMemory<int> readOnlyMemory = memory;
-
-        Assert.AreEqual(3, readOnlyMemory.Length);
-        Assert.AreEqual(1, readOnlyMemory.Span[0]);
-    }
-
-    [Test]
-    public void Memory_Empty_CreatesEmptyMemory()
-    {
-        Memory<int> memory = Memory<int>.Empty;
-        Assert.AreEqual(0, memory.Length);
-        Assert.IsTrue(memory.IsEmpty);
-    }
-
-    [Test]
-    public void Memory_Equals_SameBackingArray_ReturnsTrue()
-    {
-        int[] array = new[] { 1, 2, 3 };
-        var memory1 = new Memory<int>(array);
-        var memory2 = new Memory<int>(array);
-
-        Assert.IsTrue(memory1.Equals(memory2));
-    }
-
-    [Test]
-    public void Memory_Equals_DifferentBackingArray_ReturnsFalse()
-    {
-        int[] array1 = new[] { 1, 2, 3 };
-        int[] array2 = new[] { 1, 2, 3 };
-        var memory1 = new Memory<int>(array1);
-        var memory2 = new Memory<int>(array2);
-
-        Assert.IsFalse(memory1.Equals(memory2));
-    }
-
-    [Test]
-    public void Memory_GetHashCode_ReturnsHashCode()
-    {
-        int[] array = new[] { 1, 2, 3 };
-        var memory = new Memory<int>(array);
-        int hashCode = memory.GetHashCode();
-
-        Assert.AreNotEqual(0, hashCode);
-    }
-
-    [Test]
-    public void Memory_FromNullArray_CreatesEmptyMemory()
-    {
-        var memory = new Memory<int>(null);
-        Assert.AreEqual(0, memory.Length);
-        Assert.IsTrue(memory.IsEmpty);
-    }
-
-    [Test]
-    public void Memory_SliceModification_AffectsOriginal()
-    {
-        int[] array = new[] { 1, 2, 3, 4, 5 };
-        var memory = new Memory<int>(array);
-        Memory<int> slice = memory.Slice(1, 3);
-        Span<int> span = slice.Span;
-
-        span[0] = 20;
-        span[1] = 30;
-
-        Assert.AreEqual(20, array[1]);
-        Assert.AreEqual(30, array[2]);
     }
 }
