@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Net.Http.Headers;
 
 #if NETFRAMEWORK
@@ -15,6 +16,8 @@ public class HttpClient : HttpMessageInvoker
     private HttpRequestHeaders? _defaultRequestHeaders;
     private long _maxResponseContentBufferSize;
     private TimeSpan _timeout;
+    private CancellationTokenSource _pendingRequestsCts;
+    private readonly object _pendingRequestsLock = new();
 
     private Uri? _baseAddress;
 
@@ -45,6 +48,7 @@ public class HttpClient : HttpMessageInvoker
     {
         _timeout = DefaultTimeout;
         _maxResponseContentBufferSize = int.MaxValue;
+        _pendingRequestsCts = new CancellationTokenSource();
     }
 
     /// <summary>
@@ -118,7 +122,16 @@ public class HttpClient : HttpMessageInvoker
     public void CancelPendingRequests()
     {
         CheckDisposed();
-        // 현재 구현에서는 각 요청이 독립적으로 처리되므로 특별한 취소 로직이 필요하지 않음
+
+        lock (_pendingRequestsLock)
+        {
+            // 현재 CancellationTokenSource 취소
+            _pendingRequestsCts.Cancel();
+            _pendingRequestsCts.Dispose();
+
+            // 새로운 CancellationTokenSource 생성
+            _pendingRequestsCts = new CancellationTokenSource();
+        }
     }
 
     /// <summary>
@@ -130,6 +143,8 @@ public class HttpClient : HttpMessageInvoker
         if (disposing && !_disposed)
         {
             _disposed = true;
+            _pendingRequestsCts.Cancel();
+            _pendingRequestsCts.Dispose();
         }
 
         base.Dispose(disposing);
@@ -451,6 +466,147 @@ public class HttpClient : HttpMessageInvoker
 
     #endregion
 
+    #region HEAD 메서드
+
+    /// <summary>
+    ///     HEAD 요청을 지정된 URI에 비동기 작업으로 보냅니다.
+    /// </summary>
+    /// <param name="requestUri">요청이 전송되는 URI입니다.</param>
+    /// <returns>비동기 작업을 나타내는 작업 개체입니다.</returns>
+    public Task<HttpResponseMessage> HeadAsync(string? requestUri)
+    {
+        return HeadAsync(CreateUri(requestUri), CancellationToken.None);
+    }
+
+    /// <summary>
+    ///     HEAD 요청을 지정된 URI에 비동기 작업으로 보냅니다.
+    /// </summary>
+    /// <param name="requestUri">요청이 전송되는 URI입니다.</param>
+    /// <returns>비동기 작업을 나타내는 작업 개체입니다.</returns>
+    public Task<HttpResponseMessage> HeadAsync(Uri? requestUri)
+    {
+        return HeadAsync(requestUri, CancellationToken.None);
+    }
+
+    /// <summary>
+    ///     HEAD 요청을 지정된 URI에 비동기 작업으로 보냅니다.
+    /// </summary>
+    /// <param name="requestUri">요청이 전송되는 URI입니다.</param>
+    /// <param name="cancellationToken">작업을 취소하기 위한 취소 토큰입니다.</param>
+    /// <returns>비동기 작업을 나타내는 작업 개체입니다.</returns>
+    public Task<HttpResponseMessage> HeadAsync(string? requestUri, CancellationToken cancellationToken)
+    {
+        return HeadAsync(CreateUri(requestUri), cancellationToken);
+    }
+
+    /// <summary>
+    ///     HEAD 요청을 지정된 URI에 비동기 작업으로 보냅니다.
+    /// </summary>
+    /// <param name="requestUri">요청이 전송되는 URI입니다.</param>
+    /// <param name="cancellationToken">작업을 취소하기 위한 취소 토큰입니다.</param>
+    /// <returns>비동기 작업을 나타내는 작업 개체입니다.</returns>
+    public Task<HttpResponseMessage> HeadAsync(Uri? requestUri, CancellationToken cancellationToken)
+    {
+        return SendAsync(CreateRequestMessage(HttpMethod.Head, requestUri), HttpCompletionOption.ResponseContentRead,
+            cancellationToken);
+    }
+
+    #endregion
+
+    #region OPTIONS 메서드
+
+    /// <summary>
+    ///     OPTIONS 요청을 지정된 URI에 비동기 작업으로 보냅니다.
+    /// </summary>
+    /// <param name="requestUri">요청이 전송되는 URI입니다.</param>
+    /// <returns>비동기 작업을 나타내는 작업 개체입니다.</returns>
+    public Task<HttpResponseMessage> OptionsAsync(string? requestUri)
+    {
+        return OptionsAsync(CreateUri(requestUri), CancellationToken.None);
+    }
+
+    /// <summary>
+    ///     OPTIONS 요청을 지정된 URI에 비동기 작업으로 보냅니다.
+    /// </summary>
+    /// <param name="requestUri">요청이 전송되는 URI입니다.</param>
+    /// <returns>비동기 작업을 나타내는 작업 개체입니다.</returns>
+    public Task<HttpResponseMessage> OptionsAsync(Uri? requestUri)
+    {
+        return OptionsAsync(requestUri, CancellationToken.None);
+    }
+
+    /// <summary>
+    ///     OPTIONS 요청을 지정된 URI에 비동기 작업으로 보냅니다.
+    /// </summary>
+    /// <param name="requestUri">요청이 전송되는 URI입니다.</param>
+    /// <param name="cancellationToken">작업을 취소하기 위한 취소 토큰입니다.</param>
+    /// <returns>비동기 작업을 나타내는 작업 개체입니다.</returns>
+    public Task<HttpResponseMessage> OptionsAsync(string? requestUri, CancellationToken cancellationToken)
+    {
+        return OptionsAsync(CreateUri(requestUri), cancellationToken);
+    }
+
+    /// <summary>
+    ///     OPTIONS 요청을 지정된 URI에 비동기 작업으로 보냅니다.
+    /// </summary>
+    /// <param name="requestUri">요청이 전송되는 URI입니다.</param>
+    /// <param name="cancellationToken">작업을 취소하기 위한 취소 토큰입니다.</param>
+    /// <returns>비동기 작업을 나타내는 작업 개체입니다.</returns>
+    public Task<HttpResponseMessage> OptionsAsync(Uri? requestUri, CancellationToken cancellationToken)
+    {
+        return SendAsync(CreateRequestMessage(HttpMethod.Options, requestUri), HttpCompletionOption.ResponseContentRead,
+            cancellationToken);
+    }
+
+    #endregion
+
+    #region TRACE 메서드
+
+    /// <summary>
+    ///     TRACE 요청을 지정된 URI에 비동기 작업으로 보냅니다.
+    /// </summary>
+    /// <param name="requestUri">요청이 전송되는 URI입니다.</param>
+    /// <returns>비동기 작업을 나타내는 작업 개체입니다.</returns>
+    public Task<HttpResponseMessage> TraceAsync(string? requestUri)
+    {
+        return TraceAsync(CreateUri(requestUri), CancellationToken.None);
+    }
+
+    /// <summary>
+    ///     TRACE 요청을 지정된 URI에 비동기 작업으로 보냅니다.
+    /// </summary>
+    /// <param name="requestUri">요청이 전송되는 URI입니다.</param>
+    /// <returns>비동기 작업을 나타내는 작업 개체입니다.</returns>
+    public Task<HttpResponseMessage> TraceAsync(Uri? requestUri)
+    {
+        return TraceAsync(requestUri, CancellationToken.None);
+    }
+
+    /// <summary>
+    ///     TRACE 요청을 지정된 URI에 비동기 작업으로 보냅니다.
+    /// </summary>
+    /// <param name="requestUri">요청이 전송되는 URI입니다.</param>
+    /// <param name="cancellationToken">작업을 취소하기 위한 취소 토큰입니다.</param>
+    /// <returns>비동기 작업을 나타내는 작업 개체입니다.</returns>
+    public Task<HttpResponseMessage> TraceAsync(string? requestUri, CancellationToken cancellationToken)
+    {
+        return TraceAsync(CreateUri(requestUri), cancellationToken);
+    }
+
+    /// <summary>
+    ///     TRACE 요청을 지정된 URI에 비동기 작업으로 보냅니다.
+    /// </summary>
+    /// <param name="requestUri">요청이 전송되는 URI입니다.</param>
+    /// <param name="cancellationToken">작업을 취소하기 위한 취소 토큰입니다.</param>
+    /// <returns>비동기 작업을 나타내는 작업 개체입니다.</returns>
+    public Task<HttpResponseMessage> TraceAsync(Uri? requestUri, CancellationToken cancellationToken)
+    {
+        return SendAsync(CreateRequestMessage(HttpMethod.Trace, requestUri), HttpCompletionOption.ResponseContentRead,
+            cancellationToken);
+    }
+
+    #endregion
+
     #region DELETE 메서드
 
     /// <summary>
@@ -605,7 +761,14 @@ public class HttpClient : HttpMessageInvoker
         SetOperationStarted();
         PrepareRequestMessage(request);
 
-        return base.SendAsync(request, cancellationToken);
+        // 사용자의 취소 토큰과 pendingRequests 취소 토큰을 연결
+        CancellationTokenSource linkedCts;
+        lock (_pendingRequestsLock)
+        {
+            linkedCts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, _pendingRequestsCts.Token);
+        }
+
+        return base.SendAsync(request, linkedCts.Token);
     }
 
     #endregion

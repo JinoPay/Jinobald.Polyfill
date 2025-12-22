@@ -177,6 +177,79 @@ public class HttpClientTests
         Assert.IsTrue(true);
     }
 
+    [Test]
+    public void HttpClient_CancelPendingRequests_CanBeCalledMultipleTimes()
+    {
+        using var client = new HttpClient();
+
+        client.CancelPendingRequests();
+        client.CancelPendingRequests();
+        client.CancelPendingRequests();
+
+        Assert.IsTrue(true);
+    }
+
+    #endregion
+
+    #region HTTP Method Async Tests
+
+    [Test]
+    public void HttpClient_HeadAsync_MethodExists()
+    {
+        using var client = new HttpClient();
+
+        // HeadAsync 메서드가 존재하는지 확인
+        var method = typeof(HttpClient).GetMethod("HeadAsync", new[] { typeof(string) });
+        Assert.IsNotNull(method, "HeadAsync(string) 메서드가 존재해야 합니다.");
+
+        method = typeof(HttpClient).GetMethod("HeadAsync", new[] { typeof(Uri) });
+        Assert.IsNotNull(method, "HeadAsync(Uri) 메서드가 존재해야 합니다.");
+
+        method = typeof(HttpClient).GetMethod("HeadAsync", new[] { typeof(string), typeof(global::System.Threading.CancellationToken) });
+        Assert.IsNotNull(method, "HeadAsync(string, CancellationToken) 메서드가 존재해야 합니다.");
+
+        method = typeof(HttpClient).GetMethod("HeadAsync", new[] { typeof(Uri), typeof(global::System.Threading.CancellationToken) });
+        Assert.IsNotNull(method, "HeadAsync(Uri, CancellationToken) 메서드가 존재해야 합니다.");
+    }
+
+    [Test]
+    public void HttpClient_OptionsAsync_MethodExists()
+    {
+        using var client = new HttpClient();
+
+        // OptionsAsync 메서드가 존재하는지 확인
+        var method = typeof(HttpClient).GetMethod("OptionsAsync", new[] { typeof(string) });
+        Assert.IsNotNull(method, "OptionsAsync(string) 메서드가 존재해야 합니다.");
+
+        method = typeof(HttpClient).GetMethod("OptionsAsync", new[] { typeof(Uri) });
+        Assert.IsNotNull(method, "OptionsAsync(Uri) 메서드가 존재해야 합니다.");
+
+        method = typeof(HttpClient).GetMethod("OptionsAsync", new[] { typeof(string), typeof(global::System.Threading.CancellationToken) });
+        Assert.IsNotNull(method, "OptionsAsync(string, CancellationToken) 메서드가 존재해야 합니다.");
+
+        method = typeof(HttpClient).GetMethod("OptionsAsync", new[] { typeof(Uri), typeof(global::System.Threading.CancellationToken) });
+        Assert.IsNotNull(method, "OptionsAsync(Uri, CancellationToken) 메서드가 존재해야 합니다.");
+    }
+
+    [Test]
+    public void HttpClient_TraceAsync_MethodExists()
+    {
+        using var client = new HttpClient();
+
+        // TraceAsync 메서드가 존재하는지 확인
+        var method = typeof(HttpClient).GetMethod("TraceAsync", new[] { typeof(string) });
+        Assert.IsNotNull(method, "TraceAsync(string) 메서드가 존재해야 합니다.");
+
+        method = typeof(HttpClient).GetMethod("TraceAsync", new[] { typeof(Uri) });
+        Assert.IsNotNull(method, "TraceAsync(Uri) 메서드가 존재해야 합니다.");
+
+        method = typeof(HttpClient).GetMethod("TraceAsync", new[] { typeof(string), typeof(global::System.Threading.CancellationToken) });
+        Assert.IsNotNull(method, "TraceAsync(string, CancellationToken) 메서드가 존재해야 합니다.");
+
+        method = typeof(HttpClient).GetMethod("TraceAsync", new[] { typeof(Uri), typeof(global::System.Threading.CancellationToken) });
+        Assert.IsNotNull(method, "TraceAsync(Uri, CancellationToken) 메서드가 존재해야 합니다.");
+    }
+
     #endregion
 
     #region Property Modification After Operation Tests
