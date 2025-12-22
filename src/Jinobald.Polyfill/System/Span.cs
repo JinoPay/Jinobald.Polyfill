@@ -112,6 +112,20 @@ public readonly ref struct Span<T>
     }
 
     /// <summary>
+    ///     지정된 범위의 요소로 구성된 슬라이스를 반환합니다.
+    /// </summary>
+    /// <param name="range">Span의 시작 및 끝 인덱스를 나타내는 범위입니다.</param>
+    /// <returns>지정된 범위의 요소를 포함하는 Span입니다.</returns>
+    public Span<T> this[Range range]
+    {
+        get
+        {
+            var (offset, length) = range.GetOffsetAndLength(Length);
+            return Slice(offset, length);
+        }
+    }
+
+    /// <summary>
     ///     현재 Span에서 모든 요소를 지정된 값으로 설정합니다.
     /// </summary>
     public void Fill(T value)

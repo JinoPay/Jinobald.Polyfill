@@ -3,7 +3,7 @@ using NUnit.Framework;
 
 namespace Jinobald.Polyfill.Tests.System;
 
-#if NET35 || NET40 || NET45 || NET451 || NET452 || NET46 || NET461 || NET462 || NET47 || NET471 || NET472 || NET48
+#if NET35 || NET40 || NET45 || NET451 || NET452 || NET46 || NET461 || NET462 || NET47 || NET471 || NET472 || NET48 || NET481
 
 public class RangeTests
 {
