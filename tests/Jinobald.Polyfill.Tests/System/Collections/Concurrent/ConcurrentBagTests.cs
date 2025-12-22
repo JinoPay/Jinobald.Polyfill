@@ -6,7 +6,7 @@ using global::System.Collections.Generic;
 using global::System.Linq;
 using global::System.Threading;
 using global::System.Threading.Tasks;
-using Xunit;
+using NUnit.Framework;
 
 #if NET35 || NET40
 using ConcurrentBag = global::System.Collections.Concurrent.ConcurrentBag<int>;
@@ -24,32 +24,32 @@ public class ConcurrentBagTests
     /// <summary>
     /// 빈 백이 올바르게 초기화되는지 테스트합니다.
     /// </summary>
-    [Fact]
+    [Test]
     public void Constructor_Default_IsEmpty()
     {
         var bag = new ConcurrentBag();
 
-        Assert.True(bag.IsEmpty);
-        Assert.Equal(0, bag.Count);
+        Assert.IsTrue(bag.IsEmpty);
+        Assert.AreEqual(0, bag.Count);
     }
 
     /// <summary>
     /// 컬렉션으로 백을 초기화하는지 테스트합니다.
     /// </summary>
-    [Fact]
+    [Test]
     public void Constructor_WithCollection_ContainsElements()
     {
         var items = new[] { 1, 2, 3, 4, 5 };
         var bag = new ConcurrentBag(items);
 
-        Assert.False(bag.IsEmpty);
-        Assert.Equal(5, bag.Count);
+        Assert.IsFalse(bag.IsEmpty);
+        Assert.AreEqual(5, bag.Count);
     }
 
     /// <summary>
     /// Add가 요소를 추가하는지 테스트합니다.
     /// </summary>
-    [Fact]
+    [Test]
     public void Add_AddsElement()
     {
         var bag = new ConcurrentBag();
@@ -58,14 +58,14 @@ public class ConcurrentBagTests
         bag.Add(2);
         bag.Add(3);
 
-        Assert.False(bag.IsEmpty);
-        Assert.Equal(3, bag.Count);
+        Assert.IsFalse(bag.IsEmpty);
+        Assert.AreEqual(3, bag.Count);
     }
 
     /// <summary>
     /// TryTake가 요소를 제거하는지 테스트합니다.
     /// </summary>
-    [Fact]
+    [Test]
     public void TryTake_RemovesElement()
     {
         var bag = new ConcurrentBag();
@@ -73,54 +73,54 @@ public class ConcurrentBagTests
         bag.Add(2);
         bag.Add(3);
 
-        Assert.True(bag.TryTake(out int result1));
-        Assert.Equal(2, bag.Count);
+        Assert.IsTrue(bag.TryTake(out int result1));
+        Assert.AreEqual(2, bag.Count);
 
-        Assert.True(bag.TryTake(out int result2));
-        Assert.Equal(1, bag.Count);
+        Assert.IsTrue(bag.TryTake(out int result2));
+        Assert.AreEqual(1, bag.Count);
 
-        Assert.True(bag.TryTake(out int result3));
-        Assert.True(bag.IsEmpty);
+        Assert.IsTrue(bag.TryTake(out int result3));
+        Assert.IsTrue(bag.IsEmpty);
     }
 
     /// <summary>
     /// 빈 백에서 TryTake가 false를 반환하는지 테스트합니다.
     /// </summary>
-    [Fact]
+    [Test]
     public void TryTake_EmptyBag_ReturnsFalse()
     {
         var bag = new ConcurrentBag();
 
-        Assert.False(bag.TryTake(out int result));
-        Assert.Equal(0, result);
+        Assert.IsFalse(bag.TryTake(out int result));
+        Assert.AreEqual(0, result);
     }
 
     /// <summary>
     /// TryPeek가 요소를 제거하지 않고 반환하는지 테스트합니다.
     /// </summary>
-    [Fact]
+    [Test]
     public void TryPeek_DoesNotRemoveElement()
     {
         var bag = new ConcurrentBag();
         bag.Add(42);
 
-        Assert.True(bag.TryPeek(out int result));
-        Assert.Equal(1, bag.Count);
+        Assert.IsTrue(bag.TryPeek(out int result));
+        Assert.AreEqual(1, bag.Count);
 
-        Assert.True(bag.TryPeek(out result));
-        Assert.Equal(1, bag.Count);
+        Assert.IsTrue(bag.TryPeek(out result));
+        Assert.AreEqual(1, bag.Count);
     }
 
     /// <summary>
     /// 빈 백에서 TryPeek가 false를 반환하는지 테스트합니다.
     /// </summary>
-    [Fact]
+    [Test]
     public void TryPeek_EmptyBag_ReturnsFalse()
     {
         var bag = new ConcurrentBag();
 
-        Assert.False(bag.TryPeek(out int result));
-        Assert.Equal(0, result);
+        Assert.IsFalse(bag.TryPeek(out int result));
+        Assert.AreEqual(0, result);
     }
 
     #endregion
@@ -130,7 +130,7 @@ public class ConcurrentBagTests
     /// <summary>
     /// 같은 스레드에서 Add와 TryTake가 올바르게 동작하는지 테스트합니다.
     /// </summary>
-    [Fact]
+    [Test]
     public void SameThread_AddAndTake()
     {
         var bag = new ConcurrentBag();
@@ -140,14 +140,14 @@ public class ConcurrentBagTests
         bag.Add(3);
 
         // 같은 스레드에서 추가한 항목은 LIFO 순서로 제거됨
-        Assert.True(bag.TryTake(out int result1));
-        Assert.Equal(3, result1);
+        Assert.IsTrue(bag.TryTake(out int result1));
+        Assert.AreEqual(3, result1);
 
-        Assert.True(bag.TryTake(out int result2));
-        Assert.Equal(2, result2);
+        Assert.IsTrue(bag.TryTake(out int result2));
+        Assert.AreEqual(2, result2);
 
-        Assert.True(bag.TryTake(out int result3));
-        Assert.Equal(1, result3);
+        Assert.IsTrue(bag.TryTake(out int result3));
+        Assert.AreEqual(1, result3);
     }
 
     #endregion
@@ -157,7 +157,7 @@ public class ConcurrentBagTests
     /// <summary>
     /// ToArray가 백의 모든 요소를 반환하는지 테스트합니다.
     /// </summary>
-    [Fact]
+    [Test]
     public void ToArray_ReturnsAllElements()
     {
         var bag = new ConcurrentBag();
@@ -167,7 +167,7 @@ public class ConcurrentBagTests
 
         var result = bag.ToArray();
 
-        Assert.Equal(3, result.Length);
+        Assert.AreEqual(3, result.Length);
         Assert.Contains(1, result);
         Assert.Contains(2, result);
         Assert.Contains(3, result);
@@ -176,7 +176,7 @@ public class ConcurrentBagTests
     /// <summary>
     /// GetEnumerator가 백의 요소를 열거하는지 테스트합니다.
     /// </summary>
-    [Fact]
+    [Test]
     public void GetEnumerator_EnumeratesElements()
     {
         var bag = new ConcurrentBag();
@@ -190,7 +190,7 @@ public class ConcurrentBagTests
             list.Add(item);
         }
 
-        Assert.Equal(3, list.Count);
+        Assert.AreEqual(3, list.Count);
         Assert.Contains(1, list);
         Assert.Contains(2, list);
         Assert.Contains(3, list);
@@ -203,7 +203,7 @@ public class ConcurrentBagTests
     /// <summary>
     /// 여러 스레드에서 동시에 Add를 수행하는지 테스트합니다.
     /// </summary>
-    [Fact]
+    [Test]
     public void ConcurrentAdd_MultipleThreads()
     {
         var bag = new ConcurrentBag();
@@ -225,13 +225,13 @@ public class ConcurrentBagTests
 
         Task.WaitAll(tasks);
 
-        Assert.Equal(itemsPerThread * threadCount, bag.Count);
+        Assert.AreEqual(itemsPerThread * threadCount, bag.Count);
     }
 
     /// <summary>
     /// 여러 스레드에서 동시에 TryTake를 수행하는지 테스트합니다.
     /// </summary>
-    [Fact]
+    [Test]
     public void ConcurrentTake_MultipleThreads()
     {
         var bag = new ConcurrentBag();
@@ -259,14 +259,14 @@ public class ConcurrentBagTests
 
         Task.WaitAll(tasks);
 
-        Assert.Equal(totalItems, taken.Count);
-        Assert.True(bag.IsEmpty);
+        Assert.AreEqual(totalItems, taken.Count);
+        Assert.IsTrue(bag.IsEmpty);
     }
 
     /// <summary>
     /// 여러 스레드에서 동시에 Add와 TryTake를 수행하는지 테스트합니다.
     /// </summary>
-    [Fact]
+    [Test]
     public void ConcurrentAddAndTake_MultipleThreads()
     {
         var bag = new ConcurrentBag();
@@ -303,13 +303,13 @@ public class ConcurrentBagTests
         Task.WaitAll(takeTasks);
         addTask.Wait();
 
-        Assert.Equal(operationsPerThread * threadCount, taken.Count);
+        Assert.AreEqual(operationsPerThread * threadCount, taken.Count);
     }
 
     /// <summary>
     /// Work-stealing이 올바르게 동작하는지 테스트합니다.
     /// </summary>
-    [Fact]
+    [Test]
     public void WorkStealing_DifferentThreads()
     {
         var bag = new ConcurrentBag();
@@ -334,8 +334,8 @@ public class ConcurrentBagTests
             }
         }).Wait();
 
-        Assert.Equal(itemsPerThread, taken.Count);
-        Assert.True(bag.IsEmpty);
+        Assert.AreEqual(itemsPerThread, taken.Count);
+        Assert.IsTrue(bag.IsEmpty);
     }
 
     #endregion
@@ -345,7 +345,7 @@ public class ConcurrentBagTests
     /// <summary>
     /// 대량의 요소를 처리하는지 테스트합니다.
     /// </summary>
-    [Fact]
+    [Test]
     public void LargeScale_AddAndTake()
     {
         var bag = new ConcurrentBag();
@@ -356,7 +356,7 @@ public class ConcurrentBagTests
             bag.Add(i);
         }
 
-        Assert.Equal(itemCount, bag.Count);
+        Assert.AreEqual(itemCount, bag.Count);
 
         int count = 0;
         while (bag.TryTake(out int _))
@@ -364,8 +364,8 @@ public class ConcurrentBagTests
             count++;
         }
 
-        Assert.Equal(itemCount, count);
-        Assert.True(bag.IsEmpty);
+        Assert.AreEqual(itemCount, count);
+        Assert.IsTrue(bag.IsEmpty);
     }
 
     #endregion

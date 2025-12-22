@@ -3,7 +3,7 @@ namespace Jinobald.Polyfill.Tests.System;
 public partial class StringExTests
 {
 #if !NETFRAMEWORK
-    [Fact]
+    [Test]
     public void Join_WithCharSeparator_ShouldJoinStrings()
     {
         // Arrange
@@ -13,10 +13,10 @@ public partial class StringExTests
         var result = string.Join(',', values);
 
         // Assert
-        Assert.Equal("a,b,c", result);
+        Assert.AreEqual("a,b,c", result);
     }
 
-    [Fact]
+    [Test]
     public void Join_WithCharSeparator_EmptyArray_ShouldReturnEmpty()
     {
         // Arrange
@@ -26,10 +26,10 @@ public partial class StringExTests
         var result = string.Join(',', values);
 
         // Assert
-        Assert.Equal(string.Empty, result);
+        Assert.AreEqual(string.Empty, result);
     }
 
-    [Fact]
+    [Test]
     public void Join_WithCharSeparator_SingleElement_ShouldReturnElement()
     {
         // Arrange
@@ -39,10 +39,10 @@ public partial class StringExTests
         var result = string.Join(',', values);
 
         // Assert
-        Assert.Equal("only", result);
+        Assert.AreEqual("only", result);
     }
 
-    [Fact]
+    [Test]
     public void Join_WithCharSeparator_Objects_ShouldJoinObjects()
     {
         // Arrange
@@ -52,10 +52,10 @@ public partial class StringExTests
         var result = string.Join(',', values);
 
         // Assert
-        Assert.Equal("1,2,3", result);
+        Assert.AreEqual("1,2,3", result);
     }
 
-    [Fact]
+    [Test]
     public void Join_WithCharSeparator_StartIndexAndCount_ShouldJoinSubset()
     {
         // Arrange
@@ -65,10 +65,10 @@ public partial class StringExTests
         var result = string.Join(',', values, 1, 2);
 
         // Assert
-        Assert.Equal("b,c", result);
+        Assert.AreEqual("b,c", result);
     }
 
-    [Fact]
+    [Test]
     public void Join_WithCharSeparator_IEnumerable_ShouldJoinElements()
     {
         // Arrange
@@ -78,7 +78,7 @@ public partial class StringExTests
         var result = string.Join(',', values);
 
         // Assert
-        Assert.Equal("1,2,3", result);
+        Assert.AreEqual("1,2,3", result);
     }
 #endif
 }

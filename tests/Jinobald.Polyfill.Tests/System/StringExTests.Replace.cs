@@ -1,11 +1,11 @@
 #if NETCOREAPP2_1_OR_GREATER
-using Xunit;
+using NUnit.Framework;
 
 namespace Jinobald.Polyfill.Tests.System;
 
 public partial class StringExTests
 {
-    [Fact]
+    [Test]
     public void Replace_WithStringAndComparison_OrdinalShouldWork()
     {
         // Arrange
@@ -15,10 +15,10 @@ public partial class StringExTests
         var result = text.Replace("World", "Universe", StringComparison.Ordinal);
 
         // Assert
-        Assert.Equal("Hello Universe", result);
+        Assert.AreEqual("Hello Universe", result);
     }
 
-    [Fact]
+    [Test]
     public void Replace_WithStringAndComparison_OrdinalIgnoreCaseShouldWork()
     {
         // Arrange
@@ -28,10 +28,10 @@ public partial class StringExTests
         var result = text.Replace("WORLD", "Universe", StringComparison.OrdinalIgnoreCase);
 
         // Assert
-        Assert.Equal("Hello Universe", result);
+        Assert.AreEqual("Hello Universe", result);
     }
 
-    [Fact]
+    [Test]
     public void Replace_WithStringAndComparison_NoMatch_ShouldReturnOriginal()
     {
         // Arrange
@@ -41,10 +41,10 @@ public partial class StringExTests
         var result = text.Replace("xyz", "abc", StringComparison.Ordinal);
 
         // Assert
-        Assert.Equal("Hello World", result);
+        Assert.AreEqual("Hello World", result);
     }
 
-    [Fact]
+    [Test]
     public void Replace_WithStringAndComparison_CurrentCultureShouldWork()
     {
         // Arrange
@@ -54,10 +54,10 @@ public partial class StringExTests
         var result = text.Replace("World", "Universe", StringComparison.CurrentCulture);
 
         // Assert
-        Assert.Equal("Hello Universe", result);
+        Assert.AreEqual("Hello Universe", result);
     }
 
-    [Fact]
+    [Test]
     public void Replace_WithStringAndComparison_CurrentCultureIgnoreCaseShouldWork()
     {
         // Arrange
@@ -67,10 +67,10 @@ public partial class StringExTests
         var result = text.Replace("world", "Universe", StringComparison.CurrentCultureIgnoreCase);
 
         // Assert
-        Assert.Equal("Hello Universe", result);
+        Assert.AreEqual("Hello Universe", result);
     }
 
-    [Fact]
+    [Test]
     public void Replace_WithStringAndComparison_InvariantCultureShouldWork()
     {
         // Arrange
@@ -80,10 +80,10 @@ public partial class StringExTests
         var result = text.Replace("World", "Universe", StringComparison.InvariantCulture);
 
         // Assert
-        Assert.Equal("Hello Universe", result);
+        Assert.AreEqual("Hello Universe", result);
     }
 
-    [Fact]
+    [Test]
     public void Replace_WithStringAndComparison_InvariantCultureIgnoreCaseShouldWork()
     {
         // Arrange
@@ -93,10 +93,10 @@ public partial class StringExTests
         var result = text.Replace("WORLD", "Universe", StringComparison.InvariantCultureIgnoreCase);
 
         // Assert
-        Assert.Equal("Hello Universe", result);
+        Assert.AreEqual("Hello Universe", result);
     }
 
-    [Fact]
+    [Test]
     public void Replace_WithStringAndComparison_MultipleOccurrences_ShouldReplaceAll()
     {
         // Arrange
@@ -106,10 +106,10 @@ public partial class StringExTests
         var result = text.Replace("Hello", "Hi", StringComparison.Ordinal);
 
         // Assert
-        Assert.Equal("Hi Hi Hi", result);
+        Assert.AreEqual("Hi Hi Hi", result);
     }
 
-    [Fact]
+    [Test]
     public void Replace_WithStringAndComparison_EmptyOldValue_ShouldThrow()
     {
         // Arrange
@@ -119,7 +119,7 @@ public partial class StringExTests
         Assert.Throws<ArgumentException>(() => text.Replace("", "X", StringComparison.Ordinal));
     }
 
-    [Fact]
+    [Test]
     public void Replace_WithStringAndComparison_NullOldValue_ShouldThrow()
     {
         // Arrange
@@ -129,7 +129,7 @@ public partial class StringExTests
         Assert.Throws<ArgumentNullException>(() => text.Replace(null!, "X", StringComparison.Ordinal));
     }
 
-    [Fact]
+    [Test]
     public void Replace_WithStringAndComparison_NullNewValue_ShouldRemove()
     {
         // Arrange
@@ -139,10 +139,10 @@ public partial class StringExTests
         var result = text.Replace("World", null, StringComparison.Ordinal);
 
         // Assert
-        Assert.Equal("Hello ", result);
+        Assert.AreEqual("Hello ", result);
     }
 
-    [Fact]
+    [Test]
     public void Replace_WithStringAndComparison_OverlappingMatches()
     {
         // Arrange
@@ -152,7 +152,7 @@ public partial class StringExTests
         var result = text.Replace("aa", "b", StringComparison.Ordinal);
 
         // Assert
-        Assert.Equal("ba", result);
+        Assert.AreEqual("ba", result);
     }
 }
 #endif

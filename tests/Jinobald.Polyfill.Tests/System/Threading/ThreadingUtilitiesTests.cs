@@ -1,67 +1,67 @@
-using Xunit;
+using NUnit.Framework;
 using System.Threading;
 
 namespace Jinobald.Polyfill.Tests.System.Threading;
 
 public class ThreadingUtilitiesTests
 {
-    [Fact]
+    [Test]
     public void ManualResetEventSlim_InitialState_False()
     {
         using (var mre = new ManualResetEventSlim(false))
         {
-            Assert.False(mre.IsSet);
+            Assert.IsFalse(mre.IsSet);
         }
     }
 
-    [Fact]
+    [Test]
     public void ManualResetEventSlim_InitialState_True()
     {
         using (var mre = new ManualResetEventSlim(true))
         {
-            Assert.True(mre.IsSet);
+            Assert.IsTrue(mre.IsSet);
         }
     }
 
-    [Fact]
+    [Test]
     public void ManualResetEventSlim_Set_SignalsEvent()
     {
         using (var mre = new ManualResetEventSlim(false))
         {
             mre.Set();
-            Assert.True(mre.IsSet);
+            Assert.IsTrue(mre.IsSet);
         }
     }
 
-    [Fact]
+    [Test]
     public void ManualResetEventSlim_Reset_ResetsEvent()
     {
         using (var mre = new ManualResetEventSlim(true))
         {
             mre.Reset();
-            Assert.False(mre.IsSet);
+            Assert.IsFalse(mre.IsSet);
         }
     }
 
-    [Fact]
+    [Test]
     public void ManualResetEventSlim_Wait_ReturnsImmediatelyIfSignaled()
     {
         using (var mre = new ManualResetEventSlim(true))
         {
-            Assert.True(mre.Wait(100));
+            Assert.IsTrue(mre.Wait(100));
         }
     }
 
-    [Fact]
+    [Test]
     public void ManualResetEventSlim_Wait_TimesOutIfNotSignaled()
     {
         using (var mre = new ManualResetEventSlim(false))
         {
-            Assert.False(mre.Wait(50));
+            Assert.IsFalse(mre.Wait(50));
         }
     }
 
-    [Fact]
+    [Test]
     public void SemaphoreSlim_Constructor_ValidatesParameters()
     {
         Assert.Throws<ArgumentOutOfRangeException>(() => new SemaphoreSlim(-1, 1));
@@ -69,42 +69,42 @@ public class ThreadingUtilitiesTests
         Assert.Throws<ArgumentOutOfRangeException>(() => new SemaphoreSlim(2, 1));
     }
 
-    [Fact]
+    [Test]
     public void SemaphoreSlim_InitialCount_IsCorrect()
     {
         using (var sem = new SemaphoreSlim(3, 5))
         {
-            Assert.Equal(3, sem.CurrentCount);
+            Assert.AreEqual(3, sem.CurrentCount);
         }
     }
 
-    [Fact]
+    [Test]
     public void SemaphoreSlim_Wait_DecrementsCount()
     {
         using (var sem = new SemaphoreSlim(2, 5))
         {
             sem.Wait();
-            Assert.Equal(1, sem.CurrentCount);
+            Assert.AreEqual(1, sem.CurrentCount);
             sem.Wait();
-            Assert.Equal(0, sem.CurrentCount);
+            Assert.AreEqual(0, sem.CurrentCount);
         }
     }
 
-    [Fact]
+    [Test]
     public void SemaphoreSlim_Release_IncrementsCount()
     {
         using (var sem = new SemaphoreSlim(1, 5))
         {
             sem.Wait();
-            Assert.Equal(0, sem.CurrentCount);
+            Assert.AreEqual(0, sem.CurrentCount);
 
             int prevCount = sem.Release();
-            Assert.Equal(0, prevCount);
-            Assert.Equal(1, sem.CurrentCount);
+            Assert.AreEqual(0, prevCount);
+            Assert.AreEqual(1, sem.CurrentCount);
         }
     }
 
-    [Fact]
+    [Test]
     public void SemaphoreSlim_Release_ThrowsWhenFull()
     {
         using (var sem = new SemaphoreSlim(3, 3))
@@ -113,99 +113,99 @@ public class ThreadingUtilitiesTests
         }
     }
 
-    [Fact]
+    [Test]
     public void SemaphoreSlim_WaitWithTimeout_ReturnsTrue()
     {
         using (var sem = new SemaphoreSlim(1, 1))
         {
-            Assert.True(sem.Wait(100));
+            Assert.IsTrue(sem.Wait(100));
         }
     }
 
-    [Fact]
+    [Test]
     public void SemaphoreSlim_WaitWithTimeout_ReturnsFalse()
     {
         using (var sem = new SemaphoreSlim(0, 1))
         {
-            Assert.False(sem.Wait(50));
+            Assert.IsFalse(sem.Wait(50));
         }
     }
 
-    [Fact]
+    [Test]
     public void CountdownEvent_Constructor_ValidatesCount()
     {
         Assert.Throws<ArgumentOutOfRangeException>(() => new CountdownEvent(-1));
     }
 
-    [Fact]
+    [Test]
     public void CountdownEvent_InitialCount_IsZero_IsSetIsTrue()
     {
         using (var ce = new CountdownEvent(0))
         {
-            Assert.True(ce.IsSet);
-            Assert.Equal(0, ce.CurrentCount);
+            Assert.IsTrue(ce.IsSet);
+            Assert.AreEqual(0, ce.CurrentCount);
         }
     }
 
-    [Fact]
+    [Test]
     public void CountdownEvent_InitialCount_IsPositive_IsSetIsFalse()
     {
         using (var ce = new CountdownEvent(3))
         {
-            Assert.False(ce.IsSet);
-            Assert.Equal(3, ce.CurrentCount);
+            Assert.IsFalse(ce.IsSet);
+            Assert.AreEqual(3, ce.CurrentCount);
         }
     }
 
-    [Fact]
+    [Test]
     public void CountdownEvent_Signal_DecrementsCount()
     {
         using (var ce = new CountdownEvent(3))
         {
             ce.Signal();
-            Assert.Equal(2, ce.CurrentCount);
+            Assert.AreEqual(2, ce.CurrentCount);
             ce.Signal();
-            Assert.Equal(1, ce.CurrentCount);
+            Assert.AreEqual(1, ce.CurrentCount);
         }
     }
 
-    [Fact]
+    [Test]
     public void CountdownEvent_Signal_SignalsWhenZero()
     {
         using (var ce = new CountdownEvent(2))
         {
             ce.Signal();
-            Assert.False(ce.IsSet);
+            Assert.IsFalse(ce.IsSet);
             ce.Signal();
-            Assert.True(ce.IsSet);
+            Assert.IsTrue(ce.IsSet);
         }
     }
 
-    [Fact]
+    [Test]
     public void CountdownEvent_SignalWithCount_DecrementsCorrectly()
     {
         using (var ce = new CountdownEvent(5))
         {
             ce.Signal(2);
-            Assert.Equal(3, ce.CurrentCount);
+            Assert.AreEqual(3, ce.CurrentCount);
             ce.Signal(3);
-            Assert.True(ce.IsSet);
+            Assert.IsTrue(ce.IsSet);
         }
     }
 
-    [Fact]
+    [Test]
     public void CountdownEvent_AddCount_IncrementsCount()
     {
         using (var ce = new CountdownEvent(2))
         {
             ce.AddCount();
-            Assert.Equal(3, ce.CurrentCount);
+            Assert.AreEqual(3, ce.CurrentCount);
             ce.AddCount(2);
-            Assert.Equal(5, ce.CurrentCount);
+            Assert.AreEqual(5, ce.CurrentCount);
         }
     }
 
-    [Fact]
+    [Test]
     public void CountdownEvent_AddCount_ThrowsWhenSignaled()
     {
         using (var ce = new CountdownEvent(0))
@@ -214,61 +214,61 @@ public class ThreadingUtilitiesTests
         }
     }
 
-    [Fact]
+    [Test]
     public void CountdownEvent_Wait_ReturnsImmediatelyIfSignaled()
     {
         using (var ce = new CountdownEvent(0))
         {
-            Assert.True(ce.Wait(100));
+            Assert.IsTrue(ce.Wait(100));
         }
     }
 
-    [Fact]
+    [Test]
     public void CountdownEvent_Wait_TimesOutIfNotSignaled()
     {
         using (var ce = new CountdownEvent(1))
         {
-            Assert.False(ce.Wait(50));
+            Assert.IsFalse(ce.Wait(50));
         }
     }
 
-    [Fact]
+    [Test]
     public void SpinWait_Count_StartsAtZero()
     {
         SpinWait spinner = default;
-        Assert.Equal(0, spinner.Count);
+        Assert.AreEqual(0, spinner.Count);
     }
 
-    [Fact]
+    [Test]
     public void SpinWait_SpinOnce_IncrementsCount()
     {
         SpinWait spinner = default;
         spinner.SpinOnce();
-        Assert.Equal(1, spinner.Count);
+        Assert.AreEqual(1, spinner.Count);
         spinner.SpinOnce();
-        Assert.Equal(2, spinner.Count);
+        Assert.AreEqual(2, spinner.Count);
     }
 
-    [Fact]
+    [Test]
     public void SpinWait_Reset_ResetsCount()
     {
         SpinWait spinner = default;
         spinner.SpinOnce();
         spinner.SpinOnce();
-        Assert.Equal(2, spinner.Count);
+        Assert.AreEqual(2, spinner.Count);
 
         spinner.Reset();
-        Assert.Equal(0, spinner.Count);
+        Assert.AreEqual(0, spinner.Count);
     }
 
-    [Fact]
+    [Test]
     public void SpinWait_NextSpinWillYield_FalseInitially()
     {
         SpinWait spinner = default;
-        Assert.False(spinner.NextSpinWillYield);
+        Assert.IsFalse(spinner.NextSpinWillYield);
     }
 
-    [Fact]
+    [Test]
     public void SpinWait_NextSpinWillYield_TrueAfterThreshold()
     {
         SpinWait spinner = default;
@@ -276,26 +276,26 @@ public class ThreadingUtilitiesTests
         {
             spinner.SpinOnce();
         }
-        Assert.True(spinner.NextSpinWillYield);
+        Assert.IsTrue(spinner.NextSpinWillYield);
     }
 
-    [Fact]
+    [Test]
     public void SpinWait_SpinUntil_ReturnsTrue_WhenConditionMet()
     {
         int counter = 0;
         bool result = SpinWait.SpinUntil(() => ++counter > 5, 1000);
-        Assert.True(result);
-        Assert.True(counter > 5);
+        Assert.IsTrue(result);
+        Assert.IsTrue(counter > 5);
     }
 
-    [Fact]
+    [Test]
     public void SpinWait_SpinUntil_ReturnsFalse_WhenTimedOut()
     {
         bool result = SpinWait.SpinUntil(() => false, 50);
-        Assert.False(result);
+        Assert.IsFalse(result);
     }
 
-    [Fact]
+    [Test]
     public void ManualResetEventSlim_MultipleDismissDisposeCalls()
     {
         var mre = new ManualResetEventSlim(false);
@@ -303,7 +303,7 @@ public class ThreadingUtilitiesTests
         mre.Dispose(); // Calling dispose multiple times should not throw
     }
 
-    [Fact]
+    [Test]
     public void SemaphoreSlim_MultipleDismissDisposeCalls()
     {
         var sem = new SemaphoreSlim(1, 1);
@@ -311,7 +311,7 @@ public class ThreadingUtilitiesTests
         sem.Dispose(); // Calling dispose multiple times should not throw
     }
 
-    [Fact]
+    [Test]
     public void CountdownEvent_MultipleDismissDisposeCalls()
     {
         var ce = new CountdownEvent(1);

@@ -1,10 +1,10 @@
-using Xunit;
+using NUnit.Framework;
 
 namespace Jinobald.Polyfill.Tests.System;
 
 public partial class StringExTests
 {
-    [Fact]
+    [Test]
     public void Split_WithChar_ShouldSplitString()
     {
         // Arrange
@@ -14,10 +14,10 @@ public partial class StringExTests
         string[] result = text.Split(',');
 
         // Assert
-        Assert.Equal(new[] { "a", "b", "c" }, result);
+        Assert.AreEqual(new[] { "a", "b", "c" }, result);
     }
 
-    [Fact]
+    [Test]
     public void Split_WithChar_NoDelimiter_ShouldReturnOriginal()
     {
         // Arrange
@@ -27,10 +27,10 @@ public partial class StringExTests
         string[] result = text.Split(',');
 
         // Assert
-        Assert.Equal(new[] { "abc" }, result);
+        Assert.AreEqual(new[] { "abc" }, result);
     }
 
-    [Fact]
+    [Test]
     public void Split_WithChar_EmptyString_ShouldReturnEmptyArray()
     {
         // Arrange
@@ -40,11 +40,11 @@ public partial class StringExTests
         string[] result = text.Split(',');
 
         // Assert
-        Assert.Equal(new[] { "" }, result);
+        Assert.AreEqual(new[] { "" }, result);
     }
 
 #if NET5_0_OR_GREATER
-    [Fact]
+    [Test]
     public void Split_WithChar_AndOptions_RemoveEmptyEntries()
     {
         // Arrange
@@ -54,10 +54,10 @@ public partial class StringExTests
         var result = text.Split(',', StringSplitOptions.RemoveEmptyEntries);
 
         // Assert
-        Assert.Equal(new[] { "a", "b", "c" }, result);
+        Assert.AreEqual(new[] { "a", "b", "c" }, result);
     }
 
-    [Fact]
+    [Test]
     public void Split_WithChar_AndOptions_None()
     {
         // Arrange
@@ -67,10 +67,10 @@ public partial class StringExTests
         var result = text.Split(',', StringSplitOptions.None);
 
         // Assert
-        Assert.Equal(new[] { "a", "", "b", "c" }, result);
+        Assert.AreEqual(new[] { "a", "", "b", "c" }, result);
     }
 
-    [Fact]
+    [Test]
     public void Split_WithChar_AndOptions_TrimEntries()
     {
         // Arrange
@@ -80,10 +80,10 @@ public partial class StringExTests
         var result = text.Split(',', StringSplitOptions.TrimEntries);
 
         // Assert
-        Assert.Equal(new[] { "a", "b", "c" }, result);
+        Assert.AreEqual(new[] { "a", "b", "c" }, result);
     }
 
-    [Fact]
+    [Test]
     public void Split_WithChar_AndOptions_RemoveEmptyAndTrim()
     {
         // Arrange
@@ -93,10 +93,10 @@ public partial class StringExTests
         var result = text.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
 
         // Assert
-        Assert.Equal(new[] { "a", "b", "c" }, result);
+        Assert.AreEqual(new[] { "a", "b", "c" }, result);
     }
 
-    [Fact]
+    [Test]
     public void Split_WithChar_AndCount_ShouldLimitSplits()
     {
         // Arrange
@@ -106,10 +106,10 @@ public partial class StringExTests
         var result = text.Split(',', 2);
 
         // Assert
-        Assert.Equal(new[] { "a", "b,c,d" }, result);
+        Assert.AreEqual(new[] { "a", "b,c,d" }, result);
     }
 
-    [Fact]
+    [Test]
     public void Split_WithChar_CountAndOptions_ShouldWork()
     {
         // Arrange
@@ -119,10 +119,10 @@ public partial class StringExTests
         var result = text.Split(',', 3, StringSplitOptions.TrimEntries);
 
         // Assert
-        Assert.Equal(new[] { "a", "", "b,c" }, result);
+        Assert.AreEqual(new[] { "a", "", "b,c" }, result);
     }
 
-    [Fact]
+    [Test]
     public void Split_WithString_ShouldSplitString()
     {
         // Arrange
@@ -132,10 +132,10 @@ public partial class StringExTests
         var result = text.Split("::");
 
         // Assert
-        Assert.Equal(new[] { "a", "b", "c" }, result);
+        Assert.AreEqual(new[] { "a", "b", "c" }, result);
     }
 
-    [Fact]
+    [Test]
     public void Split_WithString_AndOptions_RemoveEmptyEntries()
     {
         // Arrange
@@ -145,10 +145,10 @@ public partial class StringExTests
         var result = text.Split("::", StringSplitOptions.RemoveEmptyEntries);
 
         // Assert
-        Assert.Equal(new[] { "a", "b", "c" }, result);
+        Assert.AreEqual(new[] { "a", "b", "c" }, result);
     }
 
-    [Fact]
+    [Test]
     public void Split_WithString_AndOptions_TrimEntries()
     {
         // Arrange
@@ -158,10 +158,10 @@ public partial class StringExTests
         var result = text.Split("::", StringSplitOptions.TrimEntries);
 
         // Assert
-        Assert.Equal(new[] { "a", "b", "c" }, result);
+        Assert.AreEqual(new[] { "a", "b", "c" }, result);
     }
 
-    [Fact]
+    [Test]
     public void Split_WithString_AndCount_ShouldLimitSplits()
     {
         // Arrange
@@ -171,10 +171,10 @@ public partial class StringExTests
         var result = text.Split("::", 2);
 
         // Assert
-        Assert.Equal(new[] { "a", "b::c::d" }, result);
+        Assert.AreEqual(new[] { "a", "b::c::d" }, result);
     }
 
-    [Fact]
+    [Test]
     public void Split_WithString_CountAndOptions_ShouldWork()
     {
         // Arrange
@@ -184,11 +184,11 @@ public partial class StringExTests
         var result = text.Split("::", 3, StringSplitOptions.TrimEntries);
 
         // Assert
-        Assert.Equal(new[] { "a", "", "b::c" }, result);
+        Assert.AreEqual(new[] { "a", "", "b::c" }, result);
     }
 #endif
 
-    [Fact]
+    [Test]
     public void Split_WithCharArray_ShouldSplitOnAnyChar()
     {
         // Arrange
@@ -198,10 +198,10 @@ public partial class StringExTests
         string[] result = text.Split(new[] { ',', ';', ':' });
 
         // Assert
-        Assert.Equal(new[] { "a", "b", "c", "d" }, result);
+        Assert.AreEqual(new[] { "a", "b", "c", "d" }, result);
     }
 
-    [Fact]
+    [Test]
     public void Split_WithStringArray_ShouldSplitOnAnyString()
     {
         // Arrange
@@ -211,6 +211,6 @@ public partial class StringExTests
         string[] result = text.Split(new[] { "::", ";;" }, StringSplitOptions.None);
 
         // Assert
-        Assert.Equal(new[] { "a", "b", "c", "d" }, result);
+        Assert.AreEqual(new[] { "a", "b", "c", "d" }, result);
     }
 }

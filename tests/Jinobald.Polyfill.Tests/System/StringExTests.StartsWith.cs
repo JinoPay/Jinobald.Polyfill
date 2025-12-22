@@ -1,11 +1,11 @@
 #if NETCOREAPP3_0_OR_GREATER
-using Xunit;
+using NUnit.Framework;
 
 namespace Jinobald.Polyfill.Tests.System;
 
 public partial class StringExTests
 {
-    [Fact]
+    [Test]
     public void StartsWith_WithChar_ShouldReturnTrue()
     {
         // Arrange
@@ -15,10 +15,10 @@ public partial class StringExTests
         var result = text.StartsWith('H');
 
         // Assert
-        Assert.True(result);
+        Assert.IsTrue(result);
     }
 
-    [Fact]
+    [Test]
     public void StartsWith_WithChar_NotMatching_ShouldReturnFalse()
     {
         // Arrange
@@ -28,10 +28,10 @@ public partial class StringExTests
         var result = text.StartsWith('W');
 
         // Assert
-        Assert.False(result);
+        Assert.IsFalse(result);
     }
 
-    [Fact]
+    [Test]
     public void StartsWith_WithChar_EmptyString_ShouldReturnFalse()
     {
         // Arrange
@@ -41,10 +41,10 @@ public partial class StringExTests
         var result = text.StartsWith('H');
 
         // Assert
-        Assert.False(result);
+        Assert.IsFalse(result);
     }
 
-    [Fact]
+    [Test]
     public void StartsWith_WithChar_CaseSensitive()
     {
         // Arrange
@@ -54,10 +54,10 @@ public partial class StringExTests
         var result = text.StartsWith('h');
 
         // Assert
-        Assert.False(result);
+        Assert.IsFalse(result);
     }
 
-    [Fact]
+    [Test]
     public void StartsWith_WithChar_SingleChar_ShouldReturnTrue()
     {
         // Arrange
@@ -67,7 +67,7 @@ public partial class StringExTests
         var result = text.StartsWith('H');
 
         // Assert
-        Assert.True(result);
+        Assert.IsTrue(result);
     }
 }
 #endif

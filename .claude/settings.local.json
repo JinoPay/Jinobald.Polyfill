@@ -8,7 +8,12 @@
       "Bash(msbuild:*)",
       "Bash(cmd.exe /c \"dir \"\"C:\\Program Files\\Microsoft Visual Studio\"\" 2>nul\")",
       "Bash(cmd.exe:*)",
-      "Bash(dotnet build:*)"
+      "Bash(dotnet build:*)",
+      "WebSearch",
+      "WebFetch(domain:www.nuget.org)",
+      "Bash(findstr:*)",
+      "Bash(powershell:*)",
+      "Bash(find:*)"
     ],
     "deny": [],
     "ask": []

@@ -9,7 +9,7 @@ using global::System.IO;
 using global::System.Net.Http;
 using global::System.Text;
 using global::System.Threading.Tasks;
-using Xunit;
+using NUnit.Framework;
 
 /// <summary>
 /// HttpContent 파생 클래스들에 대한 단위 테스트입니다.
@@ -18,17 +18,17 @@ public class HttpContentTests
 {
     #region StringContent Tests
 
-    [Fact]
+    [Test]
     public void StringContent_Constructor_WithString_SetsContent()
     {
         var content = new StringContent("Hello, World!");
 
         var result = content.ReadAsStringAsync().Result;
 
-        Assert.Equal("Hello, World!", result);
+        Assert.AreEqual("Hello, World!", result);
     }
 
-    [Fact]
+    [Test]
     public void StringContent_Constructor_WithEncoding_SetsContentType()
     {
         var content = new StringContent("Hello", Encoding.UTF8, "text/plain");
@@ -36,7 +36,7 @@ public class HttpContentTests
         Assert.Contains("text/plain", content.Headers.ContentType ?? string.Empty);
     }
 
-    [Fact]
+    [Test]
     public void StringContent_ReadAsByteArrayAsync_ReturnsBytes()
     {
         var text = "Hello, World!";
@@ -44,15 +44,15 @@ public class HttpContentTests
 
         var bytes = content.ReadAsByteArrayAsync().Result;
 
-        Assert.NotNull(bytes);
-        Assert.True(bytes.Length > 0);
+        Assert.IsNotNull(bytes);
+        Assert.IsTrue(bytes.Length > 0);
     }
 
     #endregion
 
     #region ByteArrayContent Tests
 
-    [Fact]
+    [Test]
     public void ByteArrayContent_Constructor_WithByteArray_SetsContent()
     {
         var data = Encoding.UTF8.GetBytes("Hello, World!");
@@ -60,10 +60,10 @@ public class HttpContentTests
 
         var result = content.ReadAsByteArrayAsync().Result;
 
-        Assert.Equal(data, result);
+        Assert.AreEqual(data, result);
     }
 
-    [Fact]
+    [Test]
     public void ByteArrayContent_Constructor_WithOffsetAndCount_SetsPartialContent()
     {
         var data = Encoding.UTF8.GetBytes("Hello, World!");
@@ -71,11 +71,11 @@ public class HttpContentTests
 
         var result = content.ReadAsByteArrayAsync().Result;
 
-        Assert.Equal(5, result.Length);
-        Assert.Equal("Hello", Encoding.UTF8.GetString(result));
+        Assert.AreEqual(5, result.Length);
+        Assert.AreEqual("Hello", Encoding.UTF8.GetString(result));
     }
 
-    [Fact]
+    [Test]
     public void ByteArrayContent_ReadAsStringAsync_ReturnsString()
     {
         var data = Encoding.UTF8.GetBytes("Hello, World!");
@@ -83,14 +83,14 @@ public class HttpContentTests
 
         var result = content.ReadAsStringAsync().Result;
 
-        Assert.Equal("Hello, World!", result);
+        Assert.AreEqual("Hello, World!", result);
     }
 
     #endregion
 
     #region StreamContent Tests
 
-    [Fact]
+    [Test]
     public void StreamContent_Constructor_WithStream_SetsContent()
     {
         var stream = new MemoryStream(Encoding.UTF8.GetBytes("Hello, World!"));
@@ -98,10 +98,10 @@ public class HttpContentTests
 
         var result = content.ReadAsStringAsync().Result;
 
-        Assert.Equal("Hello, World!", result);
+        Assert.AreEqual("Hello, World!", result);
     }
 
-    [Fact]
+    [Test]
     public void StreamContent_ReadAsByteArrayAsync_ReturnsBytes()
     {
         var data = Encoding.UTF8.GetBytes("Hello, World!");
@@ -110,14 +110,14 @@ public class HttpContentTests
 
         var result = content.ReadAsByteArrayAsync().Result;
 
-        Assert.Equal(data, result);
+        Assert.AreEqual(data, result);
     }
 
     #endregion
 
     #region FormUrlEncodedContent Tests
 
-    [Fact]
+    [Test]
     public void FormUrlEncodedContent_Constructor_WithKeyValuePairs_EncodesContent()
     {
         var pairs = new[]
@@ -134,7 +134,7 @@ public class HttpContentTests
         Assert.Contains("&", result);
     }
 
-    [Fact]
+    [Test]
     public void FormUrlEncodedContent_EncodesSpecialCharacters()
     {
         var pairs = new[]
@@ -149,7 +149,7 @@ public class HttpContentTests
         Assert.Contains("key=value", result);
     }
 
-    [Fact]
+    [Test]
     public void FormUrlEncodedContent_ContentType_IsFormUrlEncoded()
     {
         var pairs = new[]
@@ -165,29 +165,29 @@ public class HttpContentTests
 
     #region Headers Tests
 
-    [Fact]
+    [Test]
     public void HttpContent_Headers_CanSetContentType()
     {
         var content = new StringContent("Hello");
         content.Headers.ContentType = "application/json";
 
-        Assert.Equal("application/json", content.Headers.ContentType);
+        Assert.AreEqual("application/json", content.Headers.ContentType);
     }
 
-    [Fact]
+    [Test]
     public void HttpContent_Headers_CanSetContentLength()
     {
         var content = new StringContent("Hello");
 
         // ContentLength는 자동으로 계산됨
-        Assert.True(content.Headers.ContentLength > 0);
+        Assert.IsTrue(content.Headers.ContentLength > 0);
     }
 
     #endregion
 
     #region CopyTo Tests
 
-    [Fact]
+    [Test]
     public void HttpContent_CopyToAsync_CopiesToStream()
     {
         var content = new StringContent("Hello, World!");
@@ -197,14 +197,14 @@ public class HttpContentTests
         targetStream.Position = 0;
 
         var result = new StreamReader(targetStream).ReadToEnd();
-        Assert.Equal("Hello, World!", result);
+        Assert.AreEqual("Hello, World!", result);
     }
 
     #endregion
 
     #region Dispose Tests
 
-    [Fact]
+    [Test]
     public void HttpContent_Dispose_DisposesContent()
     {
         var content = new StringContent("Hello");

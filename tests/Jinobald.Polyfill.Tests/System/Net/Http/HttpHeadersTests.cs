@@ -7,7 +7,7 @@ namespace Jinobald.Polyfill.Tests.System.Net.Http;
 using global::System;
 using global::System.Linq;
 using global::System.Net.Http.Headers;
-using Xunit;
+using NUnit.Framework;
 
 /// <summary>
 /// HttpHeaders 클래스들에 대한 단위 테스트입니다.
@@ -16,17 +16,17 @@ public class HttpHeadersTests
 {
     #region HttpRequestHeaders Tests
 
-    [Fact]
+    [Test]
     public void HttpRequestHeaders_Add_AddsHeader()
     {
         var headers = new HttpRequestHeaders();
 
         headers.Add("X-Custom-Header", "value");
 
-        Assert.True(headers.Contains("X-Custom-Header"));
+        Assert.IsTrue(headers.Contains("X-Custom-Header"));
     }
 
-    [Fact]
+    [Test]
     public void HttpRequestHeaders_GetValues_ReturnsValues()
     {
         var headers = new HttpRequestHeaders();
@@ -39,7 +39,7 @@ public class HttpHeadersTests
         Assert.Contains("value2", values);
     }
 
-    [Fact]
+    [Test]
     public void HttpRequestHeaders_Remove_RemovesHeader()
     {
         var headers = new HttpRequestHeaders();
@@ -47,75 +47,75 @@ public class HttpHeadersTests
 
         var result = headers.Remove("X-Custom-Header");
 
-        Assert.True(result);
-        Assert.False(headers.Contains("X-Custom-Header"));
+        Assert.IsTrue(result);
+        Assert.IsFalse(headers.Contains("X-Custom-Header"));
     }
 
-    [Fact]
+    [Test]
     public void HttpRequestHeaders_Accept_CanBeSet()
     {
         var headers = new HttpRequestHeaders();
 
         headers.Accept = "application/json";
 
-        Assert.Equal("application/json", headers.Accept);
+        Assert.AreEqual("application/json", headers.Accept);
     }
 
-    [Fact]
+    [Test]
     public void HttpRequestHeaders_Authorization_CanBeSet()
     {
         var headers = new HttpRequestHeaders();
 
         headers.Authorization = "Bearer token123";
 
-        Assert.Equal("Bearer token123", headers.Authorization);
+        Assert.AreEqual("Bearer token123", headers.Authorization);
     }
 
-    [Fact]
+    [Test]
     public void HttpRequestHeaders_UserAgent_CanBeSet()
     {
         var headers = new HttpRequestHeaders();
 
         headers.UserAgent = "MyApp/1.0";
 
-        Assert.Equal("MyApp/1.0", headers.UserAgent);
+        Assert.AreEqual("MyApp/1.0", headers.UserAgent);
     }
 
-    [Fact]
+    [Test]
     public void HttpRequestHeaders_Host_CanBeSet()
     {
         var headers = new HttpRequestHeaders();
 
         headers.Host = "example.com";
 
-        Assert.Equal("example.com", headers.Host);
+        Assert.AreEqual("example.com", headers.Host);
     }
 
     #endregion
 
     #region HttpResponseHeaders Tests
 
-    [Fact]
+    [Test]
     public void HttpResponseHeaders_Add_AddsHeader()
     {
         var headers = new HttpResponseHeaders();
 
         headers.Add("X-Response-Header", "value");
 
-        Assert.True(headers.Contains("X-Response-Header"));
+        Assert.IsTrue(headers.Contains("X-Response-Header"));
     }
 
-    [Fact]
+    [Test]
     public void HttpResponseHeaders_Server_CanBeSet()
     {
         var headers = new HttpResponseHeaders();
 
         headers.Server = "MyServer/1.0";
 
-        Assert.Equal("MyServer/1.0", headers.Server);
+        Assert.AreEqual("MyServer/1.0", headers.Server);
     }
 
-    [Fact]
+    [Test]
     public void HttpResponseHeaders_Location_CanBeSet()
     {
         var headers = new HttpResponseHeaders();
@@ -123,48 +123,48 @@ public class HttpHeadersTests
 
         headers.Location = uri;
 
-        Assert.Equal(uri, headers.Location);
+        Assert.AreEqual(uri, headers.Location);
     }
 
     #endregion
 
     #region HttpContentHeaders Tests
 
-    [Fact]
+    [Test]
     public void HttpContentHeaders_ContentType_CanBeSet()
     {
         var headers = new HttpContentHeaders();
 
         headers.ContentType = "application/json";
 
-        Assert.Equal("application/json", headers.ContentType);
+        Assert.AreEqual("application/json", headers.ContentType);
     }
 
-    [Fact]
+    [Test]
     public void HttpContentHeaders_ContentLength_CanBeSet()
     {
         var headers = new HttpContentHeaders();
 
         headers.ContentLength = 1024;
 
-        Assert.Equal(1024, headers.ContentLength);
+        Assert.AreEqual(1024, headers.ContentLength);
     }
 
-    [Fact]
+    [Test]
     public void HttpContentHeaders_ContentEncoding_CanBeSet()
     {
         var headers = new HttpContentHeaders();
 
         headers.ContentEncoding = "gzip";
 
-        Assert.Equal("gzip", headers.ContentEncoding);
+        Assert.AreEqual("gzip", headers.ContentEncoding);
     }
 
     #endregion
 
     #region Enumeration Tests
 
-    [Fact]
+    [Test]
     public void HttpHeaders_Enumerable_ReturnsAllHeaders()
     {
         var headers = new HttpRequestHeaders();
@@ -173,10 +173,10 @@ public class HttpHeadersTests
 
         var list = headers.ToList();
 
-        Assert.Equal(2, list.Count);
+        Assert.AreEqual(2, list.Count);
     }
 
-    [Fact]
+    [Test]
     public void HttpHeaders_Clear_RemovesAllHeaders()
     {
         var headers = new HttpRequestHeaders();
@@ -185,14 +185,14 @@ public class HttpHeadersTests
 
         headers.Clear();
 
-        Assert.Empty(headers);
+        Assert.IsEmpty(headers);
     }
 
     #endregion
 
     #region TryGetValues Tests
 
-    [Fact]
+    [Test]
     public void HttpHeaders_TryGetValues_ExistingHeader_ReturnsTrue()
     {
         var headers = new HttpRequestHeaders();
@@ -200,20 +200,20 @@ public class HttpHeadersTests
 
         var result = headers.TryGetValues("X-Custom-Header", out var values);
 
-        Assert.True(result);
-        Assert.NotNull(values);
+        Assert.IsTrue(result);
+        Assert.IsNotNull(values);
         Assert.Contains("value", values);
     }
 
-    [Fact]
+    [Test]
     public void HttpHeaders_TryGetValues_NonExistingHeader_ReturnsFalse()
     {
         var headers = new HttpRequestHeaders();
 
         var result = headers.TryGetValues("Non-Existing", out var values);
 
-        Assert.False(result);
-        Assert.Null(values);
+        Assert.IsFalse(result);
+        Assert.IsNull(values);
     }
 
     #endregion

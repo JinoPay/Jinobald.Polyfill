@@ -4,7 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Xunit;
+using NUnit.Framework;
 
 namespace Jinobald.Polyfill.Tests.System.Linq
 {
@@ -15,7 +15,7 @@ namespace Jinobald.Polyfill.Tests.System.Linq
     {
         #region Where 테스트
 
-        [Fact]
+        [Test]
         public void Where_조건을_만족하는_요소만_반환()
         {
             // 준비
@@ -25,11 +25,11 @@ namespace Jinobald.Polyfill.Tests.System.Linq
             var result = source.Where(x => x > 2).ToList();
 
             // 검증
-            Assert.Equal(3, result.Count);
-            Assert.Equal(new[] { 3, 4, 5 }, result);
+            Assert.AreEqual(3, result.Count);
+            Assert.AreEqual(new[] { 3, 4, 5 }, result);
         }
 
-        [Fact]
+        [Test]
         public void Where_인덱스와_함께_필터링()
         {
             // 준비
@@ -39,10 +39,10 @@ namespace Jinobald.Polyfill.Tests.System.Linq
             var result = source.Where((x, i) => i % 2 == 0).ToList();
 
             // 검증
-            Assert.Equal(new[] { "a", "c", "e" }, result);
+            Assert.AreEqual(new[] { "a", "c", "e" }, result);
         }
 
-        [Fact]
+        [Test]
         public void Where_빈_시퀀스_반환()
         {
             // 준비
@@ -52,10 +52,10 @@ namespace Jinobald.Polyfill.Tests.System.Linq
             var result = source.Where(x => x > 10).ToList();
 
             // 검증
-            Assert.Empty(result);
+            Assert.IsEmpty(result);
         }
 
-        [Fact]
+        [Test]
         public void Where_Null_Source_예외_발생()
         {
             // 준비
@@ -65,7 +65,7 @@ namespace Jinobald.Polyfill.Tests.System.Linq
             Assert.Throws<ArgumentNullException>(() => source!.Where(x => true));
         }
 
-        [Fact]
+        [Test]
         public void Where_Null_Predicate_예외_발생()
         {
             // 준비
@@ -79,7 +79,7 @@ namespace Jinobald.Polyfill.Tests.System.Linq
 
         #region Select 테스트
 
-        [Fact]
+        [Test]
         public void Select_요소를_변환()
         {
             // 준비
@@ -89,10 +89,10 @@ namespace Jinobald.Polyfill.Tests.System.Linq
             var result = source.Select(x => x * 2).ToList();
 
             // 검증
-            Assert.Equal(new[] { 2, 4, 6 }, result);
+            Assert.AreEqual(new[] { 2, 4, 6 }, result);
         }
 
-        [Fact]
+        [Test]
         public void Select_인덱스와_함께_변환()
         {
             // 준비
@@ -102,10 +102,10 @@ namespace Jinobald.Polyfill.Tests.System.Linq
             var result = source.Select((x, i) => $"{i}:{x}").ToList();
 
             // 검증
-            Assert.Equal(new[] { "0:a", "1:b", "2:c" }, result);
+            Assert.AreEqual(new[] { "0:a", "1:b", "2:c" }, result);
         }
 
-        [Fact]
+        [Test]
         public void Select_타입_변환()
         {
             // 준비
@@ -115,14 +115,14 @@ namespace Jinobald.Polyfill.Tests.System.Linq
             var result = source.Select(x => x.ToString()).ToList();
 
             // 검증
-            Assert.Equal(new[] { "1", "2", "3" }, result);
+            Assert.AreEqual(new[] { "1", "2", "3" }, result);
         }
 
         #endregion
 
         #region SelectMany 테스트
 
-        [Fact]
+        [Test]
         public void SelectMany_중첩_컬렉션_평탄화()
         {
             // 준비
@@ -132,10 +132,10 @@ namespace Jinobald.Polyfill.Tests.System.Linq
             var result = source.SelectMany(x => x).ToList();
 
             // 검증
-            Assert.Equal(new[] { 1, 2, 3, 4 }, result);
+            Assert.AreEqual(new[] { 1, 2, 3, 4 }, result);
         }
 
-        [Fact]
+        [Test]
         public void SelectMany_인덱스_사용()
         {
             // 준비
@@ -145,10 +145,10 @@ namespace Jinobald.Polyfill.Tests.System.Linq
             var result = source.SelectMany((s, i) => s.Select(c => $"{i}:{c}")).ToList();
 
             // 검증
-            Assert.Equal(new[] { "0:a", "0:b", "1:c", "1:d" }, result);
+            Assert.AreEqual(new[] { "0:a", "0:b", "1:c", "1:d" }, result);
         }
 
-        [Fact]
+        [Test]
         public void SelectMany_결과_선택기_사용()
         {
             // 준비
@@ -165,14 +165,14 @@ namespace Jinobald.Polyfill.Tests.System.Linq
             ).ToList();
 
             // 검증
-            Assert.Equal(new[] { "Alice:Cat", "Alice:Dog", "Bob:Bird" }, result);
+            Assert.AreEqual(new[] { "Alice:Cat", "Alice:Dog", "Bob:Bird" }, result);
         }
 
         #endregion
 
         #region First / FirstOrDefault 테스트
 
-        [Fact]
+        [Test]
         public void First_첫_번째_요소_반환()
         {
             // 준비
@@ -182,10 +182,10 @@ namespace Jinobald.Polyfill.Tests.System.Linq
             var result = source.First();
 
             // 검증
-            Assert.Equal(1, result);
+            Assert.AreEqual(1, result);
         }
 
-        [Fact]
+        [Test]
         public void First_조건을_만족하는_첫_번째_요소()
         {
             // 준비
@@ -195,10 +195,10 @@ namespace Jinobald.Polyfill.Tests.System.Linq
             var result = source.First(x => x > 3);
 
             // 검증
-            Assert.Equal(4, result);
+            Assert.AreEqual(4, result);
         }
 
-        [Fact]
+        [Test]
         public void First_빈_시퀀스_예외_발생()
         {
             // 준비
@@ -208,7 +208,7 @@ namespace Jinobald.Polyfill.Tests.System.Linq
             Assert.Throws<InvalidOperationException>(() => source.First());
         }
 
-        [Fact]
+        [Test]
         public void FirstOrDefault_첫_번째_요소_반환()
         {
             // 준비
@@ -218,10 +218,10 @@ namespace Jinobald.Polyfill.Tests.System.Linq
             var result = source.FirstOrDefault();
 
             // 검증
-            Assert.Equal(1, result);
+            Assert.AreEqual(1, result);
         }
 
-        [Fact]
+        [Test]
         public void FirstOrDefault_빈_시퀀스_기본값_반환()
         {
             // 준비
@@ -231,10 +231,10 @@ namespace Jinobald.Polyfill.Tests.System.Linq
             var result = source.FirstOrDefault();
 
             // 검증
-            Assert.Equal(0, result);
+            Assert.AreEqual(0, result);
         }
 
-        [Fact]
+        [Test]
         public void FirstOrDefault_조건을_만족하는_요소_없음_기본값_반환()
         {
             // 준비
@@ -244,14 +244,14 @@ namespace Jinobald.Polyfill.Tests.System.Linq
             var result = source.FirstOrDefault(x => x > 10);
 
             // 검증
-            Assert.Equal(0, result);
+            Assert.AreEqual(0, result);
         }
 
         #endregion
 
         #region Last / LastOrDefault 테스트
 
-        [Fact]
+        [Test]
         public void Last_마지막_요소_반환()
         {
             // 준비
@@ -261,10 +261,10 @@ namespace Jinobald.Polyfill.Tests.System.Linq
             var result = source.Last();
 
             // 검증
-            Assert.Equal(3, result);
+            Assert.AreEqual(3, result);
         }
 
-        [Fact]
+        [Test]
         public void Last_조건을_만족하는_마지막_요소()
         {
             // 준비
@@ -274,10 +274,10 @@ namespace Jinobald.Polyfill.Tests.System.Linq
             var result = source.Last(x => x < 4);
 
             // 검증
-            Assert.Equal(3, result);
+            Assert.AreEqual(3, result);
         }
 
-        [Fact]
+        [Test]
         public void Last_빈_시퀀스_예외_발생()
         {
             // 준비
@@ -287,7 +287,7 @@ namespace Jinobald.Polyfill.Tests.System.Linq
             Assert.Throws<InvalidOperationException>(() => source.Last());
         }
 
-        [Fact]
+        [Test]
         public void LastOrDefault_마지막_요소_반환()
         {
             // 준비
@@ -297,10 +297,10 @@ namespace Jinobald.Polyfill.Tests.System.Linq
             var result = source.LastOrDefault();
 
             // 검증
-            Assert.Equal(3, result);
+            Assert.AreEqual(3, result);
         }
 
-        [Fact]
+        [Test]
         public void LastOrDefault_빈_시퀀스_기본값_반환()
         {
             // 준비
@@ -310,14 +310,14 @@ namespace Jinobald.Polyfill.Tests.System.Linq
             var result = source.LastOrDefault();
 
             // 검증
-            Assert.Equal(0, result);
+            Assert.AreEqual(0, result);
         }
 
         #endregion
 
         #region Single / SingleOrDefault 테스트
 
-        [Fact]
+        [Test]
         public void Single_유일한_요소_반환()
         {
             // 준비
@@ -327,10 +327,10 @@ namespace Jinobald.Polyfill.Tests.System.Linq
             var result = source.Single();
 
             // 검증
-            Assert.Equal(42, result);
+            Assert.AreEqual(42, result);
         }
 
-        [Fact]
+        [Test]
         public void Single_여러_요소_예외_발생()
         {
             // 준비
@@ -340,7 +340,7 @@ namespace Jinobald.Polyfill.Tests.System.Linq
             Assert.Throws<InvalidOperationException>(() => source.Single());
         }
 
-        [Fact]
+        [Test]
         public void Single_빈_시퀀스_예외_발생()
         {
             // 준비
@@ -350,7 +350,7 @@ namespace Jinobald.Polyfill.Tests.System.Linq
             Assert.Throws<InvalidOperationException>(() => source.Single());
         }
 
-        [Fact]
+        [Test]
         public void SingleOrDefault_유일한_요소_반환()
         {
             // 준비
@@ -360,10 +360,10 @@ namespace Jinobald.Polyfill.Tests.System.Linq
             var result = source.SingleOrDefault();
 
             // 검증
-            Assert.Equal(42, result);
+            Assert.AreEqual(42, result);
         }
 
-        [Fact]
+        [Test]
         public void SingleOrDefault_빈_시퀀스_기본값_반환()
         {
             // 준비
@@ -373,10 +373,10 @@ namespace Jinobald.Polyfill.Tests.System.Linq
             var result = source.SingleOrDefault();
 
             // 검증
-            Assert.Equal(0, result);
+            Assert.AreEqual(0, result);
         }
 
-        [Fact]
+        [Test]
         public void SingleOrDefault_여러_요소_예외_발생()
         {
             // 준비
@@ -390,169 +390,169 @@ namespace Jinobald.Polyfill.Tests.System.Linq
 
         #region Any / All 테스트
 
-        [Fact]
+        [Test]
         public void Any_요소가_있으면_True()
         {
             // 준비
             var source = new[] { 1, 2, 3 };
 
             // 실행 및 검증
-            Assert.True(source.Any());
+            Assert.IsTrue(source.Any());
         }
 
-        [Fact]
+        [Test]
         public void Any_빈_시퀀스_False()
         {
             // 준비
             var source = Array.Empty<int>();
 
             // 실행 및 검증
-            Assert.False(source.Any());
+            Assert.IsFalse(source.Any());
         }
 
-        [Fact]
+        [Test]
         public void Any_조건을_만족하는_요소가_있으면_True()
         {
             // 준비
             var source = new[] { 1, 2, 3, 4, 5 };
 
             // 실행 및 검증
-            Assert.True(source.Any(x => x > 4));
+            Assert.IsTrue(source.Any(x => x > 4));
         }
 
-        [Fact]
+        [Test]
         public void Any_조건을_만족하는_요소가_없으면_False()
         {
             // 준비
             var source = new[] { 1, 2, 3 };
 
             // 실행 및 검증
-            Assert.False(source.Any(x => x > 10));
+            Assert.IsFalse(source.Any(x => x > 10));
         }
 
-        [Fact]
+        [Test]
         public void All_모든_요소가_조건_만족_True()
         {
             // 준비
             var source = new[] { 2, 4, 6, 8 };
 
             // 실행 및 검증
-            Assert.True(source.All(x => x % 2 == 0));
+            Assert.IsTrue(source.All(x => x % 2 == 0));
         }
 
-        [Fact]
+        [Test]
         public void All_일부_요소가_조건_불만족_False()
         {
             // 준비
             var source = new[] { 2, 3, 4, 6 };
 
             // 실행 및 검증
-            Assert.False(source.All(x => x % 2 == 0));
+            Assert.IsFalse(source.All(x => x % 2 == 0));
         }
 
-        [Fact]
+        [Test]
         public void All_빈_시퀀스_True()
         {
             // 준비
             var source = Array.Empty<int>();
 
             // 실행 및 검증
-            Assert.True(source.All(x => x > 0));
+            Assert.IsTrue(source.All(x => x > 0));
         }
 
         #endregion
 
         #region Contains 테스트
 
-        [Fact]
+        [Test]
         public void Contains_요소_포함_True()
         {
             // 준비
             var source = new[] { 1, 2, 3, 4, 5 };
 
             // 실행 및 검증
-            Assert.True(source.Contains(3));
+            Assert.IsTrue(source.Contains(3));
         }
 
-        [Fact]
+        [Test]
         public void Contains_요소_미포함_False()
         {
             // 준비
             var source = new[] { 1, 2, 3 };
 
             // 실행 및 검증
-            Assert.False(source.Contains(10));
+            Assert.IsFalse(source.Contains(10));
         }
 
-        [Fact]
+        [Test]
         public void Contains_커스텀_비교자_사용()
         {
             // 준비
             var source = new[] { "Apple", "Banana", "Cherry" };
 
             // 실행 및 검증 - 대소문자 무시 비교
-            Assert.True(source.Contains("apple", StringComparer.OrdinalIgnoreCase));
+            Assert.IsTrue(source.Contains("apple", StringComparer.OrdinalIgnoreCase));
         }
 
         #endregion
 
         #region Count / LongCount 테스트
 
-        [Fact]
+        [Test]
         public void Count_요소_수_반환()
         {
             // 준비
             var source = new[] { 1, 2, 3, 4, 5 };
 
             // 실행 및 검증
-            Assert.Equal(5, source.Count());
+            Assert.AreEqual(5, source.Count());
         }
 
-        [Fact]
+        [Test]
         public void Count_조건을_만족하는_요소_수_반환()
         {
             // 준비
             var source = new[] { 1, 2, 3, 4, 5 };
 
             // 실행 및 검증
-            Assert.Equal(3, source.Count(x => x > 2));
+            Assert.AreEqual(3, source.Count(x => x > 2));
         }
 
-        [Fact]
+        [Test]
         public void Count_빈_시퀀스_0_반환()
         {
             // 준비
             var source = Array.Empty<int>();
 
             // 실행 및 검증
-            Assert.Equal(0, source.Count());
+            Assert.AreEqual(0, source.Count());
         }
 
-        [Fact]
+        [Test]
         public void LongCount_큰_시퀀스_요소_수_반환()
         {
             // 준비
             var source = Enumerable.Range(0, 1000);
 
             // 실행 및 검증
-            Assert.Equal(1000L, source.LongCount());
+            Assert.AreEqual(1000L, source.LongCount());
         }
 
         #endregion
 
         #region ElementAt / ElementAtOrDefault 테스트
 
-        [Fact]
+        [Test]
         public void ElementAt_인덱스로_요소_반환()
         {
             // 준비
             var source = new[] { "a", "b", "c", "d" };
 
             // 실행 및 검증
-            Assert.Equal("c", source.ElementAt(2));
+            Assert.AreEqual("c", source.ElementAt(2));
         }
 
-        [Fact]
+        [Test]
         public void ElementAt_범위_초과_예외_발생()
         {
             // 준비
@@ -562,7 +562,7 @@ namespace Jinobald.Polyfill.Tests.System.Linq
             Assert.Throws<ArgumentOutOfRangeException>(() => source.ElementAt(10));
         }
 
-        [Fact]
+        [Test]
         public void ElementAt_음수_인덱스_예외_발생()
         {
             // 준비
@@ -572,41 +572,41 @@ namespace Jinobald.Polyfill.Tests.System.Linq
             Assert.Throws<ArgumentOutOfRangeException>(() => source.ElementAt(-1));
         }
 
-        [Fact]
+        [Test]
         public void ElementAtOrDefault_인덱스로_요소_반환()
         {
             // 준비
             var source = new[] { "a", "b", "c" };
 
             // 실행 및 검증
-            Assert.Equal("b", source.ElementAtOrDefault(1));
+            Assert.AreEqual("b", source.ElementAtOrDefault(1));
         }
 
-        [Fact]
+        [Test]
         public void ElementAtOrDefault_범위_초과_기본값_반환()
         {
             // 준비
             var source = new[] { 1, 2, 3 };
 
             // 실행 및 검증
-            Assert.Equal(0, source.ElementAtOrDefault(10));
+            Assert.AreEqual(0, source.ElementAtOrDefault(10));
         }
 
-        [Fact]
+        [Test]
         public void ElementAtOrDefault_음수_인덱스_기본값_반환()
         {
             // 준비
             var source = new[] { 1, 2, 3 };
 
             // 실행 및 검증
-            Assert.Equal(0, source.ElementAtOrDefault(-1));
+            Assert.AreEqual(0, source.ElementAtOrDefault(-1));
         }
 
         #endregion
 
         #region 지연 실행 테스트
 
-        [Fact]
+        [Test]
         public void Where_지연_실행_확인()
         {
             // 준비
@@ -624,17 +624,17 @@ namespace Jinobald.Polyfill.Tests.System.Linq
             var query = Source().Where(x => x > 2);
 
             // 검증 - 아직 실행되지 않음
-            Assert.Equal(0, executionCount);
+            Assert.AreEqual(0, executionCount);
 
             // 실행 - ToList로 실제 실행
             var result = query.ToList();
 
             // 검증 - 모든 요소가 평가됨
-            Assert.Equal(5, executionCount);
-            Assert.Equal(new[] { 3, 4, 5 }, result);
+            Assert.AreEqual(5, executionCount);
+            Assert.AreEqual(new[] { 3, 4, 5 }, result);
         }
 
-        [Fact]
+        [Test]
         public void Select_지연_실행_확인()
         {
             // 준비
@@ -648,14 +648,14 @@ namespace Jinobald.Polyfill.Tests.System.Linq
             });
 
             // 검증 - 아직 변환되지 않음
-            Assert.Equal(0, transformCount);
+            Assert.AreEqual(0, transformCount);
 
             // 실행 - 첫 번째 요소만 가져옴
             var first = query.First();
 
             // 검증 - 하나의 요소만 변환됨
-            Assert.Equal(1, transformCount);
-            Assert.Equal(2, first);
+            Assert.AreEqual(1, transformCount);
+            Assert.AreEqual(2, first);
         }
 
         #endregion

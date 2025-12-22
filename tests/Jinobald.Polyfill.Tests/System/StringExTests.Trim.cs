@@ -1,10 +1,10 @@
-using Xunit;
+using NUnit.Framework;
 
 namespace Jinobald.Polyfill.Tests.System;
 
 public partial class StringExTests
 {
-    [Fact]
+    [Test]
     public void Trim_WithChar_ShouldRemoveFromBothEnds()
     {
         // Arrange
@@ -14,10 +14,10 @@ public partial class StringExTests
         string result = text.Trim('x');
 
         // Assert
-        Assert.Equal("Hello World", result);
+        Assert.AreEqual("Hello World", result);
     }
 
-    [Fact]
+    [Test]
     public void Trim_WithChar_NoMatch_ShouldReturnOriginal()
     {
         // Arrange
@@ -27,10 +27,10 @@ public partial class StringExTests
         string result = text.Trim('x');
 
         // Assert
-        Assert.Equal("Hello World", result);
+        Assert.AreEqual("Hello World", result);
     }
 
-    [Fact]
+    [Test]
     public void Trim_WithChar_MultipleChars_ShouldRemoveAll()
     {
         // Arrange
@@ -40,10 +40,10 @@ public partial class StringExTests
         string result = text.Trim('x');
 
         // Assert
-        Assert.Equal("Hello World", result);
+        Assert.AreEqual("Hello World", result);
     }
 
-    [Fact]
+    [Test]
     public void Trim_WithChar_OnlyTrimChar_ShouldReturnEmpty()
     {
         // Arrange
@@ -53,10 +53,10 @@ public partial class StringExTests
         string result = text.Trim('x');
 
         // Assert
-        Assert.Equal(string.Empty, result);
+        Assert.AreEqual(string.Empty, result);
     }
 
-    [Fact]
+    [Test]
     public void Trim_WithChar_EmptyString_ShouldReturnEmpty()
     {
         // Arrange
@@ -66,10 +66,10 @@ public partial class StringExTests
         string result = text.Trim('x');
 
         // Assert
-        Assert.Equal(string.Empty, result);
+        Assert.AreEqual(string.Empty, result);
     }
 
-    [Fact]
+    [Test]
     public void TrimStart_WithChar_ShouldRemoveFromStart()
     {
         // Arrange
@@ -79,10 +79,10 @@ public partial class StringExTests
         string result = text.TrimStart('x');
 
         // Assert
-        Assert.Equal("Hello Worldx", result);
+        Assert.AreEqual("Hello Worldx", result);
     }
 
-    [Fact]
+    [Test]
     public void TrimStart_WithChar_NoMatch_ShouldReturnOriginal()
     {
         // Arrange
@@ -92,10 +92,10 @@ public partial class StringExTests
         string result = text.TrimStart('x');
 
         // Assert
-        Assert.Equal("Hello World", result);
+        Assert.AreEqual("Hello World", result);
     }
 
-    [Fact]
+    [Test]
     public void TrimStart_WithChar_MultipleChars_ShouldRemoveAll()
     {
         // Arrange
@@ -105,10 +105,10 @@ public partial class StringExTests
         string result = text.TrimStart('x');
 
         // Assert
-        Assert.Equal("Hello World", result);
+        Assert.AreEqual("Hello World", result);
     }
 
-    [Fact]
+    [Test]
     public void TrimStart_WithChar_OnlyTrimChar_ShouldReturnEmpty()
     {
         // Arrange
@@ -118,10 +118,10 @@ public partial class StringExTests
         string result = text.TrimStart('x');
 
         // Assert
-        Assert.Equal(string.Empty, result);
+        Assert.AreEqual(string.Empty, result);
     }
 
-    [Fact]
+    [Test]
     public void TrimStart_WithChar_EmptyString_ShouldReturnEmpty()
     {
         // Arrange
@@ -131,10 +131,10 @@ public partial class StringExTests
         string result = text.TrimStart('x');
 
         // Assert
-        Assert.Equal(string.Empty, result);
+        Assert.AreEqual(string.Empty, result);
     }
 
-    [Fact]
+    [Test]
     public void TrimEnd_WithChar_ShouldRemoveFromEnd()
     {
         // Arrange
@@ -144,10 +144,10 @@ public partial class StringExTests
         string result = text.TrimEnd('x');
 
         // Assert
-        Assert.Equal("xHello World", result);
+        Assert.AreEqual("xHello World", result);
     }
 
-    [Fact]
+    [Test]
     public void TrimEnd_WithChar_NoMatch_ShouldReturnOriginal()
     {
         // Arrange
@@ -157,10 +157,10 @@ public partial class StringExTests
         string result = text.TrimEnd('x');
 
         // Assert
-        Assert.Equal("Hello World", result);
+        Assert.AreEqual("Hello World", result);
     }
 
-    [Fact]
+    [Test]
     public void TrimEnd_WithChar_MultipleChars_ShouldRemoveAll()
     {
         // Arrange
@@ -170,10 +170,10 @@ public partial class StringExTests
         string result = text.TrimEnd('x');
 
         // Assert
-        Assert.Equal("Hello World", result);
+        Assert.AreEqual("Hello World", result);
     }
 
-    [Fact]
+    [Test]
     public void TrimEnd_WithChar_OnlyTrimChar_ShouldReturnEmpty()
     {
         // Arrange
@@ -183,10 +183,10 @@ public partial class StringExTests
         string result = text.TrimEnd('x');
 
         // Assert
-        Assert.Equal(string.Empty, result);
+        Assert.AreEqual(string.Empty, result);
     }
 
-    [Fact]
+    [Test]
     public void TrimEnd_WithChar_EmptyString_ShouldReturnEmpty()
     {
         // Arrange
@@ -196,10 +196,10 @@ public partial class StringExTests
         string result = text.TrimEnd('x');
 
         // Assert
-        Assert.Equal(string.Empty, result);
+        Assert.AreEqual(string.Empty, result);
     }
 
-    [Fact]
+    [Test]
     public void Trim_WithChar_WhitespaceNotAffected()
     {
         // Arrange
@@ -209,10 +209,10 @@ public partial class StringExTests
         string result = text.Trim('x');
 
         // Assert
-        Assert.Equal(" Hello World ", result);
+        Assert.AreEqual(" Hello World ", result);
     }
 
-    [Fact]
+    [Test]
     public void TrimStart_WithChar_WhitespaceNotAffected()
     {
         // Arrange
@@ -222,10 +222,10 @@ public partial class StringExTests
         string result = text.TrimStart('x');
 
         // Assert
-        Assert.Equal(" Hello World", result);
+        Assert.AreEqual(" Hello World", result);
     }
 
-    [Fact]
+    [Test]
     public void TrimEnd_WithChar_WhitespaceNotAffected()
     {
         // Arrange
@@ -235,6 +235,6 @@ public partial class StringExTests
         string result = text.TrimEnd('x');
 
         // Assert
-        Assert.Equal("Hello World ", result);
+        Assert.AreEqual("Hello World ", result);
     }
 }

@@ -1,7 +1,7 @@
 // Jinobald.Polyfill - LINQ 조인 연산자 테스트
 
 using System.Linq;
-using Xunit;
+using NUnit.Framework;
 
 namespace Jinobald.Polyfill.Tests.System.Linq;
 
@@ -15,7 +15,7 @@ public class EnumerableJoinTests
     /// <summary>
     /// Join이 일치하는 키로 두 시퀀스를 조인하는지 테스트합니다.
     /// </summary>
-    [Fact]
+    [Test]
     public void Join_일치하는키_조인결과반환()
     {
         var categories = new[]
@@ -37,7 +37,7 @@ public class EnumerableJoinTests
             (c, p) => new { Category = c.Name, Product = p.Name }
         ).ToArray();
 
-        Assert.Equal(3, result.Length);
+        Assert.AreEqual(3, result.Length);
         Assert.Contains(result, r => r.Category == "과일" && r.Product == "사과");
         Assert.Contains(result, r => r.Category == "과일" && r.Product == "바나나");
         Assert.Contains(result, r => r.Category == "채소" && r.Product == "당근");
@@ -46,7 +46,7 @@ public class EnumerableJoinTests
     /// <summary>
     /// Join이 일치하지 않는 요소를 제외하는지 테스트합니다.
     /// </summary>
-    [Fact]
+    [Test]
     public void Join_일치하지않는키_제외()
     {
         var outer = new[] { 1, 2, 3 };
@@ -54,7 +54,7 @@ public class EnumerableJoinTests
 
         var result = outer.Join(inner, o => o, i => i, (o, i) => o).ToArray();
 
-        Assert.Equal(2, result.Length);
+        Assert.AreEqual(2, result.Length);
         Assert.Contains(2, result);
         Assert.Contains(3, result);
     }
@@ -62,7 +62,7 @@ public class EnumerableJoinTests
     /// <summary>
     /// Join이 빈 시퀀스를 처리하는지 테스트합니다.
     /// </summary>
-    [Fact]
+    [Test]
     public void Join_빈시퀀스_빈결과()
     {
         var outer = new[] { 1, 2, 3 };
@@ -70,13 +70,13 @@ public class EnumerableJoinTests
 
         var result = outer.Join(inner, o => o, i => i, (o, i) => o).ToArray();
 
-        Assert.Empty(result);
+        Assert.IsEmpty(result);
     }
 
     /// <summary>
     /// Join이 null source에 대해 예외를 throw하는지 테스트합니다.
     /// </summary>
-    [Fact]
+    [Test]
     public void Join_NullOuter_예외발생()
     {
         int[]? outer = null;
@@ -93,7 +93,7 @@ public class EnumerableJoinTests
     /// <summary>
     /// GroupJoin이 일치하는 요소를 그룹화하는지 테스트합니다.
     /// </summary>
-    [Fact]
+    [Test]
     public void GroupJoin_일치하는키_그룹화()
     {
         var categories = new[]
@@ -115,15 +115,15 @@ public class EnumerableJoinTests
             (c, ps) => new { Category = c.Name, Count = ps.Count() }
         ).ToArray();
 
-        Assert.Equal(2, result.Length);
-        Assert.Equal(2, result.First(r => r.Category == "과일").Count);
-        Assert.Equal(1, result.First(r => r.Category == "채소").Count);
+        Assert.AreEqual(2, result.Length);
+        Assert.AreEqual(2, result.First(r => r.Category == "과일").Count);
+        Assert.AreEqual(1, result.First(r => r.Category == "채소").Count);
     }
 
     /// <summary>
     /// GroupJoin이 일치하지 않는 외부 요소에 빈 그룹을 반환하는지 테스트합니다.
     /// </summary>
-    [Fact]
+    [Test]
     public void GroupJoin_일치하지않는키_빈그룹()
     {
         var outer = new[] { 1, 2, 3 };
@@ -136,16 +136,16 @@ public class EnumerableJoinTests
             (o, items) => new { Key = o, Count = items.Count() }
         ).ToArray();
 
-        Assert.Equal(3, result.Length);
-        Assert.Equal(2, result.First(r => r.Key == 1).Count);
-        Assert.Equal(1, result.First(r => r.Key == 2).Count);
-        Assert.Equal(0, result.First(r => r.Key == 3).Count);
+        Assert.AreEqual(3, result.Length);
+        Assert.AreEqual(2, result.First(r => r.Key == 1).Count);
+        Assert.AreEqual(1, result.First(r => r.Key == 2).Count);
+        Assert.AreEqual(0, result.First(r => r.Key == 3).Count);
     }
 
     /// <summary>
     /// GroupJoin이 Left Outer Join처럼 동작하는지 테스트합니다.
     /// </summary>
-    [Fact]
+    [Test]
     public void GroupJoin_LeftOuterJoin패턴()
     {
         var departments = new[] { "개발", "영업", "인사" };
@@ -163,10 +163,10 @@ public class EnumerableJoinTests
             (d, emps) => new { Dept = d, Employees = emps.Select(e => e.Name).ToArray() }
         ).ToArray();
 
-        Assert.Equal(3, result.Length);
-        Assert.Equal(2, result.First(r => r.Dept == "개발").Employees.Length);
+        Assert.AreEqual(3, result.Length);
+        Assert.AreEqual(2, result.First(r => r.Dept == "개발").Employees.Length);
         Assert.Single(result.First(r => r.Dept == "영업").Employees);
-        Assert.Empty(result.First(r => r.Dept == "인사").Employees);
+        Assert.IsEmpty(result.First(r => r.Dept == "인사").Employees);
     }
 
     #endregion

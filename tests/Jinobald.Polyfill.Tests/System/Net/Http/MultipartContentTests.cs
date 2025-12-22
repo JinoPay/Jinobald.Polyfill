@@ -8,7 +8,7 @@ using global::System.IO;
 using global::System.Linq;
 using global::System.Net.Http;
 using global::System.Text;
-using Xunit;
+using NUnit.Framework;
 
 /// <summary>
 /// MultipartContent 클래스들에 대한 단위 테스트입니다.
@@ -17,16 +17,16 @@ public class MultipartContentTests
 {
     #region MultipartContent Tests
 
-    [Fact]
+    [Test]
     public void MultipartContent_DefaultConstructor_CreatesInstance()
     {
         var content = new MultipartContent();
 
-        Assert.NotNull(content);
+        Assert.IsNotNull(content);
         Assert.Contains("multipart/mixed", content.Headers.ContentType ?? string.Empty);
     }
 
-    [Fact]
+    [Test]
     public void MultipartContent_Constructor_WithSubtype_SetsContentType()
     {
         var content = new MultipartContent("form-data");
@@ -34,7 +34,7 @@ public class MultipartContentTests
         Assert.Contains("multipart/form-data", content.Headers.ContentType ?? string.Empty);
     }
 
-    [Fact]
+    [Test]
     public void MultipartContent_Constructor_WithBoundary_SetsBoundary()
     {
         var boundary = "----MyBoundary123";
@@ -43,7 +43,7 @@ public class MultipartContentTests
         Assert.Contains(boundary, content.Headers.ContentType ?? string.Empty);
     }
 
-    [Fact]
+    [Test]
     public void MultipartContent_Add_AddsContent()
     {
         var content = new MultipartContent();
@@ -54,7 +54,7 @@ public class MultipartContentTests
         Assert.Single(content);
     }
 
-    [Fact]
+    [Test]
     public void MultipartContent_Add_MultipleContents()
     {
         var content = new MultipartContent();
@@ -62,10 +62,10 @@ public class MultipartContentTests
         content.Add(new StringContent("Part 2"));
         content.Add(new StringContent("Part 3"));
 
-        Assert.Equal(3, content.Count());
+        Assert.AreEqual(3, content.Count());
     }
 
-    [Fact]
+    [Test]
     public void MultipartContent_Enumerable_IteratesOverParts()
     {
         var content = new MultipartContent();
@@ -76,26 +76,26 @@ public class MultipartContentTests
         foreach (var part in content)
         {
             count++;
-            Assert.NotNull(part);
+            Assert.IsNotNull(part);
         }
 
-        Assert.Equal(2, count);
+        Assert.AreEqual(2, count);
     }
 
     #endregion
 
     #region MultipartFormDataContent Tests
 
-    [Fact]
+    [Test]
     public void MultipartFormDataContent_DefaultConstructor_CreatesInstance()
     {
         var content = new MultipartFormDataContent();
 
-        Assert.NotNull(content);
+        Assert.IsNotNull(content);
         Assert.Contains("multipart/form-data", content.Headers.ContentType ?? string.Empty);
     }
 
-    [Fact]
+    [Test]
     public void MultipartFormDataContent_Constructor_WithBoundary_SetsBoundary()
     {
         var boundary = "----FormBoundary";
@@ -104,7 +104,7 @@ public class MultipartContentTests
         Assert.Contains(boundary, content.Headers.ContentType ?? string.Empty);
     }
 
-    [Fact]
+    [Test]
     public void MultipartFormDataContent_Add_WithName_AddsContent()
     {
         var content = new MultipartFormDataContent();
@@ -115,7 +115,7 @@ public class MultipartContentTests
         Assert.Single(content);
     }
 
-    [Fact]
+    [Test]
     public void MultipartFormDataContent_Add_WithNameAndFileName_AddsFileContent()
     {
         var content = new MultipartFormDataContent();
@@ -126,7 +126,7 @@ public class MultipartContentTests
         Assert.Single(content);
     }
 
-    [Fact]
+    [Test]
     public void MultipartFormDataContent_ReadAsStringAsync_ContainsBoundary()
     {
         var boundary = "----TestBoundary";
@@ -138,7 +138,7 @@ public class MultipartContentTests
         Assert.Contains(boundary, result);
     }
 
-    [Fact]
+    [Test]
     public void MultipartFormDataContent_ReadAsStringAsync_ContainsContentDisposition()
     {
         var content = new MultipartFormDataContent();
@@ -150,7 +150,7 @@ public class MultipartContentTests
         Assert.Contains("fieldName", result);
     }
 
-    [Fact]
+    [Test]
     public void MultipartFormDataContent_ReadAsStringAsync_ContainsFileInfo()
     {
         var content = new MultipartFormDataContent();
@@ -166,7 +166,7 @@ public class MultipartContentTests
 
     #region Serialization Tests
 
-    [Fact]
+    [Test]
     public void MultipartContent_Serialization_ContainsBoundaryDelimiters()
     {
         var boundary = "----Boundary";
@@ -185,7 +185,7 @@ public class MultipartContentTests
         Assert.Contains("--" + boundary + "--", result);
     }
 
-    [Fact]
+    [Test]
     public void MultipartContent_Serialization_ContainsAllParts()
     {
         var content = new MultipartContent();

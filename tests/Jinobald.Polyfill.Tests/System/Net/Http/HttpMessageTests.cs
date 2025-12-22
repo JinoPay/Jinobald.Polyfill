@@ -7,7 +7,7 @@ namespace Jinobald.Polyfill.Tests.System.Net.Http;
 using global::System;
 using global::System.Net;
 using global::System.Net.Http;
-using Xunit;
+using NUnit.Framework;
 
 /// <summary>
 /// HttpRequestMessage 및 HttpResponseMessage 클래스에 대한 단위 테스트입니다.
@@ -16,47 +16,47 @@ public class HttpMessageTests
 {
     #region HttpRequestMessage Tests
 
-    [Fact]
+    [Test]
     public void HttpRequestMessage_DefaultConstructor_SetsDefaultValues()
     {
         var request = new HttpRequestMessage();
 
-        Assert.Equal(HttpMethod.Get, request.Method);
-        Assert.Null(request.RequestUri);
-        Assert.NotNull(request.Headers);
+        Assert.AreEqual(HttpMethod.Get, request.Method);
+        Assert.IsNull(request.RequestUri);
+        Assert.IsNotNull(request.Headers);
     }
 
-    [Fact]
+    [Test]
     public void HttpRequestMessage_Constructor_WithMethodAndUri_SetsValues()
     {
         var uri = new Uri("https://example.com/api");
         var request = new HttpRequestMessage(HttpMethod.Post, uri);
 
-        Assert.Equal(HttpMethod.Post, request.Method);
-        Assert.Equal(uri, request.RequestUri);
+        Assert.AreEqual(HttpMethod.Post, request.Method);
+        Assert.AreEqual(uri, request.RequestUri);
     }
 
-    [Fact]
+    [Test]
     public void HttpRequestMessage_Constructor_WithMethodAndStringUri_SetsValues()
     {
         var request = new HttpRequestMessage(HttpMethod.Put, "https://example.com/api");
 
-        Assert.Equal(HttpMethod.Put, request.Method);
-        Assert.NotNull(request.RequestUri);
-        Assert.Equal("https://example.com/api", request.RequestUri.ToString());
+        Assert.AreEqual(HttpMethod.Put, request.Method);
+        Assert.IsNotNull(request.RequestUri);
+        Assert.AreEqual("https://example.com/api", request.RequestUri.ToString());
     }
 
-    [Fact]
+    [Test]
     public void HttpRequestMessage_Method_CanBeSet()
     {
         var request = new HttpRequestMessage();
 
         request.Method = HttpMethod.Delete;
 
-        Assert.Equal(HttpMethod.Delete, request.Method);
+        Assert.AreEqual(HttpMethod.Delete, request.Method);
     }
 
-    [Fact]
+    [Test]
     public void HttpRequestMessage_RequestUri_CanBeSet()
     {
         var request = new HttpRequestMessage();
@@ -64,10 +64,10 @@ public class HttpMessageTests
 
         request.RequestUri = uri;
 
-        Assert.Equal(uri, request.RequestUri);
+        Assert.AreEqual(uri, request.RequestUri);
     }
 
-    [Fact]
+    [Test]
     public void HttpRequestMessage_Content_CanBeSet()
     {
         var request = new HttpRequestMessage();
@@ -75,28 +75,28 @@ public class HttpMessageTests
 
         request.Content = content;
 
-        Assert.Equal(content, request.Content);
+        Assert.AreEqual(content, request.Content);
     }
 
-    [Fact]
+    [Test]
     public void HttpRequestMessage_Version_DefaultIsHttp11()
     {
         var request = new HttpRequestMessage();
 
-        Assert.Equal(new Version(1, 1), request.Version);
+        Assert.AreEqual(new Version(1, 1), request.Version);
     }
 
-    [Fact]
+    [Test]
     public void HttpRequestMessage_Version_CanBeSet()
     {
         var request = new HttpRequestMessage();
 
         request.Version = new Version(2, 0);
 
-        Assert.Equal(new Version(2, 0), request.Version);
+        Assert.AreEqual(new Version(2, 0), request.Version);
     }
 
-    [Fact]
+    [Test]
     public void HttpRequestMessage_Dispose_DisposesContent()
     {
         var content = new StringContent("Hello");
@@ -111,44 +111,44 @@ public class HttpMessageTests
 
     #region HttpResponseMessage Tests
 
-    [Fact]
+    [Test]
     public void HttpResponseMessage_DefaultConstructor_SetsOkStatus()
     {
         var response = new HttpResponseMessage();
 
-        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-        Assert.NotNull(response.Headers);
+        Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+        Assert.IsNotNull(response.Headers);
     }
 
-    [Fact]
+    [Test]
     public void HttpResponseMessage_Constructor_WithStatusCode_SetsStatus()
     {
         var response = new HttpResponseMessage(HttpStatusCode.NotFound);
 
-        Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+        Assert.AreEqual(HttpStatusCode.NotFound, response.StatusCode);
     }
 
-    [Fact]
+    [Test]
     public void HttpResponseMessage_StatusCode_CanBeSet()
     {
         var response = new HttpResponseMessage();
 
         response.StatusCode = HttpStatusCode.Created;
 
-        Assert.Equal(HttpStatusCode.Created, response.StatusCode);
+        Assert.AreEqual(HttpStatusCode.Created, response.StatusCode);
     }
 
-    [Fact]
+    [Test]
     public void HttpResponseMessage_ReasonPhrase_CanBeSet()
     {
         var response = new HttpResponseMessage();
 
         response.ReasonPhrase = "Custom Reason";
 
-        Assert.Equal("Custom Reason", response.ReasonPhrase);
+        Assert.AreEqual("Custom Reason", response.ReasonPhrase);
     }
 
-    [Fact]
+    [Test]
     public void HttpResponseMessage_Content_CanBeSet()
     {
         var response = new HttpResponseMessage();
@@ -156,10 +156,10 @@ public class HttpMessageTests
 
         response.Content = content;
 
-        Assert.Equal(content, response.Content);
+        Assert.AreEqual(content, response.Content);
     }
 
-    [Fact]
+    [Test]
     public void HttpResponseMessage_RequestMessage_CanBeSet()
     {
         var response = new HttpResponseMessage();
@@ -167,26 +167,26 @@ public class HttpMessageTests
 
         response.RequestMessage = request;
 
-        Assert.Equal(request, response.RequestMessage);
+        Assert.AreEqual(request, response.RequestMessage);
     }
 
-    [Fact]
+    [Test]
     public void HttpResponseMessage_IsSuccessStatusCode_TrueFor2xx()
     {
-        Assert.True(new HttpResponseMessage(HttpStatusCode.OK).IsSuccessStatusCode);
-        Assert.True(new HttpResponseMessage(HttpStatusCode.Created).IsSuccessStatusCode);
-        Assert.True(new HttpResponseMessage(HttpStatusCode.NoContent).IsSuccessStatusCode);
+        Assert.IsTrue(new HttpResponseMessage(HttpStatusCode.OK).IsSuccessStatusCode);
+        Assert.IsTrue(new HttpResponseMessage(HttpStatusCode.Created).IsSuccessStatusCode);
+        Assert.IsTrue(new HttpResponseMessage(HttpStatusCode.NoContent).IsSuccessStatusCode);
     }
 
-    [Fact]
+    [Test]
     public void HttpResponseMessage_IsSuccessStatusCode_FalseForNon2xx()
     {
-        Assert.False(new HttpResponseMessage(HttpStatusCode.BadRequest).IsSuccessStatusCode);
-        Assert.False(new HttpResponseMessage(HttpStatusCode.NotFound).IsSuccessStatusCode);
-        Assert.False(new HttpResponseMessage(HttpStatusCode.InternalServerError).IsSuccessStatusCode);
+        Assert.IsFalse(new HttpResponseMessage(HttpStatusCode.BadRequest).IsSuccessStatusCode);
+        Assert.IsFalse(new HttpResponseMessage(HttpStatusCode.NotFound).IsSuccessStatusCode);
+        Assert.IsFalse(new HttpResponseMessage(HttpStatusCode.InternalServerError).IsSuccessStatusCode);
     }
 
-    [Fact]
+    [Test]
     public void HttpResponseMessage_EnsureSuccessStatusCode_ThrowsOnError()
     {
         var response = new HttpResponseMessage(HttpStatusCode.NotFound);
@@ -194,7 +194,7 @@ public class HttpMessageTests
         Assert.Throws<HttpRequestException>(() => response.EnsureSuccessStatusCode());
     }
 
-    [Fact]
+    [Test]
     public void HttpResponseMessage_EnsureSuccessStatusCode_ReturnsResponseOnSuccess()
     {
         var response = new HttpResponseMessage(HttpStatusCode.OK);
@@ -204,7 +204,7 @@ public class HttpMessageTests
         Assert.Same(response, result);
     }
 
-    [Fact]
+    [Test]
     public void HttpResponseMessage_Dispose_DisposesContent()
     {
         var content = new StringContent("Response");

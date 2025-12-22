@@ -6,7 +6,7 @@ using global::System.Collections.Generic;
 using global::System.Linq;
 using global::System.Threading;
 using global::System.Threading.Tasks;
-using Xunit;
+using NUnit.Framework;
 
 #if NET35 || NET40
 using ConcurrentQueue = global::System.Collections.Concurrent.ConcurrentQueue<int>;
@@ -24,35 +24,35 @@ public class ConcurrentQueueTests
     /// <summary>
     /// 빈 큐가 올바르게 초기화되는지 테스트합니다.
     /// </summary>
-    [Fact]
+    [Test]
     public void Constructor_Default_IsEmpty()
     {
         var queue = new ConcurrentQueue();
 
-        Assert.True(queue.IsEmpty);
-        Assert.Equal(0, queue.Count);
+        Assert.IsTrue(queue.IsEmpty);
+        Assert.AreEqual(0, queue.Count);
     }
 
     /// <summary>
     /// 컬렉션으로 큐를 초기화하는지 테스트합니다.
     /// </summary>
-    [Fact]
+    [Test]
     public void Constructor_WithCollection_ContainsElements()
     {
         var items = new[] { 1, 2, 3, 4, 5 };
         var queue = new ConcurrentQueue(items);
 
-        Assert.False(queue.IsEmpty);
-        Assert.Equal(5, queue.Count);
+        Assert.IsFalse(queue.IsEmpty);
+        Assert.AreEqual(5, queue.Count);
 
         var result = queue.ToArray();
-        Assert.Equal(items, result);
+        Assert.AreEqual(items, result);
     }
 
     /// <summary>
     /// Enqueue가 요소를 추가하는지 테스트합니다.
     /// </summary>
-    [Fact]
+    [Test]
     public void Enqueue_AddsElement()
     {
         var queue = new ConcurrentQueue();
@@ -61,14 +61,14 @@ public class ConcurrentQueueTests
         queue.Enqueue(2);
         queue.Enqueue(3);
 
-        Assert.False(queue.IsEmpty);
-        Assert.Equal(3, queue.Count);
+        Assert.IsFalse(queue.IsEmpty);
+        Assert.AreEqual(3, queue.Count);
     }
 
     /// <summary>
     /// TryDequeue가 FIFO 순서로 요소를 제거하는지 테스트합니다.
     /// </summary>
-    [Fact]
+    [Test]
     public void TryDequeue_RemovesInFifoOrder()
     {
         var queue = new ConcurrentQueue();
@@ -76,58 +76,58 @@ public class ConcurrentQueueTests
         queue.Enqueue(2);
         queue.Enqueue(3);
 
-        Assert.True(queue.TryDequeue(out int result1));
-        Assert.Equal(1, result1);
+        Assert.IsTrue(queue.TryDequeue(out int result1));
+        Assert.AreEqual(1, result1);
 
-        Assert.True(queue.TryDequeue(out int result2));
-        Assert.Equal(2, result2);
+        Assert.IsTrue(queue.TryDequeue(out int result2));
+        Assert.AreEqual(2, result2);
 
-        Assert.True(queue.TryDequeue(out int result3));
-        Assert.Equal(3, result3);
+        Assert.IsTrue(queue.TryDequeue(out int result3));
+        Assert.AreEqual(3, result3);
 
-        Assert.True(queue.IsEmpty);
+        Assert.IsTrue(queue.IsEmpty);
     }
 
     /// <summary>
     /// 빈 큐에서 TryDequeue가 false를 반환하는지 테스트합니다.
     /// </summary>
-    [Fact]
+    [Test]
     public void TryDequeue_EmptyQueue_ReturnsFalse()
     {
         var queue = new ConcurrentQueue();
 
-        Assert.False(queue.TryDequeue(out int result));
-        Assert.Equal(0, result);
+        Assert.IsFalse(queue.TryDequeue(out int result));
+        Assert.AreEqual(0, result);
     }
 
     /// <summary>
     /// TryPeek가 요소를 제거하지 않고 반환하는지 테스트합니다.
     /// </summary>
-    [Fact]
+    [Test]
     public void TryPeek_DoesNotRemoveElement()
     {
         var queue = new ConcurrentQueue();
         queue.Enqueue(42);
 
-        Assert.True(queue.TryPeek(out int result));
-        Assert.Equal(42, result);
-        Assert.Equal(1, queue.Count);
+        Assert.IsTrue(queue.TryPeek(out int result));
+        Assert.AreEqual(42, result);
+        Assert.AreEqual(1, queue.Count);
 
-        Assert.True(queue.TryPeek(out result));
-        Assert.Equal(42, result);
-        Assert.Equal(1, queue.Count);
+        Assert.IsTrue(queue.TryPeek(out result));
+        Assert.AreEqual(42, result);
+        Assert.AreEqual(1, queue.Count);
     }
 
     /// <summary>
     /// 빈 큐에서 TryPeek가 false를 반환하는지 테스트합니다.
     /// </summary>
-    [Fact]
+    [Test]
     public void TryPeek_EmptyQueue_ReturnsFalse()
     {
         var queue = new ConcurrentQueue();
 
-        Assert.False(queue.TryPeek(out int result));
-        Assert.Equal(0, result);
+        Assert.IsFalse(queue.TryPeek(out int result));
+        Assert.AreEqual(0, result);
     }
 
     #endregion
@@ -137,7 +137,7 @@ public class ConcurrentQueueTests
     /// <summary>
     /// ToArray가 큐의 요소를 올바른 순서로 반환하는지 테스트합니다.
     /// </summary>
-    [Fact]
+    [Test]
     public void ToArray_ReturnsElementsInOrder()
     {
         var queue = new ConcurrentQueue();
@@ -147,13 +147,13 @@ public class ConcurrentQueueTests
 
         var result = queue.ToArray();
 
-        Assert.Equal(new[] { 1, 2, 3 }, result);
+        Assert.AreEqual(new[] { 1, 2, 3 }, result);
     }
 
     /// <summary>
     /// GetEnumerator가 큐의 요소를 열거하는지 테스트합니다.
     /// </summary>
-    [Fact]
+    [Test]
     public void GetEnumerator_EnumeratesElements()
     {
         var queue = new ConcurrentQueue();
@@ -167,7 +167,7 @@ public class ConcurrentQueueTests
             list.Add(item);
         }
 
-        Assert.Equal(new[] { 1, 2, 3 }, list);
+        Assert.AreEqual(new[] { 1, 2, 3 }, list);
     }
 
     #endregion
@@ -177,7 +177,7 @@ public class ConcurrentQueueTests
     /// <summary>
     /// 여러 스레드에서 동시에 Enqueue를 수행하는지 테스트합니다.
     /// </summary>
-    [Fact]
+    [Test]
     public void ConcurrentEnqueue_MultipleThreads()
     {
         var queue = new ConcurrentQueue();
@@ -199,13 +199,13 @@ public class ConcurrentQueueTests
 
         Task.WaitAll(tasks);
 
-        Assert.Equal(itemsPerThread * threadCount, queue.Count);
+        Assert.AreEqual(itemsPerThread * threadCount, queue.Count);
     }
 
     /// <summary>
     /// 여러 스레드에서 동시에 TryDequeue를 수행하는지 테스트합니다.
     /// </summary>
-    [Fact]
+    [Test]
     public void ConcurrentDequeue_MultipleThreads()
     {
         var queue = new ConcurrentQueue();
@@ -233,14 +233,14 @@ public class ConcurrentQueueTests
 
         Task.WaitAll(tasks);
 
-        Assert.Equal(totalItems, dequeued.Count);
-        Assert.True(queue.IsEmpty);
+        Assert.AreEqual(totalItems, dequeued.Count);
+        Assert.IsTrue(queue.IsEmpty);
     }
 
     /// <summary>
     /// 여러 스레드에서 동시에 Enqueue와 TryDequeue를 수행하는지 테스트합니다.
     /// </summary>
-    [Fact]
+    [Test]
     public void ConcurrentEnqueueAndDequeue_MultipleThreads()
     {
         var queue = new ConcurrentQueue();
@@ -277,7 +277,7 @@ public class ConcurrentQueueTests
         Task.WaitAll(dequeueTasks);
         enqueueTask.Wait();
 
-        Assert.Equal(operationsPerThread * threadCount, dequeued.Count);
+        Assert.AreEqual(operationsPerThread * threadCount, dequeued.Count);
     }
 
     #endregion
@@ -287,7 +287,7 @@ public class ConcurrentQueueTests
     /// <summary>
     /// 대량의 요소를 처리하는지 테스트합니다.
     /// </summary>
-    [Fact]
+    [Test]
     public void LargeScale_EnqueueAndDequeue()
     {
         var queue = new ConcurrentQueue();
@@ -298,15 +298,15 @@ public class ConcurrentQueueTests
             queue.Enqueue(i);
         }
 
-        Assert.Equal(itemCount, queue.Count);
+        Assert.AreEqual(itemCount, queue.Count);
 
         for (int i = 0; i < itemCount; i++)
         {
-            Assert.True(queue.TryDequeue(out int result));
-            Assert.Equal(i, result);
+            Assert.IsTrue(queue.TryDequeue(out int result));
+            Assert.AreEqual(i, result);
         }
 
-        Assert.True(queue.IsEmpty);
+        Assert.IsTrue(queue.IsEmpty);
     }
 
     #endregion
