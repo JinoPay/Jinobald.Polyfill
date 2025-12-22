@@ -373,7 +373,7 @@ namespace Jinobald.Polyfill.Tests.System.Linq
         // Tuple/ValueTuple 호환을 위한 헬퍼 메서드
         private static int GetIndexFromTuple<T>(object tuple)
         {
-#if NET40 || NET45 || NET451 || NET452 || NET46 || NET461 || NET462 || NET47 || NET471 || NET472 || NET48 || NETSTANDARD2_0
+#if NET40 || NET45 || NET451 || NET452 || NET46 || NET461 || NET462 || NET47 || NET471 || NET472 || NET48 || NET481 || NETSTANDARD2_0
             var vt = (ValueTuple<int, T>)tuple;
             return vt.Item1;
 #else
@@ -384,7 +384,7 @@ namespace Jinobald.Polyfill.Tests.System.Linq
 
         private static T GetItemFromTuple<T>(object tuple)
         {
-#if NET40 || NET45 || NET451 || NET452 || NET46 || NET461 || NET462 || NET47 || NET471 || NET472 || NET48 || NETSTANDARD2_0
+#if NET40 || NET45 || NET451 || NET452 || NET46 || NET461 || NET462 || NET47 || NET471 || NET472 || NET48 || NET481 || NETSTANDARD2_0
             var vt = (ValueTuple<int, T>)tuple;
             return vt.Item2;
 #else
