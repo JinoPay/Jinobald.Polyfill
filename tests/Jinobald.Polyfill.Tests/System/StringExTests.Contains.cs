@@ -1,10 +1,10 @@
-using Xunit;
+using NUnit.Framework;
 
 namespace Jinobald.Polyfill.Tests.System;
 
 public partial class StringExTests
 {
-    [Fact]
+    [Test]
     public void Contains_WithChar_ShouldReturnTrue()
     {
         // Arrange
@@ -14,10 +14,10 @@ public partial class StringExTests
         bool result = text.Contains('o');
 
         // Assert
-        Assert.True(result);
+        Assert.IsTrue(result);
     }
 
-    [Fact]
+    [Test]
     public void Contains_WithChar_NotFound_ShouldReturnFalse()
     {
         // Arrange
@@ -27,10 +27,10 @@ public partial class StringExTests
         bool result = text.Contains('x');
 
         // Assert
-        Assert.False(result);
+        Assert.IsFalse(result);
     }
 
-    [Fact]
+    [Test]
     public void Contains_WithChar_EmptyString_ShouldReturnFalse()
     {
         // Arrange
@@ -40,11 +40,10 @@ public partial class StringExTests
         bool result = text.Contains('x');
 
         // Assert
-        Assert.False(result);
+        Assert.IsFalse(result);
     }
 
-#if NETCOREAPP3_0_OR_GREATER
-    [Fact]
+    [Test]
     public void Contains_WithStringAndComparison_OrdinalShouldWork()
     {
         // Arrange
@@ -54,10 +53,10 @@ public partial class StringExTests
         var result = text.Contains("WORLD", StringComparison.Ordinal);
 
         // Assert
-        Assert.False(result);
+        Assert.IsFalse(result);
     }
 
-    [Fact]
+    [Test]
     public void Contains_WithStringAndComparison_OrdinalIgnoreCaseShouldWork()
     {
         // Arrange
@@ -67,10 +66,10 @@ public partial class StringExTests
         var result = text.Contains("WORLD", StringComparison.OrdinalIgnoreCase);
 
         // Assert
-        Assert.True(result);
+        Assert.IsTrue(result);
     }
 
-    [Fact]
+    [Test]
     public void Contains_WithStringAndComparison_CurrentCultureShouldWork()
     {
         // Arrange
@@ -80,10 +79,10 @@ public partial class StringExTests
         var result = text.Contains("World", StringComparison.CurrentCulture);
 
         // Assert
-        Assert.True(result);
+        Assert.IsTrue(result);
     }
 
-    [Fact]
+    [Test]
     public void Contains_WithStringAndComparison_CurrentCultureIgnoreCaseShouldWork()
     {
         // Arrange
@@ -93,10 +92,10 @@ public partial class StringExTests
         var result = text.Contains("world", StringComparison.CurrentCultureIgnoreCase);
 
         // Assert
-        Assert.True(result);
+        Assert.IsTrue(result);
     }
 
-    [Fact]
+    [Test]
     public void Contains_WithStringAndComparison_InvariantCultureShouldWork()
     {
         // Arrange
@@ -106,10 +105,10 @@ public partial class StringExTests
         var result = text.Contains("World", StringComparison.InvariantCulture);
 
         // Assert
-        Assert.True(result);
+        Assert.IsTrue(result);
     }
 
-    [Fact]
+    [Test]
     public void Contains_WithStringAndComparison_InvariantCultureIgnoreCaseShouldWork()
     {
         // Arrange
@@ -119,10 +118,10 @@ public partial class StringExTests
         var result = text.Contains("WORLD", StringComparison.InvariantCultureIgnoreCase);
 
         // Assert
-        Assert.True(result);
+        Assert.IsTrue(result);
     }
 
-    [Fact]
+    [Test]
     public void Contains_WithEmptyString_ShouldReturnTrue()
     {
         // Arrange
@@ -132,10 +131,10 @@ public partial class StringExTests
         var result = text.Contains("", StringComparison.Ordinal);
 
         // Assert
-        Assert.True(result);
+        Assert.IsTrue(result);
     }
 
-    [Fact]
+    [Test]
     public void Contains_WithNullValue_ShouldThrow()
     {
         // Arrange
@@ -144,5 +143,4 @@ public partial class StringExTests
         // Act & Assert
         Assert.Throws<ArgumentNullException>(() => text.Contains(null!, StringComparison.Ordinal));
     }
-#endif
 }

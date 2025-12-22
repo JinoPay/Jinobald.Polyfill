@@ -1,11 +1,10 @@
-#if !NETFRAMEWORK
-using Xunit;
+using NUnit.Framework;
 
 namespace Jinobald.Polyfill.Tests.System;
 
 public partial class StringExTests
 {
-    [Fact]
+    [Test]
     public void Create_WithValidLength_ShouldCreateString()
     {
         // Arrange
@@ -21,20 +20,20 @@ public partial class StringExTests
         });
 
         // Assert
-        Assert.Equal("xxxxx", result);
+        Assert.AreEqual("xxxxx", result);
     }
 
-    [Fact]
+    [Test]
     public void Create_WithZeroLength_ShouldReturnEmpty()
     {
         // Act
         var result = string.Create(0, 'x', (span, state) => { });
 
         // Assert
-        Assert.Equal(string.Empty, result);
+        Assert.AreEqual(string.Empty, result);
     }
 
-    [Fact]
+    [Test]
     public void Create_WithNegativeLength_ShouldThrow()
     {
         // Act & Assert
@@ -42,7 +41,7 @@ public partial class StringExTests
             string.Create(-1, 'x', (span, state) => { }));
     }
 
-    [Fact]
+    [Test]
     public void Create_WithComplexState_ShouldWork()
     {
         // Arrange
@@ -56,10 +55,10 @@ public partial class StringExTests
         });
 
         // Assert
-        Assert.Equal("HelloWorld", result);
+        Assert.AreEqual("HelloWorld", result);
     }
 
-    [Fact]
+    [Test]
     public void Create_WithNullState_ShouldWork()
     {
         // Act
@@ -71,10 +70,10 @@ public partial class StringExTests
         });
 
         // Assert
-        Assert.Equal("foo", result);
+        Assert.AreEqual("foo", result);
     }
 
-    [Fact]
+    [Test]
     public void Create_WithLargeString_ShouldWork()
     {
         // Arrange
@@ -90,11 +89,11 @@ public partial class StringExTests
         });
 
         // Assert
-        Assert.Equal(length, result.Length);
-        Assert.True(result.All(c => c == '*'));
+        Assert.AreEqual(length, result.Length);
+        Assert.IsTrue(result.All(c => c == '*'));
     }
 
-    [Fact]
+    [Test]
     public void Create_WithMultipleChars_ShouldWork()
     {
         // Act
@@ -107,10 +106,10 @@ public partial class StringExTests
         });
 
         // Assert
-        Assert.Equal("abcde", result);
+        Assert.AreEqual("abcde", result);
     }
 
-    [Fact]
+    [Test]
     public void Create_WithCustomClass_ShouldWork()
     {
         // Arrange
@@ -123,7 +122,7 @@ public partial class StringExTests
         });
 
         // Assert
-        Assert.Equal("Test", result);
+        Assert.AreEqual("Test", result);
     }
 
     private class TestData
@@ -131,4 +130,3 @@ public partial class StringExTests
         public string Value { get; set; } = string.Empty;
     }
 }
-#endif

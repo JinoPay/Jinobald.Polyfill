@@ -1,11 +1,10 @@
-#if NETCOREAPP3_0_OR_GREATER
-using Xunit;
+using NUnit.Framework;
 
 namespace Jinobald.Polyfill.Tests.System;
 
 public partial class StringExTests
 {
-    [Fact]
+    [Test]
     public void EndsWith_WithChar_ShouldReturnTrue()
     {
         // Arrange
@@ -15,10 +14,10 @@ public partial class StringExTests
         var result = text.EndsWith('d');
 
         // Assert
-        Assert.True(result);
+        Assert.IsTrue(result);
     }
 
-    [Fact]
+    [Test]
     public void EndsWith_WithChar_NotMatching_ShouldReturnFalse()
     {
         // Arrange
@@ -28,10 +27,10 @@ public partial class StringExTests
         var result = text.EndsWith('o');
 
         // Assert
-        Assert.False(result);
+        Assert.IsFalse(result);
     }
 
-    [Fact]
+    [Test]
     public void EndsWith_WithChar_EmptyString_ShouldReturnFalse()
     {
         // Arrange
@@ -41,10 +40,10 @@ public partial class StringExTests
         var result = text.EndsWith('d');
 
         // Assert
-        Assert.False(result);
+        Assert.IsFalse(result);
     }
 
-    [Fact]
+    [Test]
     public void EndsWith_WithChar_CaseSensitive()
     {
         // Arrange
@@ -54,10 +53,10 @@ public partial class StringExTests
         var result = text.EndsWith('D');
 
         // Assert
-        Assert.False(result);
+        Assert.IsFalse(result);
     }
 
-    [Fact]
+    [Test]
     public void EndsWith_WithChar_SingleChar_ShouldReturnTrue()
     {
         // Arrange
@@ -67,7 +66,6 @@ public partial class StringExTests
         var result = text.EndsWith('d');
 
         // Assert
-        Assert.True(result);
+        Assert.IsTrue(result);
     }
 }
-#endif

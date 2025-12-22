@@ -2,7 +2,6 @@
 // 공통 키를 가진 요소 컬렉션을 나타냅니다.
 
 #if NET20
-
 using System.Collections.Generic;
 
 namespace System.Linq

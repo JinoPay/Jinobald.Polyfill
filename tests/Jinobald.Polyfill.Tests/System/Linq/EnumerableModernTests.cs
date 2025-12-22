@@ -2,7 +2,6 @@
 // Chunk, Index, TryGetNonEnumeratedCount 메서드 테스트
 
 #if NET20
-
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;

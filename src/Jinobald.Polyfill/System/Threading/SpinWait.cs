@@ -2,31 +2,24 @@
 namespace System.Threading;
 
 /// <summary>
-/// 회전 대기를 지원하는 구조체입니다.
+///     회전 대기를 지원하는 구조체입니다.
 /// </summary>
 public struct SpinWait
 {
-    private int _count;
     private const int SpinCountThreshold = 10;
 
     /// <summary>
-    /// SpinWait의 회전 횟수를 가져옵니다.
+    ///     SpinWait의 회전 횟수를 가져옵니다.
     /// </summary>
-    public int Count
-    {
-        get { return _count; }
-    }
+    public int Count { get; private set; }
 
     /// <summary>
-    /// 다음 회전에서 yield를 수행해야 하는지 여부를 가져옵니다.
+    ///     다음 회전에서 yield를 수행해야 하는지 여부를 가져옵니다.
     /// </summary>
-    public bool NextSpinWillYield
-    {
-        get { return _count >= SpinCountThreshold; }
-    }
+    public bool NextSpinWillYield => Count >= SpinCountThreshold;
 
     /// <summary>
-    /// 한 번 회전합니다.
+    ///     한 번 회전합니다.
     /// </summary>
     public void SpinOnce()
     {
@@ -40,26 +33,26 @@ public struct SpinWait
         }
         else
         {
-            int spinCount = 1 << _count;
+            int spinCount = 1 << Count;
             for (int i = 0; i < spinCount; i++)
             {
                 Thread.SpinWait(1);
             }
         }
 
-        _count = (_count + 1) % 33;
+        Count = (Count + 1) % 33;
     }
 
     /// <summary>
-    /// 회전을 리셋합니다.
+    ///     회전을 리셋합니다.
     /// </summary>
     public void Reset()
     {
-        _count = 0;
+        Count = 0;
     }
 
     /// <summary>
-    /// 조건이 true가 될 때까지 회전합니다.
+    ///     조건이 true가 될 때까지 회전합니다.
     /// </summary>
     public static void SpinUntil(Func<bool> condition)
     {
@@ -67,18 +60,23 @@ public struct SpinWait
     }
 
     /// <summary>
-    /// 조건이 true가 될 때까지 회전합니다.
+    ///     조건이 true가 될 때까지 회전합니다.
     /// </summary>
     public static bool SpinUntil(Func<bool> condition, int millisecondsTimeout)
     {
         if (condition == null)
+        {
             throw new ArgumentNullException(nameof(condition));
+        }
 
         if (millisecondsTimeout < -1)
+        {
             throw new ArgumentOutOfRangeException(nameof(millisecondsTimeout));
+        }
 
         SpinWait spinner = default;
-        DateTime endTime = DateTime.UtcNow.AddMilliseconds(millisecondsTimeout == Timeout.Infinite ? 0 : millisecondsTimeout);
+        DateTime endTime =
+            DateTime.UtcNow.AddMilliseconds(millisecondsTimeout == Timeout.Infinite ? 0 : millisecondsTimeout);
 
         while (!condition())
         {
@@ -86,7 +84,9 @@ public struct SpinWait
             {
                 TimeSpan remaining = endTime - DateTime.UtcNow;
                 if (remaining.TotalMilliseconds <= 0)
+                {
                     return false;
+                }
             }
 
             spinner.SpinOnce();
@@ -96,15 +96,18 @@ public struct SpinWait
     }
 
     /// <summary>
-    /// 조건이 true가 될 때까지 회전합니다.
+    ///     조건이 true가 될 때까지 회전합니다.
     /// </summary>
     public static bool SpinUntil(Func<bool> condition, TimeSpan timeout)
     {
         if (timeout < TimeSpan.Zero && timeout != TimeSpan.FromMilliseconds(Timeout.Infinite))
+        {
             throw new ArgumentOutOfRangeException(nameof(timeout));
+        }
 
-        int millisecondsTimeout = timeout == TimeSpan.FromMilliseconds(Timeout.Infinite) ?
-            Timeout.Infinite : (int)timeout.TotalMilliseconds;
+        int millisecondsTimeout = timeout == TimeSpan.FromMilliseconds(Timeout.Infinite)
+            ? Timeout.Infinite
+            : (int)timeout.TotalMilliseconds;
 
         return SpinUntil(condition, millisecondsTimeout);
     }

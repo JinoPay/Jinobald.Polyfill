@@ -2,8 +2,7 @@ namespace Jinobald.Polyfill.Tests.System;
 
 public partial class StringExTests
 {
-#if NETCOREAPP || NETSTANDARD2_1_OR_GREATER
-    [Fact]
+    [Test]
     public void GetHashCode_FromSpan_ShouldReturnHashCode()
     {
         // Arrange
@@ -13,10 +12,10 @@ public partial class StringExTests
         var hashCode = string.GetHashCode(text);
 
         // Assert
-        Assert.Equal("test".GetHashCode(), hashCode);
+        Assert.AreEqual("test".GetHashCode(), hashCode);
     }
 
-    [Fact]
+    [Test]
     public void GetHashCode_FromEmptySpan_ShouldReturnHashCode()
     {
         // Arrange
@@ -26,10 +25,10 @@ public partial class StringExTests
         var hashCode = string.GetHashCode(text);
 
         // Assert
-        Assert.Equal(string.Empty.GetHashCode(), hashCode);
+        Assert.AreEqual(string.Empty.GetHashCode(), hashCode);
     }
 
-    [Fact]
+    [Test]
     public void GetHashCode_FromLongSpan_ShouldReturnHashCode()
     {
         // Arrange
@@ -40,12 +39,10 @@ public partial class StringExTests
         var hashCode = string.GetHashCode(text);
 
         // Assert
-        Assert.Equal(longText.GetHashCode(), hashCode);
+        Assert.AreEqual(longText.GetHashCode(), hashCode);
     }
-#endif
 
-#if NETCOREAPP3_0_OR_GREATER
-    [Fact]
+    [Test]
     public void GetHashCode_WithComparison_OrdinalShouldReturnHashCode()
     {
         // Arrange
@@ -55,10 +52,10 @@ public partial class StringExTests
         var hashCode = string.GetHashCode(text, StringComparison.Ordinal);
 
         // Assert
-        Assert.Equal("Test".GetHashCode(StringComparison.Ordinal), hashCode);
+        Assert.AreEqual("Test".GetHashCode(StringComparison.Ordinal), hashCode);
     }
 
-    [Fact]
+    [Test]
     public void GetHashCode_WithComparison_OrdinalIgnoreCaseShouldReturnHashCode()
     {
         // Arrange
@@ -68,10 +65,10 @@ public partial class StringExTests
         var hashCode = string.GetHashCode(text, StringComparison.OrdinalIgnoreCase);
 
         // Assert
-        Assert.Equal("Test".GetHashCode(StringComparison.OrdinalIgnoreCase), hashCode);
+        Assert.AreEqual("Test".GetHashCode(StringComparison.OrdinalIgnoreCase), hashCode);
     }
 
-    [Fact]
+    [Test]
     public void GetHashCode_WithComparison_CurrentCultureShouldReturnHashCode()
     {
         // Arrange
@@ -81,10 +78,10 @@ public partial class StringExTests
         var hashCode = string.GetHashCode(text, StringComparison.CurrentCulture);
 
         // Assert
-        Assert.Equal("Test".GetHashCode(StringComparison.CurrentCulture), hashCode);
+        Assert.AreEqual("Test".GetHashCode(StringComparison.CurrentCulture), hashCode);
     }
 
-    [Fact]
+    [Test]
     public void GetHashCode_WithComparison_CurrentCultureIgnoreCaseShouldReturnHashCode()
     {
         // Arrange
@@ -94,10 +91,10 @@ public partial class StringExTests
         var hashCode = string.GetHashCode(text, StringComparison.CurrentCultureIgnoreCase);
 
         // Assert
-        Assert.Equal("Test".GetHashCode(StringComparison.CurrentCultureIgnoreCase), hashCode);
+        Assert.AreEqual("Test".GetHashCode(StringComparison.CurrentCultureIgnoreCase), hashCode);
     }
 
-    [Fact]
+    [Test]
     public void GetHashCode_WithComparison_InvariantCultureShouldReturnHashCode()
     {
         // Arrange
@@ -107,10 +104,10 @@ public partial class StringExTests
         var hashCode = string.GetHashCode(text, StringComparison.InvariantCulture);
 
         // Assert
-        Assert.Equal("Test".GetHashCode(StringComparison.InvariantCulture), hashCode);
+        Assert.AreEqual("Test".GetHashCode(StringComparison.InvariantCulture), hashCode);
     }
 
-    [Fact]
+    [Test]
     public void GetHashCode_WithComparison_InvariantCultureIgnoreCaseShouldReturnHashCode()
     {
         // Arrange
@@ -120,10 +117,10 @@ public partial class StringExTests
         var hashCode = string.GetHashCode(text, StringComparison.InvariantCultureIgnoreCase);
 
         // Assert
-        Assert.Equal("Test".GetHashCode(StringComparison.InvariantCultureIgnoreCase), hashCode);
+        Assert.AreEqual("Test".GetHashCode(StringComparison.InvariantCultureIgnoreCase), hashCode);
     }
 
-    [Fact]
+    [Test]
     public void GetHashCode_SameContent_ShouldReturnSameHashCode()
     {
         // Arrange
@@ -135,10 +132,10 @@ public partial class StringExTests
         var hashCode2 = string.GetHashCode(text2);
 
         // Assert
-        Assert.Equal(hashCode1, hashCode2);
+        Assert.AreEqual(hashCode1, hashCode2);
     }
 
-    [Fact]
+    [Test]
     public void GetHashCode_DifferentContent_ShouldReturnDifferentHashCode()
     {
         // Arrange
@@ -150,10 +147,10 @@ public partial class StringExTests
         var hashCode2 = string.GetHashCode(text2);
 
         // Assert
-        Assert.NotEqual(hashCode1, hashCode2);
+        Assert.AreNotEqual(hashCode1, hashCode2);
     }
 
-    [Fact]
+    [Test]
     public void GetHashCode_WithComparison_EmptySpan_ShouldReturnHashCode()
     {
         // Arrange
@@ -163,10 +160,10 @@ public partial class StringExTests
         var hashCode = string.GetHashCode(text, StringComparison.Ordinal);
 
         // Assert
-        Assert.Equal(string.Empty.GetHashCode(StringComparison.Ordinal), hashCode);
+        Assert.AreEqual(string.Empty.GetHashCode(StringComparison.Ordinal), hashCode);
     }
 
-    [Fact]
+    [Test]
     public void GetHashCode_IgnoreCase_SameContentDifferentCase_ShouldReturnSameHashCode()
     {
         // Arrange
@@ -178,7 +175,6 @@ public partial class StringExTests
         var hashCode2 = string.GetHashCode(text2, StringComparison.OrdinalIgnoreCase);
 
         // Assert
-        Assert.Equal(hashCode1, hashCode2);
+        Assert.AreEqual(hashCode1, hashCode2);
     }
-#endif
 }

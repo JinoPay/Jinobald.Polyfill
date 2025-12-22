@@ -1,21 +1,21 @@
 using System;
 using System.Threading;
-using Xunit;
+using NUnit.Framework;
 
 namespace Jinobald.Polyfill.Tests.System
 {
 #if NET35 || NET40
     public class ProgressTests
     {
-        [Fact]
+        [Test]
         public void Progress_CreateInstance_SuccessfullyCreated()
         {
             var progress = new Progress<int>();
 
-            Assert.NotNull(progress);
+            Assert.IsNotNull(progress);
         }
 
-        [Fact]
+        [Test]
         public void Progress_Report_RaisesProgressChanged()
         {
             var progress = new Progress<int>();
@@ -30,11 +30,11 @@ namespace Jinobald.Polyfill.Tests.System
 
             progress.Report(42);
 
-            Assert.True(eventRaised);
-            Assert.Equal(42, reportedValue);
+            Assert.IsTrue(eventRaised);
+            Assert.AreEqual(42, reportedValue);
         }
 
-        [Fact]
+        [Test]
         public void Progress_MultipleReports_RaisesMultipleEvents()
         {
             var progress = new Progress<int>();
@@ -49,10 +49,10 @@ namespace Jinobald.Polyfill.Tests.System
             progress.Report(2);
             progress.Report(3);
 
-            Assert.Equal(3, callCount);
+            Assert.AreEqual(3, callCount);
         }
 
-        [Fact]
+        [Test]
         public void Progress_WithoutSubscriber_NoException()
         {
             var progress = new Progress<int>();
@@ -61,7 +61,7 @@ namespace Jinobald.Polyfill.Tests.System
             progress.Report(42);
         }
 
-        [Fact]
+        [Test]
         public void Progress_MultipleSubscribers_AllReceiveNotification()
         {
             var progress = new Progress<int>();
@@ -73,15 +73,15 @@ namespace Jinobald.Polyfill.Tests.System
 
             progress.Report(42);
 
-            Assert.Equal(1, subscriber1Count);
-            Assert.Equal(1, subscriber2Count);
+            Assert.AreEqual(1, subscriber1Count);
+            Assert.AreEqual(1, subscriber2Count);
         }
 
-        [Fact]
+        [Test]
         public void Progress_WithString_ReportsStringValue()
         {
             var progress = new Progress<string>();
-            string reportedValue = null;
+            string? reportedValue = null;
 
             progress.ProgressChanged += (sender, args) =>
             {
@@ -90,10 +90,10 @@ namespace Jinobald.Polyfill.Tests.System
 
             progress.Report("test");
 
-            Assert.Equal("test", reportedValue);
+            Assert.AreEqual("test", reportedValue);
         }
 
-        [Fact]
+        [Test]
         public void Progress_SynchronizationContext_CapturedOnCreation()
         {
             var originalContext = SynchronizationContext.Current;
@@ -113,7 +113,7 @@ namespace Jinobald.Polyfill.Tests.System
 
                 progress.Report(42);
 
-                Assert.Equal(42, reportedValue);
+                Assert.AreEqual(42, reportedValue);
             }
             finally
             {

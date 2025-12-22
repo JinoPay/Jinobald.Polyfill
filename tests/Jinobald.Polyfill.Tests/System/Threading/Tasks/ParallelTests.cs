@@ -3,7 +3,7 @@
 namespace Jinobald.Polyfill.Tests.System.Threading.Tasks;
 
 using global::System.Collections.Concurrent;
-using Xunit;
+using NUnit.Framework;
 
 /// <summary>
 /// Parallel 클래스에 대한 테스트입니다.
@@ -15,7 +15,7 @@ public class ParallelTests
     /// <summary>
     /// Parallel.For가 올바르게 모든 반복을 실행하는지 테스트합니다.
     /// </summary>
-    [Fact]
+    [Test]
     public void For_ExecutesAllIterations()
     {
         var executed = new bool[100];
@@ -27,39 +27,39 @@ public class ParallelTests
 
         for (int i = 0; i < 100; i++)
         {
-            Assert.True(executed[i], $"반복 {i}이 실행되지 않았습니다.");
+            Assert.IsTrue(executed[i], $"반복 {i}이 실행되지 않았습니다.");
         }
     }
 
     /// <summary>
     /// Parallel.For가 빈 범위에서 올바르게 동작하는지 테스트합니다.
     /// </summary>
-    [Fact]
+    [Test]
     public void For_EmptyRange_ReturnsCompleted()
     {
         var result = Parallel.For(10, 10, i => { });
 
-        Assert.True(result.IsCompleted);
-        Assert.Null(result.LowestBreakIteration);
+        Assert.IsTrue(result.IsCompleted);
+        Assert.IsNull(result.LowestBreakIteration);
     }
 
     /// <summary>
     /// Parallel.For가 역순 범위에서 올바르게 동작하는지 테스트합니다.
     /// </summary>
-    [Fact]
+    [Test]
     public void For_ReverseRange_ReturnsCompleted()
     {
         var executed = false;
         var result = Parallel.For(10, 5, i => { executed = true; });
 
-        Assert.True(result.IsCompleted);
-        Assert.False(executed);
+        Assert.IsTrue(result.IsCompleted);
+        Assert.IsFalse(executed);
     }
 
     /// <summary>
     /// Parallel.For가 ParallelOptions를 올바르게 사용하는지 테스트합니다.
     /// </summary>
-    [Fact]
+    [Test]
     public void For_WithMaxDegreeOfParallelism_LimitsWorkers()
     {
         var options = new ParallelOptions { MaxDegreeOfParallelism = 2 };
@@ -70,13 +70,13 @@ public class ParallelTests
             Interlocked.Increment(ref executedCount);
         });
 
-        Assert.Equal(10, executedCount);
+        Assert.AreEqual(10, executedCount);
     }
 
     /// <summary>
     /// Parallel.For가 long 버전에서 올바르게 동작하는지 테스트합니다.
     /// </summary>
-    [Fact]
+    [Test]
     public void For_LongVersion_ExecutesAllIterations()
     {
         var executed = new bool[50];
@@ -88,14 +88,14 @@ public class ParallelTests
 
         for (int i = 0; i < 50; i++)
         {
-            Assert.True(executed[i], $"반복 {i}이 실행되지 않았습니다.");
+            Assert.IsTrue(executed[i], $"반복 {i}이 실행되지 않았습니다.");
         }
     }
 
     /// <summary>
     /// Parallel.For가 ParallelLoopState를 올바르게 전달하는지 테스트합니다.
     /// </summary>
-    [Fact]
+    [Test]
     public void For_WithState_ProvidesLoopState()
     {
         var stateReceived = false;
@@ -108,13 +108,13 @@ public class ParallelTests
             }
         });
 
-        Assert.True(stateReceived);
+        Assert.IsTrue(stateReceived);
     }
 
     /// <summary>
     /// Parallel.For가 합계를 올바르게 계산하는지 테스트합니다.
     /// </summary>
-    [Fact]
+    [Test]
     public void For_CalculatesSum_Correctly()
     {
         long sum = 0;
@@ -125,7 +125,7 @@ public class ParallelTests
         });
 
         // 1 + 2 + ... + 100 = 5050
-        Assert.Equal(5050, sum);
+        Assert.AreEqual(5050, sum);
     }
 
     #endregion
@@ -135,7 +135,7 @@ public class ParallelTests
     /// <summary>
     /// Parallel.ForEach가 모든 요소를 처리하는지 테스트합니다.
     /// </summary>
-    [Fact]
+    [Test]
     public void ForEach_ProcessesAllElements()
     {
         var items = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
@@ -148,26 +148,26 @@ public class ParallelTests
 
         foreach (var item in items)
         {
-            Assert.True(processed[item], $"항목 {item}이 처리되지 않았습니다.");
+            Assert.IsTrue(processed[item], $"항목 {item}이 처리되지 않았습니다.");
         }
     }
 
     /// <summary>
     /// Parallel.ForEach가 빈 컬렉션에서 올바르게 동작하는지 테스트합니다.
     /// </summary>
-    [Fact]
+    [Test]
     public void ForEach_EmptyCollection_ReturnsCompleted()
     {
         var items = new List<int>();
         var result = Parallel.ForEach(items, item => { });
 
-        Assert.True(result.IsCompleted);
+        Assert.IsTrue(result.IsCompleted);
     }
 
     /// <summary>
     /// Parallel.ForEach가 문자열 리스트를 처리하는지 테스트합니다.
     /// </summary>
-    [Fact]
+    [Test]
     public void ForEach_StringList_ProcessesAll()
     {
         var items = new List<string> { "a", "b", "c", "d", "e" };
@@ -178,7 +178,7 @@ public class ParallelTests
             results.Add(item.ToUpper());
         });
 
-        Assert.Equal(5, results.Count);
+        Assert.AreEqual(5, results.Count);
         Assert.Contains("A", results);
         Assert.Contains("E", results);
     }
@@ -186,7 +186,7 @@ public class ParallelTests
     /// <summary>
     /// Parallel.ForEach가 인덱스 버전에서 올바르게 동작하는지 테스트합니다.
     /// </summary>
-    [Fact]
+    [Test]
     public void ForEach_WithIndex_ProvidesCorrectIndices()
     {
         var items = new List<string> { "a", "b", "c", "d", "e" };
@@ -198,13 +198,13 @@ public class ParallelTests
         });
 
         // 0 + 1 + 2 + 3 + 4 = 10
-        Assert.Equal(10, indexSum);
+        Assert.AreEqual(10, indexSum);
     }
 
     /// <summary>
     /// Parallel.ForEach가 배열을 처리하는지 테스트합니다.
     /// </summary>
-    [Fact]
+    [Test]
     public void ForEach_Array_ProcessesAll()
     {
         var items = new[] { 10, 20, 30, 40, 50 };
@@ -215,13 +215,13 @@ public class ParallelTests
             Interlocked.Add(ref sum, item);
         });
 
-        Assert.Equal(150, sum);
+        Assert.AreEqual(150, sum);
     }
 
     /// <summary>
     /// Parallel.ForEach가 ParallelOptions를 올바르게 사용하는지 테스트합니다.
     /// </summary>
-    [Fact]
+    [Test]
     public void ForEach_WithOptions_RespectsMaxDegree()
     {
         var items = Enumerable.Range(1, 100).ToList();
@@ -234,7 +234,7 @@ public class ParallelTests
         });
 
         // 1 + 2 + ... + 100 = 5050
-        Assert.Equal(5050, sum);
+        Assert.AreEqual(5050, sum);
     }
 
     #endregion
@@ -244,7 +244,7 @@ public class ParallelTests
     /// <summary>
     /// Parallel.Invoke가 모든 액션을 실행하는지 테스트합니다.
     /// </summary>
-    [Fact]
+    [Test]
     public void Invoke_ExecutesAllActions()
     {
         var executed = new bool[3];
@@ -255,39 +255,47 @@ public class ParallelTests
             () => executed[2] = true
         );
 
-        Assert.True(executed[0], "액션 0이 실행되지 않았습니다.");
-        Assert.True(executed[1], "액션 1이 실행되지 않았습니다.");
-        Assert.True(executed[2], "액션 2이 실행되지 않았습니다.");
+        Assert.IsTrue(executed[0], "액션 0이 실행되지 않았습니다.");
+        Assert.IsTrue(executed[1], "액션 1이 실행되지 않았습니다.");
+        Assert.IsTrue(executed[2], "액션 2이 실행되지 않았습니다.");
     }
 
     /// <summary>
     /// Parallel.Invoke가 빈 배열에서 올바르게 동작하는지 테스트합니다.
     /// </summary>
-    [Fact]
+    [Test]
     public void Invoke_EmptyArray_DoesNotThrow()
     {
-        var exception = Record.Exception(() => Parallel.Invoke());
+        Exception? exception = null;
+        try
+        {
+            Parallel.Invoke();
+        }
+        catch (Exception ex)
+        {
+            exception = ex;
+        }
 
-        Assert.Null(exception);
+        Assert.IsNull(exception);
     }
 
     /// <summary>
     /// Parallel.Invoke가 단일 액션에서 올바르게 동작하는지 테스트합니다.
     /// </summary>
-    [Fact]
+    [Test]
     public void Invoke_SingleAction_ExecutesSuccessfully()
     {
         var executed = false;
 
         Parallel.Invoke(() => executed = true);
 
-        Assert.True(executed);
+        Assert.IsTrue(executed);
     }
 
     /// <summary>
     /// Parallel.Invoke가 여러 작업의 결과를 올바르게 수집하는지 테스트합니다.
     /// </summary>
-    [Fact]
+    [Test]
     public void Invoke_MultipleActions_AllComplete()
     {
         int counter = 0;
@@ -300,13 +308,13 @@ public class ParallelTests
             () => Interlocked.Increment(ref counter)
         );
 
-        Assert.Equal(5, counter);
+        Assert.AreEqual(5, counter);
     }
 
     /// <summary>
     /// Parallel.Invoke가 예외를 올바르게 집계하는지 테스트합니다.
     /// </summary>
-    [Fact]
+    [Test]
     public void Invoke_WithException_ThrowsAggregateException()
     {
         var exception = Assert.Throws<AggregateException>(() =>
@@ -318,14 +326,14 @@ public class ParallelTests
             );
         });
 
-        Assert.NotEmpty(exception.InnerExceptions);
-        Assert.Contains(exception.InnerExceptions, e => e is InvalidOperationException);
+        Assert.IsNotEmpty(exception!.InnerExceptions);
+        Assert.IsTrue(exception.InnerExceptions.Any(e => e is InvalidOperationException));
     }
 
     /// <summary>
     /// Parallel.Invoke가 여러 예외를 올바르게 집계하는지 테스트합니다.
     /// </summary>
-    [Fact]
+    [Test]
     public void Invoke_WithMultipleExceptions_AggregatesAll()
     {
         var exception = Assert.Throws<AggregateException>(() =>
@@ -337,7 +345,7 @@ public class ParallelTests
             );
         });
 
-        Assert.True(exception.InnerExceptions.Count >= 1);
+        Assert.IsTrue(exception!.InnerExceptions.Count >= 1);
     }
 
     #endregion
@@ -347,22 +355,22 @@ public class ParallelTests
     /// <summary>
     /// ParallelOptions 기본값이 올바른지 테스트합니다.
     /// </summary>
-    [Fact]
+    [Test]
     public void ParallelOptions_DefaultValues_AreCorrect()
     {
         var options = new ParallelOptions();
 
-        Assert.Equal(-1, options.MaxDegreeOfParallelism);
-        Assert.Equal(CancellationToken.None, options.CancellationToken);
+        Assert.AreEqual(-1, options.MaxDegreeOfParallelism);
+        Assert.AreEqual(CancellationToken.None, options.CancellationToken);
     }
 
     /// <summary>
     /// ParallelOptions가 잘못된 MaxDegreeOfParallelism 값을 거부하는지 테스트합니다.
     /// </summary>
-    [Theory]
-    [InlineData(0)]
-    [InlineData(-2)]
-    [InlineData(-100)]
+    
+    [TestCase(0)]
+    [TestCase(-2)]
+    [TestCase(-100)]
     public void ParallelOptions_InvalidMaxDegree_ThrowsException(int value)
     {
         var options = new ParallelOptions();
@@ -373,28 +381,28 @@ public class ParallelTests
     /// <summary>
     /// ParallelOptions가 유효한 MaxDegreeOfParallelism 값을 허용하는지 테스트합니다.
     /// </summary>
-    [Theory]
-    [InlineData(-1)]
-    [InlineData(1)]
-    [InlineData(4)]
-    [InlineData(100)]
+    
+    [TestCase(-1)]
+    [TestCase(1)]
+    [TestCase(4)]
+    [TestCase(100)]
     public void ParallelOptions_ValidMaxDegree_Succeeds(int value)
     {
         var options = new ParallelOptions { MaxDegreeOfParallelism = value };
 
-        Assert.Equal(value, options.MaxDegreeOfParallelism);
+        Assert.AreEqual(value, options.MaxDegreeOfParallelism);
     }
 
     /// <summary>
     /// ParallelOptions가 CancellationToken을 올바르게 설정하는지 테스트합니다.
     /// </summary>
-    [Fact]
+    [Test]
     public void ParallelOptions_CancellationToken_CanBeSet()
     {
         var cts = new CancellationTokenSource();
         var options = new ParallelOptions { CancellationToken = cts.Token };
 
-        Assert.Equal(cts.Token, options.CancellationToken);
+        Assert.AreEqual(cts.Token, options.CancellationToken);
     }
 
     #endregion
@@ -404,7 +412,7 @@ public class ParallelTests
     /// <summary>
     /// Parallel.For가 예외를 올바르게 집계하는지 테스트합니다.
     /// </summary>
-    [Fact]
+    [Test]
     public void For_WithException_ThrowsAggregateException()
     {
         var exception = Assert.Throws<AggregateException>(() =>
@@ -416,15 +424,15 @@ public class ParallelTests
                     throw new InvalidOperationException($"반복 {i}에서 예외");
                 }
             });
-        });
+        })!;
 
-        Assert.NotEmpty(exception.InnerExceptions);
+        Assert.IsNotEmpty(exception.InnerExceptions);
     }
 
     /// <summary>
     /// Parallel.ForEach가 예외를 올바르게 집계하는지 테스트합니다.
     /// </summary>
-    [Fact]
+    [Test]
     public void ForEach_WithException_ThrowsAggregateException()
     {
         var items = new List<int> { 1, 2, 3, 4, 5 };
@@ -438,9 +446,9 @@ public class ParallelTests
                     throw new InvalidOperationException($"항목 {item}에서 예외");
                 }
             });
-        });
+        })!;
 
-        Assert.NotEmpty(exception.InnerExceptions);
+        Assert.IsNotEmpty(exception.InnerExceptions);
     }
 
     #endregion
@@ -450,7 +458,7 @@ public class ParallelTests
     /// <summary>
     /// Parallel.For가 취소를 올바르게 처리하는지 테스트합니다.
     /// </summary>
-    [Fact]
+    [Test]
     public void For_WithCancelledToken_ThrowsOperationCanceledException()
     {
         var cts = new CancellationTokenSource();
@@ -466,7 +474,7 @@ public class ParallelTests
     /// <summary>
     /// Parallel.ForEach가 취소를 올바르게 처리하는지 테스트합니다.
     /// </summary>
-    [Fact]
+    [Test]
     public void ForEach_WithCancelledToken_ThrowsOperationCanceledException()
     {
         var cts = new CancellationTokenSource();
@@ -483,7 +491,7 @@ public class ParallelTests
     /// <summary>
     /// Parallel.Invoke가 취소를 올바르게 처리하는지 테스트합니다.
     /// </summary>
-    [Fact]
+    [Test]
     public void Invoke_WithCancelledToken_ThrowsOperationCanceledException()
     {
         var cts = new CancellationTokenSource();
@@ -503,7 +511,7 @@ public class ParallelTests
     /// <summary>
     /// Parallel.For가 null body에서 예외를 throw하는지 테스트합니다.
     /// </summary>
-    [Fact]
+    [Test]
     public void For_NullBody_ThrowsArgumentNullException()
     {
         Assert.Throws<ArgumentNullException>(() => Parallel.For(0, 10, (Action<int>)null!));
@@ -512,7 +520,7 @@ public class ParallelTests
     /// <summary>
     /// Parallel.For가 null options에서 예외를 throw하는지 테스트합니다.
     /// </summary>
-    [Fact]
+    [Test]
     public void For_NullOptions_ThrowsArgumentNullException()
     {
         Assert.Throws<ArgumentNullException>(() => Parallel.For(0, 10, null!, i => { }));
@@ -521,7 +529,7 @@ public class ParallelTests
     /// <summary>
     /// Parallel.ForEach가 null source에서 예외를 throw하는지 테스트합니다.
     /// </summary>
-    [Fact]
+    [Test]
     public void ForEach_NullSource_ThrowsArgumentNullException()
     {
         IEnumerable<int> nullSource = null!;
@@ -531,7 +539,7 @@ public class ParallelTests
     /// <summary>
     /// Parallel.ForEach가 null body에서 예외를 throw하는지 테스트합니다.
     /// </summary>
-    [Fact]
+    [Test]
     public void ForEach_NullBody_ThrowsArgumentNullException()
     {
         var items = new List<int> { 1, 2, 3 };
@@ -541,7 +549,7 @@ public class ParallelTests
     /// <summary>
     /// Parallel.Invoke가 null actions에서 예외를 throw하는지 테스트합니다.
     /// </summary>
-    [Fact]
+    [Test]
     public void Invoke_NullActions_ThrowsArgumentNullException()
     {
         Assert.Throws<ArgumentNullException>(() => Parallel.Invoke((Action[])null!));
@@ -550,7 +558,7 @@ public class ParallelTests
     /// <summary>
     /// Parallel.Invoke가 null 요소를 포함한 배열에서 예외를 throw하는지 테스트합니다.
     /// </summary>
-    [Fact]
+    [Test]
     public void Invoke_NullElementInActions_ThrowsArgumentException()
     {
         Assert.Throws<ArgumentException>(() => Parallel.Invoke(() => { }, null!, () => { }));
@@ -563,13 +571,13 @@ public class ParallelTests
     /// <summary>
     /// ParallelLoopResult가 완료 상태를 올바르게 반환하는지 테스트합니다.
     /// </summary>
-    [Fact]
+    [Test]
     public void ParallelLoopResult_CompletedLoop_IsCompleted()
     {
         var result = Parallel.For(0, 10, i => { });
 
-        Assert.True(result.IsCompleted);
-        Assert.Null(result.LowestBreakIteration);
+        Assert.IsTrue(result.IsCompleted);
+        Assert.IsNull(result.LowestBreakIteration);
     }
 
     #endregion
@@ -580,7 +588,7 @@ public class ParallelTests
     /// <summary>
     /// ParallelLoopState.Stop이 루프를 중단하는지 테스트합니다.
     /// </summary>
-    [Fact]
+    [Test]
     public void For_WithStop_StopsLoop()
     {
         var executedIndices = new ConcurrentBag<int>();
@@ -596,13 +604,13 @@ public class ParallelTests
             executedIndices.Add(i);
         });
 
-        Assert.False(result.IsCompleted);
+        Assert.IsFalse(result.IsCompleted);
     }
 
     /// <summary>
     /// ParallelLoopState.Break가 루프를 중단하는지 테스트합니다.
     /// </summary>
-    [Fact]
+    [Test]
     public void For_WithBreak_BreaksLoop()
     {
         var result = Parallel.For(0, 1000, (i, state) =>
@@ -613,14 +621,14 @@ public class ParallelTests
             }
         });
 
-        Assert.False(result.IsCompleted);
-        Assert.NotNull(result.LowestBreakIteration);
+        Assert.IsFalse(result.IsCompleted);
+        Assert.IsNotNull(result.LowestBreakIteration);
     }
 
     /// <summary>
     /// ParallelLoopState가 IsStopped를 올바르게 반환하는지 테스트합니다.
     /// </summary>
-    [Fact]
+    [Test]
     public void For_StopCalled_IsStoppedReturnsTrue()
     {
         bool wasStoppedObserved = false;
@@ -638,7 +646,7 @@ public class ParallelTests
             }
         });
 
-        Assert.True(wasStoppedObserved);
+        Assert.IsTrue(wasStoppedObserved);
     }
 
     #endregion

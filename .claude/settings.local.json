@@ -3,7 +3,22 @@
     "allow": [
       "Bash(ForEach-Object { $_ame })",
       "Bash(dir:*)",
-      "Bash(tree:*)"
+      "Bash(tree:*)",
+      "Bash(\"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\Common7\\Tools\\VsDevCmd.bat\")",
+      "Bash(msbuild:*)",
+      "Bash(cmd.exe /c \"dir \"\"C:\\Program Files\\Microsoft Visual Studio\"\" 2>nul\")",
+      "Bash(cmd.exe:*)",
+      "Bash(dotnet build:*)",
+      "WebSearch",
+      "WebFetch(domain:www.nuget.org)",
+      "Bash(findstr:*)",
+      "Bash(powershell:*)",
+      "Bash(find:*)",
+      "Bash(Select-String -Pattern \"error|warning\")",
+      "Bash(Select-Object -First 50)",
+      "Bash(dotnet restore:*)",
+      "Bash(dotnet test:*)",
+      "Bash(Select-String -Pattern \"error|Build succeeded\")"
     ],
     "deny": [],
     "ask": []

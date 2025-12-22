@@ -2,7 +2,6 @@
 // 키를 IEnumerable<TElement> 값 시퀀스에 매핑하는 데이터 구조를 정의합니다.
 
 #if NET20
-
 using System.Collections.Generic;
 
 namespace System.Linq

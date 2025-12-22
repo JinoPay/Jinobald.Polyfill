@@ -5,22 +5,22 @@ using System.Runtime.CompilerServices;
 namespace System
 {
     /// <summary>
-    /// Represents a type that can be used to index a collection either from the start or the end.
+    ///     Represents a type that can be used to index a collection either from the start or the end.
     /// </summary>
     /// <remarks>
-    /// Index is used by the C# compiler to support the new indexing syntax (^operator).
-    /// This is a polyfill implementation for .NET Framework 3.5+.
+    ///     Index is used by the C# compiler to support the new indexing syntax (^operator).
+    ///     This is a polyfill implementation for .NET Framework 3.5+.
     /// </remarks>
     public readonly struct Index : IEquatable<Index>
     {
         private readonly int _value;
 
         /// <summary>
-        /// Initializes a new Index with a given value and indicates whether it's from the start or end.
+        ///     Initializes a new Index with a given value and indicates whether it's from the start or end.
         /// </summary>
         /// <param name="value">The index value. Must be greater than or equal to 0.</param>
         /// <param name="fromEnd">Indicates whether the index is from the start (false) or from the end (true).</param>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [MethodImpl((MethodImplOptions)256)]
         public Index(int value, bool fromEnd = false)
         {
             if (value < 0)
@@ -45,10 +45,10 @@ namespace System
         }
 
         /// <summary>
-        /// Creates an Index from the start at the specified position.
+        ///     Creates an Index from the start at the specified position.
         /// </summary>
         /// <param name="value">The index value from the start.</param>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [MethodImpl((MethodImplOptions)256)]
         public static Index FromStart(int value)
         {
             if (value < 0)
@@ -60,10 +60,10 @@ namespace System
         }
 
         /// <summary>
-        /// Creates an Index from the end at the specified position.
+        ///     Creates an Index from the end at the specified position.
         /// </summary>
         /// <param name="value">The index value from the end.</param>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [MethodImpl((MethodImplOptions)256)]
         public static Index FromEnd(int value)
         {
             if (value < 0)
@@ -75,11 +75,11 @@ namespace System
         }
 
         /// <summary>
-        /// Gets the index value.
+        ///     Gets the index value.
         /// </summary>
         public int Value
         {
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            [MethodImpl((MethodImplOptions)256)]
             get
             {
                 if (_value < 0)
@@ -94,20 +94,19 @@ namespace System
         }
 
         /// <summary>
-        /// Gets a value indicating whether the index is from the end.
+        ///     Gets a value indicating whether the index is from the end.
         /// </summary>
         public bool IsFromEnd
         {
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            get { return _value < 0; }
+            [MethodImpl((MethodImplOptions)256)] get => _value < 0;
         }
 
         /// <summary>
-        /// Calculates the offset from the start given a collection length.
+        ///     Calculates the offset from the start given a collection length.
         /// </summary>
         /// <param name="length">The length of the collection.</param>
         /// <returns>The offset from the start.</returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [MethodImpl((MethodImplOptions)256)]
         public int GetOffset(int length)
         {
             int offset = _value;
@@ -121,7 +120,7 @@ namespace System
         }
 
         /// <summary>
-        /// Indicates whether the current Index is equal to another Index.
+        ///     Indicates whether the current Index is equal to another Index.
         /// </summary>
         public bool Equals(Index other)
         {
@@ -129,7 +128,7 @@ namespace System
         }
 
         /// <summary>
-        /// Indicates whether the current Index is equal to the specified object.
+        ///     Indicates whether the current Index is equal to the specified object.
         /// </summary>
         public override bool Equals(object obj)
         {
@@ -137,7 +136,7 @@ namespace System
         }
 
         /// <summary>
-        /// Returns the hash code for this Index.
+        ///     Returns the hash code for this Index.
         /// </summary>
         public override int GetHashCode()
         {
@@ -145,7 +144,7 @@ namespace System
         }
 
         /// <summary>
-        /// Converts an integer to an Index from the start.
+        ///     Converts an integer to an Index from the start.
         /// </summary>
         public static implicit operator Index(int value)
         {
@@ -153,7 +152,7 @@ namespace System
         }
 
         /// <summary>
-        /// Returns a string representation of this Index.
+        ///     Returns a string representation of this Index.
         /// </summary>
         public override string ToString()
         {
@@ -168,7 +167,7 @@ namespace System
         }
 
         /// <summary>
-        /// Determines whether two Index values are equal.
+        ///     Determines whether two Index values are equal.
         /// </summary>
         public static bool operator ==(Index left, Index right)
         {
@@ -176,7 +175,7 @@ namespace System
         }
 
         /// <summary>
-        /// Determines whether two Index values are not equal.
+        ///     Determines whether two Index values are not equal.
         /// </summary>
         public static bool operator !=(Index left, Index right)
         {
@@ -184,14 +183,14 @@ namespace System
         }
 
         /// <summary>
-        /// Gets an Index that points to the first element.
+        ///     Gets an Index that points to the first element.
         /// </summary>
-        public static Index Start => new Index(0);
+        public static Index Start => new(0);
 
         /// <summary>
-        /// Gets an Index that points to one past the last element.
+        ///     Gets an Index that points to one past the last element.
         /// </summary>
-        public static Index End => new Index(~0);
+        public static Index End => new(~0);
     }
 }
 

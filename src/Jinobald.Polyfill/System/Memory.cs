@@ -29,7 +29,7 @@ public readonly struct Memory<T>
     /// <summary>
     ///     지정된 배열에서 Memory를 생성합니다.
     /// </summary>
-    public Memory(T[] array)
+    public Memory(T[]? array)
     {
         if (array == null)
         {

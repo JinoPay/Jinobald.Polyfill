@@ -24,7 +24,7 @@ public readonly ref struct Span<T>
     /// <summary>
     ///     지정된 배열에서 Span을 생성합니다.
     /// </summary>
-    public Span(T[] array)
+    public Span(T[]? array)
     {
         if (array == null)
         {
@@ -95,6 +95,17 @@ public readonly ref struct Span<T>
     }
 
     /// <summary>
+    ///     현재 Span의 내용을 기본값으로 지웁니다.
+    /// </summary>
+    public void Clear()
+    {
+        if (_array != null && Length > 0)
+        {
+            Array.Clear(_array, _start, Length);
+        }
+    }
+
+    /// <summary>
     ///     현재 Span의 내용을 지정된 대상 Span에 복사합니다.
     /// </summary>
     public void CopyTo(Span<T> destination)
@@ -148,6 +159,23 @@ public readonly ref struct Span<T>
         }
 
         return new Span<T>(_array, _start + start, length);
+    }
+
+    /// <summary>
+    ///     Span의 문자열 표현을 반환합니다.
+    ///     char 형식의 경우 실제 문자열을 반환하고, 그 외의 경우 형식 정보를 반환합니다.
+    /// </summary>
+    public override string ToString()
+    {
+        if (typeof(T) == typeof(char))
+        {
+            if (_array == null || Length == 0)
+            {
+                return string.Empty;
+            }
+            return new string((char[])(object)_array, _start, Length);
+        }
+        return string.Format("System.Span<{0}>[{1}]", typeof(T).Name, Length);
     }
 
     /// <summary>
