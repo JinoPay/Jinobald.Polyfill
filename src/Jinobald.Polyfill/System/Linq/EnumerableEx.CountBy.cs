@@ -1,7 +1,7 @@
 // Jinobald.Polyfill - CountBy 확장 메서드
 // .NET 9.0+에서 추가된 CountBy 메서드를 하위 버전에서 사용 가능하도록 폴리필
 
-#if NET35
+#if NETFRAMEWORK || NET6_0 || NET7_0 || NET8_0
 
 using System.Collections.Generic;
 
@@ -26,11 +26,9 @@ public static partial class EnumerableEx
     ///     이 메서드는 GroupBy와 Count를 결합한 편의 메서드입니다.
     ///     각 키에 대해 해당 키를 갖는 요소의 수를 반환합니다.
     /// </remarks>
-#if NET40 || NET45 || NET451 || NET452 || NET46 || NET461 || NET462 || NET47 || NET471 || NET472 || NET48 || NETSTANDARD2_0
     public static IEnumerable<KeyValuePair<TKey, int>> CountBy<TSource, TKey>(
         this IEnumerable<TSource> source,
         Func<TSource, TKey> keySelector)
-        where TKey : notnull
     {
         return CountBy(source, keySelector, null);
     }
@@ -51,63 +49,6 @@ public static partial class EnumerableEx
         this IEnumerable<TSource> source,
         Func<TSource, TKey> keySelector,
         IEqualityComparer<TKey>? keyComparer)
-        where TKey : notnull
-    {
-        if (source == null)
-        {
-            throw new ArgumentNullException("source");
-        }
-
-        if (keySelector == null)
-        {
-            throw new ArgumentNullException("keySelector");
-        }
-
-        return CountByIterator(source, keySelector, keyComparer);
-    }
-
-    private static IEnumerable<KeyValuePair<TKey, int>> CountByIterator<TSource, TKey>(
-        IEnumerable<TSource> source,
-        Func<TSource, TKey> keySelector,
-        IEqualityComparer<TKey>? keyComparer)
-        where TKey : notnull
-    {
-        // 순서를 유지하면서 카운트를 추적
-        Dictionary<TKey, int> countByKey = new Dictionary<TKey, int>(keyComparer);
-        List<TKey> keysInOrder = new List<TKey>();
-
-        foreach (TSource element in source)
-        {
-            TKey key = keySelector(element);
-
-            if (countByKey.ContainsKey(key))
-            {
-                countByKey[key]++;
-            }
-            else
-            {
-                countByKey[key] = 1;
-                keysInOrder.Add(key);
-            }
-        }
-
-        foreach (TKey key in keysInOrder)
-        {
-            yield return new KeyValuePair<TKey, int>(key, countByKey[key]);
-        }
-    }
-#else
-    public static IEnumerable<KeyValuePair<TKey, int>> CountBy<TSource, TKey>(
-        this IEnumerable<TSource> source,
-        Func<TSource, TKey> keySelector)
-    {
-        return CountBy(source, keySelector, null);
-    }
-
-    public static IEnumerable<KeyValuePair<TKey, int>> CountBy<TSource, TKey>(
-        this IEnumerable<TSource> source,
-        Func<TSource, TKey> keySelector,
-        IEqualityComparer<TKey>? keyComparer)
     {
         if (source == null)
         {
@@ -151,7 +92,6 @@ public static partial class EnumerableEx
             yield return new KeyValuePair<TKey, int>(key, countByKey[key]);
         }
     }
-#endif
 
     #endregion
 }

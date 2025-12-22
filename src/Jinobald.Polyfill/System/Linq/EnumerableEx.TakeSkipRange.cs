@@ -1,7 +1,7 @@
 // Jinobald.Polyfill - Take/Skip Range 오버로드 확장 메서드
 // .NET 6.0+에서 추가된 Take(Range), TakeLast, SkipLast 메서드를 하위 버전에서 사용 가능하도록 폴리필
 
-#if NET35
+#if NETFRAMEWORK
 
 namespace System.Linq;
 

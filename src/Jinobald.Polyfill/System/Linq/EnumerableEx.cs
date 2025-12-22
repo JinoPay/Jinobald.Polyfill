@@ -1,7 +1,7 @@
 // Jinobald.Polyfill - Modern LINQ 확장 메서드 (.NET 6.0+)
 // .NET 6.0 이상에서 추가된 LINQ 메서드들을 하위 버전에서 사용 가능하도록 폴리필
 
-#if NET35
+#if NETFRAMEWORK
 
 using System.Collections;
 

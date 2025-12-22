@@ -1,7 +1,7 @@
 // Jinobald.Polyfill - Modern LINQ 확장 메서드 (.NET 6.0+)
 // 키 기반 집합 연산 메서드들 (DistinctBy, ExceptBy, IntersectBy, UnionBy)
 
-#if NET35
+#if NETFRAMEWORK
 
 using System.Collections.Generic;
 

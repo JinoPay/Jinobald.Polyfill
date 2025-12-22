@@ -1,7 +1,7 @@
 // Jinobald.Polyfill - Modern LINQ 확장 메서드 (.NET 6.0+)
 // 기본값 지정 가능한 OrDefault 메서드들
 
-#if NET35
+#if NETFRAMEWORK
 
 using System.Collections.Generic;
 

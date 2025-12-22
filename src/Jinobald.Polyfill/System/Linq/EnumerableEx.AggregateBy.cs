@@ -1,7 +1,7 @@
 // Jinobald.Polyfill - AggregateBy 확장 메서드
 // .NET 9.0+에서 추가된 AggregateBy 메서드를 하위 버전에서 사용 가능하도록 폴리필
 
-#if NET35
+#if NETFRAMEWORK || NET6_0 || NET7_0 || NET8_0
 
 using System.Collections.Generic;
 
@@ -25,13 +25,11 @@ public static partial class EnumerableEx
     /// <exception cref="ArgumentNullException">
     ///     <paramref name="source" />, <paramref name="keySelector" /> 또는 <paramref name="func" />가 null인 경우.
     /// </exception>
-#if NET40 || NET45 || NET451 || NET452 || NET46 || NET461 || NET462 || NET47 || NET471 || NET472 || NET48 || NETSTANDARD2_0
     public static IEnumerable<KeyValuePair<TKey, TAccumulate>> AggregateBy<TSource, TKey, TAccumulate>(
         this IEnumerable<TSource> source,
         Func<TSource, TKey> keySelector,
         TAccumulate seed,
         Func<TAccumulate, TSource, TAccumulate> func)
-        where TKey : notnull
     {
         return AggregateBy(source, keySelector, seed, func, null);
     }
@@ -57,7 +55,6 @@ public static partial class EnumerableEx
         TAccumulate seed,
         Func<TAccumulate, TSource, TAccumulate> func,
         IEqualityComparer<TKey>? keyComparer)
-        where TKey : notnull
     {
         if (source == null)
         {
@@ -83,7 +80,6 @@ public static partial class EnumerableEx
         TAccumulate seed,
         Func<TAccumulate, TSource, TAccumulate> func,
         IEqualityComparer<TKey>? keyComparer)
-        where TKey : notnull
     {
         // 순서를 유지하면서 집계를 추적
         Dictionary<TKey, TAccumulate> aggregateByKey = new Dictionary<TKey, TAccumulate>(keyComparer);
@@ -130,7 +126,6 @@ public static partial class EnumerableEx
         Func<TSource, TKey> keySelector,
         Func<TKey, TAccumulate> seedSelector,
         Func<TAccumulate, TSource, TAccumulate> func)
-        where TKey : notnull
     {
         return AggregateBy(source, keySelector, seedSelector, func, null);
     }
@@ -157,145 +152,6 @@ public static partial class EnumerableEx
         Func<TKey, TAccumulate> seedSelector,
         Func<TAccumulate, TSource, TAccumulate> func,
         IEqualityComparer<TKey>? keyComparer)
-        where TKey : notnull
-    {
-        if (source == null)
-        {
-            throw new ArgumentNullException("source");
-        }
-
-        if (keySelector == null)
-        {
-            throw new ArgumentNullException("keySelector");
-        }
-
-        if (seedSelector == null)
-        {
-            throw new ArgumentNullException("seedSelector");
-        }
-
-        if (func == null)
-        {
-            throw new ArgumentNullException("func");
-        }
-
-        return AggregateByWithSeedSelectorIterator(source, keySelector, seedSelector, func, keyComparer);
-    }
-
-    private static IEnumerable<KeyValuePair<TKey, TAccumulate>> AggregateByWithSeedSelectorIterator<TSource, TKey, TAccumulate>(
-        IEnumerable<TSource> source,
-        Func<TSource, TKey> keySelector,
-        Func<TKey, TAccumulate> seedSelector,
-        Func<TAccumulate, TSource, TAccumulate> func,
-        IEqualityComparer<TKey>? keyComparer)
-        where TKey : notnull
-    {
-        // 순서를 유지하면서 집계를 추적
-        Dictionary<TKey, TAccumulate> aggregateByKey = new Dictionary<TKey, TAccumulate>(keyComparer);
-        List<TKey> keysInOrder = new List<TKey>();
-
-        foreach (TSource element in source)
-        {
-            TKey key = keySelector(element);
-
-            if (aggregateByKey.ContainsKey(key))
-            {
-                aggregateByKey[key] = func(aggregateByKey[key], element);
-            }
-            else
-            {
-                aggregateByKey[key] = func(seedSelector(key), element);
-                keysInOrder.Add(key);
-            }
-        }
-
-        foreach (TKey key in keysInOrder)
-        {
-            yield return new KeyValuePair<TKey, TAccumulate>(key, aggregateByKey[key]);
-        }
-    }
-#else
-    public static IEnumerable<KeyValuePair<TKey, TAccumulate>> AggregateBy<TSource, TKey, TAccumulate>(
-        this IEnumerable<TSource> source,
-        Func<TSource, TKey> keySelector,
-        TAccumulate seed,
-        Func<TAccumulate, TSource, TAccumulate> func)
-    {
-        return AggregateBy(source, keySelector, seed, func, null);
-    }
-
-    public static IEnumerable<KeyValuePair<TKey, TAccumulate>> AggregateBy<TSource, TKey, TAccumulate>(
-        this IEnumerable<TSource> source,
-        Func<TSource, TKey> keySelector,
-        TAccumulate seed,
-        Func<TAccumulate, TSource, TAccumulate> func,
-        IEqualityComparer<TKey>? keyComparer)
-    {
-        if (source == null)
-        {
-            throw new ArgumentNullException("source");
-        }
-
-        if (keySelector == null)
-        {
-            throw new ArgumentNullException("keySelector");
-        }
-
-        if (func == null)
-        {
-            throw new ArgumentNullException("func");
-        }
-
-        return AggregateByIterator(source, keySelector, seed, func, keyComparer);
-    }
-
-    private static IEnumerable<KeyValuePair<TKey, TAccumulate>> AggregateByIterator<TSource, TKey, TAccumulate>(
-        IEnumerable<TSource> source,
-        Func<TSource, TKey> keySelector,
-        TAccumulate seed,
-        Func<TAccumulate, TSource, TAccumulate> func,
-        IEqualityComparer<TKey>? keyComparer)
-    {
-        // 순서를 유지하면서 집계를 추적
-        Dictionary<TKey, TAccumulate> aggregateByKey = new Dictionary<TKey, TAccumulate>(keyComparer);
-        List<TKey> keysInOrder = new List<TKey>();
-
-        foreach (TSource element in source)
-        {
-            TKey key = keySelector(element);
-
-            if (aggregateByKey.ContainsKey(key))
-            {
-                aggregateByKey[key] = func(aggregateByKey[key], element);
-            }
-            else
-            {
-                aggregateByKey[key] = func(seed, element);
-                keysInOrder.Add(key);
-            }
-        }
-
-        foreach (TKey key in keysInOrder)
-        {
-            yield return new KeyValuePair<TKey, TAccumulate>(key, aggregateByKey[key]);
-        }
-    }
-
-    public static IEnumerable<KeyValuePair<TKey, TAccumulate>> AggregateBy<TSource, TKey, TAccumulate>(
-        this IEnumerable<TSource> source,
-        Func<TSource, TKey> keySelector,
-        Func<TKey, TAccumulate> seedSelector,
-        Func<TAccumulate, TSource, TAccumulate> func)
-    {
-        return AggregateBy(source, keySelector, seedSelector, func, null);
-    }
-
-    public static IEnumerable<KeyValuePair<TKey, TAccumulate>> AggregateBy<TSource, TKey, TAccumulate>(
-        this IEnumerable<TSource> source,
-        Func<TSource, TKey> keySelector,
-        Func<TKey, TAccumulate> seedSelector,
-        Func<TAccumulate, TSource, TAccumulate> func,
-        IEqualityComparer<TKey>? keyComparer)
     {
         if (source == null)
         {
@@ -351,7 +207,6 @@ public static partial class EnumerableEx
             yield return new KeyValuePair<TKey, TAccumulate>(key, aggregateByKey[key]);
         }
     }
-#endif
 
     #endregion
 }

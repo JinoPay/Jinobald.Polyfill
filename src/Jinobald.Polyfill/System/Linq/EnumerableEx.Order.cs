@@ -1,7 +1,7 @@
 // Jinobald.Polyfill - Order/OrderDescending 확장 메서드
 // .NET 7.0+에서 추가된 Order/OrderDescending 메서드를 하위 버전에서 사용 가능하도록 폴리필
 
-#if NET35
+#if NETFRAMEWORK || NET6_0
 
 using System.Collections.Generic;
 
