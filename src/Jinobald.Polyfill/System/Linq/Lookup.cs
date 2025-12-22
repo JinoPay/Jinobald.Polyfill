@@ -128,10 +128,7 @@ namespace System.Linq
                 do
                 {
                     g = g._next;
-                    if (g != null)
-                    {
-                        yield return resultSelector(g._key, g);
-                    }
+                    yield return resultSelector(g!._key, g);
                 }
                 while (g != _lastGrouping);
             }

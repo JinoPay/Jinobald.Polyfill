@@ -144,7 +144,7 @@ public static partial class EnumerableEx
     ///     인덱스는 0부터 시작합니다.
     ///     이 메서드는 Select((item, index) => (index, item))의 간편한 대안입니다.
     /// </remarks>
-#if NET40 || NET45 || NET451 || NET452 || NET46 || NET461 || NET462 || NET47 || NET471 || NET472 || NET48 || NETSTANDARD2_0
+#if NET40 || NET45 || NET451 || NET452 || NET46 || NET461 || NET462 || NET47 || NET471 || NET472 || NET48 || NET481 || NETSTANDARD2_0
         public static IEnumerable<ValueTuple<int, TSource>> Index<TSource>(
             this IEnumerable<TSource> source)
         {
