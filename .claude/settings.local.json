@@ -17,7 +17,8 @@
       "Bash(Select-String -Pattern \"error|warning\")",
       "Bash(Select-Object -First 50)",
       "Bash(dotnet restore:*)",
-      "Bash(dotnet test:*)"
+      "Bash(dotnet test:*)",
+      "Bash(Select-String -Pattern \"error|Build succeeded\")"
     ],
     "deny": [],
     "ask": []

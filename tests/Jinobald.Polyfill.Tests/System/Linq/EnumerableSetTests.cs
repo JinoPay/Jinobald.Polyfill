@@ -13,8 +13,8 @@ public class EnumerableSetTests
     [Test]
     public void Except_두시퀀스_차집합반환()
     {
-        int[] first = new[] { 1, 2, 3, 4 };
-        int[] second = new[] { 3, 4, 5, 6 };
+        int[] first = [1, 2, 3, 4];
+        int[] second = [3, 4, 5, 6];
 
         int[] result = first.Except(second).ToArray();
 
@@ -27,8 +27,8 @@ public class EnumerableSetTests
     [Test]
     public void Except_모든요소제거_빈시퀀스반환()
     {
-        int[] first = new[] { 1, 2, 3 };
-        int[] second = new[] { 1, 2, 3, 4, 5 };
+        int[] first = [1, 2, 3];
+        int[] second = [1, 2, 3, 4, 5];
 
         int[] result = first.Except(second).ToArray();
 
@@ -41,8 +41,8 @@ public class EnumerableSetTests
     [Test]
     public void Except_비교자_대소문자무시()
     {
-        string[] first = new[] { "a", "B", "c" };
-        string[] second = new[] { "A", "C" };
+        string[] first = ["a", "B", "c"];
+        string[] second = ["A", "C"];
 
         string[] result = first.Except(second, StringComparer.OrdinalIgnoreCase).ToArray();
 
@@ -56,7 +56,7 @@ public class EnumerableSetTests
     [Test]
     public void Except_빈Second_고유요소반환()
     {
-        int[] first = new[] { 1, 2, 2, 3 };
+        int[] first = [1, 2, 2, 3];
         int[] second = Array.Empty<int>();
 
         int[] result = first.Except(second).ToArray();
@@ -70,8 +70,8 @@ public class EnumerableSetTests
     [Test]
     public void Except_중복요소_한번만반환()
     {
-        int[] first = new[] { 1, 1, 2, 2, 3 };
-        int[] second = new[] { 3 };
+        int[] first = [1, 1, 2, 2, 3];
+        int[] second = [3];
 
         int[] result = first.Except(second).ToArray();
 
@@ -85,7 +85,7 @@ public class EnumerableSetTests
     public void Except_NullFirst_예외발생()
     {
         int[]? first = null;
-        int[] second = new[] { 1, 2, 3 };
+        int[] second = [1, 2, 3];
 
         Assert.Throws<ArgumentNullException>(() => first!.Except(second).ToArray());
     }
@@ -96,8 +96,8 @@ public class EnumerableSetTests
     [Test]
     public void Intersect_공통요소없음_빈시퀀스반환()
     {
-        int[] first = new[] { 1, 2, 3 };
-        int[] second = new[] { 4, 5, 6 };
+        int[] first = [1, 2, 3];
+        int[] second = [4, 5, 6];
 
         int[] result = first.Intersect(second).ToArray();
 
@@ -110,8 +110,8 @@ public class EnumerableSetTests
     [Test]
     public void Intersect_두시퀀스_교집합반환()
     {
-        int[] first = new[] { 1, 2, 3, 4 };
-        int[] second = new[] { 3, 4, 5, 6 };
+        int[] first = [1, 2, 3, 4];
+        int[] second = [3, 4, 5, 6];
 
         int[] result = first.Intersect(second).ToArray();
 
@@ -124,8 +124,8 @@ public class EnumerableSetTests
     [Test]
     public void Intersect_비교자_대소문자무시()
     {
-        string[] first = new[] { "a", "B", "c" };
-        string[] second = new[] { "A", "d" };
+        string[] first = ["a", "B", "c"];
+        string[] second = ["A", "d"];
 
         string[] result = first.Intersect(second, StringComparer.OrdinalIgnoreCase).ToArray();
 
@@ -139,8 +139,8 @@ public class EnumerableSetTests
     [Test]
     public void Intersect_중복요소_한번만반환()
     {
-        int[] first = new[] { 1, 1, 2, 2 };
-        int[] second = new[] { 1, 2, 2, 3 };
+        int[] first = [1, 1, 2, 2];
+        int[] second = [1, 2, 2, 3];
 
         int[] result = first.Intersect(second).ToArray();
 
@@ -154,7 +154,7 @@ public class EnumerableSetTests
     public void Intersect_NullFirst_예외발생()
     {
         int[]? first = null;
-        int[] second = new[] { 1, 2, 3 };
+        int[] second = [1, 2, 3];
 
         Assert.Throws<ArgumentNullException>(() => first!.Intersect(second).ToArray());
     }
@@ -165,8 +165,8 @@ public class EnumerableSetTests
     [Test]
     public void Union_두시퀀스_합집합반환()
     {
-        int[] first = new[] { 1, 2, 3 };
-        int[] second = new[] { 3, 4, 5 };
+        int[] first = [1, 2, 3];
+        int[] second = [3, 4, 5];
 
         int[] result = first.Union(second).ToArray();
 
@@ -179,8 +179,8 @@ public class EnumerableSetTests
     [Test]
     public void Union_비교자_대소문자무시()
     {
-        string[] first = new[] { "a", "B" };
-        string[] second = new[] { "A", "c" };
+        string[] first = ["a", "B"];
+        string[] second = ["A", "c"];
 
         string[] result = first.Union(second, StringComparer.OrdinalIgnoreCase).ToArray();
 
@@ -197,7 +197,7 @@ public class EnumerableSetTests
     public void Union_빈시퀀스_다른시퀀스반환()
     {
         int[] first = Array.Empty<int>();
-        int[] second = new[] { 1, 2, 3 };
+        int[] second = [1, 2, 3];
 
         int[] result = first.Union(second).ToArray();
 
@@ -210,8 +210,8 @@ public class EnumerableSetTests
     [Test]
     public void Union_중복요소_제거()
     {
-        int[] first = new[] { 1, 1, 2 };
-        int[] second = new[] { 2, 3, 3 };
+        int[] first = [1, 1, 2];
+        int[] second = [2, 3, 3];
 
         int[] result = first.Union(second).ToArray();
 
@@ -225,7 +225,7 @@ public class EnumerableSetTests
     public void Union_NullFirst_예외발생()
     {
         int[]? first = null;
-        int[] second = new[] { 1, 2, 3 };
+        int[] second = [1, 2, 3];
 
         Assert.Throws<ArgumentNullException>(() => first!.Union(second).ToArray());
     }
@@ -236,7 +236,7 @@ public class EnumerableSetTests
     [Test]
     public void Union_NullSecond_예외발생()
     {
-        int[] first = new[] { 1, 2, 3 };
+        int[] first = [1, 2, 3];
         int[]? second = null;
 
         Assert.Throws<ArgumentNullException>(() => first.Union(second!).ToArray());
@@ -248,8 +248,8 @@ public class EnumerableSetTests
     [Test]
     public void Zip_결과선택기_객체생성()
     {
-        int[] numbers = new[] { 1, 2, 3 };
-        string[] names = new[] { "one", "two", "three" };
+        int[] numbers = [1, 2, 3];
+        string[] names = ["one", "two", "three"];
 
         var result = numbers.Zip(names, (n, s) => new { Number = n, Name = s }).ToArray();
 
@@ -266,8 +266,8 @@ public class EnumerableSetTests
     [Test]
     public void Zip_두번째짧음_짧은길이까지병합()
     {
-        int[] first = new[] { 1, 2, 3, 4 };
-        string[] second = new[] { "a", "b" };
+        int[] first = [1, 2, 3, 4];
+        string[] second = ["a", "b"];
 
         var result = first.Zip(second, (x, y) => $"{x}{y}").ToArray();
 
@@ -280,8 +280,8 @@ public class EnumerableSetTests
     [Test]
     public void Zip_두시퀀스_병합()
     {
-        int[] first = new[] { 1, 2, 3 };
-        string[] second = new[] { "a", "b", "c" };
+        int[] first = [1, 2, 3];
+        string[] second = ["a", "b", "c"];
 
         var result = first.Zip(second, (x, y) => $"{x}{y}").ToArray();
 
@@ -295,7 +295,7 @@ public class EnumerableSetTests
     public void Zip_빈시퀀스_빈결과반환()
     {
         int[] first = Array.Empty<int>();
-        string[] second = new[] { "a", "b", "c" };
+        string[] second = ["a", "b", "c"];
 
         var result = first.Zip(second, (x, y) => $"{x}{y}").ToArray();
 
@@ -308,8 +308,8 @@ public class EnumerableSetTests
     [Test]
     public void Zip_첫번째짧음_짧은길이까지병합()
     {
-        int[] first = new[] { 1, 2 };
-        string[] second = new[] { "a", "b", "c", "d" };
+        int[] first = [1, 2];
+        string[] second = ["a", "b", "c", "d"];
 
         var result = first.Zip(second, (x, y) => $"{x}{y}").ToArray();
 
@@ -323,7 +323,7 @@ public class EnumerableSetTests
     public void Zip_NullFirst_예외발생()
     {
         int[]? first = null;
-        string[] second = new[] { "a", "b" };
+        string[] second = ["a", "b"];
 
         Assert.Throws<ArgumentNullException>(() => first!.Zip(second, (x, y) => $"{x}{y}").ToArray());
     }
@@ -334,8 +334,8 @@ public class EnumerableSetTests
     [Test]
     public void Zip_NullResultSelector_예외발생()
     {
-        int[] first = new[] { 1, 2, 3 };
-        string[] second = new[] { "a", "b", "c" };
+        int[] first = [1, 2, 3];
+        string[] second = ["a", "b", "c"];
         Func<int, string, string>? selector = null;
 
         Assert.Throws<ArgumentNullException>(() => first.Zip(second, selector!).ToArray());
@@ -347,7 +347,7 @@ public class EnumerableSetTests
     [Test]
     public void Zip_NullSecond_예외발생()
     {
-        int[] first = new[] { 1, 2, 3 };
+        int[] first = [1, 2, 3];
         string[]? second = null;
 
         Assert.Throws<ArgumentNullException>(() => first.Zip(second!, (x, y) => $"{x}{y}").ToArray());
