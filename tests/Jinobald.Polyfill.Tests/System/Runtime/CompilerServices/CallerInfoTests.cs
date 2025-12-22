@@ -5,7 +5,7 @@ namespace Jinobald.Polyfill.Tests.System.Runtime.CompilerServices
 {
     public class CallerInfoTests
     {
-#if NET40 || NET35 || NET20
+#if NET40 || NET35
         [Test]
         public void CallerMemberName_Should_Be_Filled_By_Compiler()
         {
@@ -58,7 +58,7 @@ namespace Jinobald.Polyfill.Tests.System.Runtime.CompilerServices
         [Test]
         public void CallerInfo_Attributes_Should_Exist()
         {
-#if NET40 || NET35 || NET20
+#if NET40 || NET35
             var memberNameAttr = typeof(CallerMemberNameAttribute);
             var filePathAttr = typeof(CallerFilePathAttribute);
             var lineNumberAttr = typeof(CallerLineNumberAttribute);

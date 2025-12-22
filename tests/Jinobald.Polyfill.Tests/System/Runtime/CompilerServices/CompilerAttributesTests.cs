@@ -9,14 +9,7 @@ namespace Jinobald.Polyfill.Tests.System.Runtime.CompilerServices
         [Test]
         public void ExtensionAttribute_Should_Exist()
         {
-#if NET20
-            var attr = typeof(global::System.Runtime.CompilerServices.ExtensionAttribute);
-            Assert.IsNotNull(attr);
-            Assert.IsTrue(attr.IsSealed);
-            Assert.IsTrue(typeof(SysAttribute).IsAssignableFrom(attr));
-#else
             Assert.IsTrue(true); // ExtensionAttribute is built-in in .NET 3.5+
-#endif
         }
 
         [Test]
@@ -69,24 +62,5 @@ namespace Jinobald.Polyfill.Tests.System.Runtime.CompilerServices
             Assert.IsTrue(true); // SetsRequiredMembersAttribute is built-in in .NET 7+
 #endif
         }
-
-#if NET20
-        [Test]
-        public void Extension_Method_Should_Work_With_ExtensionAttribute()
-        {
-            var result = "test".TestExtension();
-            Assert.AreEqual("TEST", result);
-        }
-#endif
     }
-
-#if NET20
-    public static class TestExtensions
-    {
-        public static string TestExtension(this string str)
-        {
-            return str.ToUpper();
-        }
-    }
-#endif
 }
