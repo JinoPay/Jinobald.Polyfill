@@ -23,7 +23,7 @@ public class CallerInfoTests
     public void CallerFilePath_Should_Be_Filled_By_Compiler()
     {
         string? result = GetCallerFilePath();
-        Assert.Contains("CallerInfoTests.cs", result);
+        StringAssert.Contains("CallerInfoTests.cs", result);
     }
 
     [Test]
