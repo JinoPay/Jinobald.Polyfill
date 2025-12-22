@@ -1,5 +1,8 @@
 #if NET35 || NET40 || NET45 || NET451 || NET452 || NET46
 
+using System.Buffers;
+using System.Runtime.InteropServices;
+
 namespace System;
 
 /// <summary>
@@ -8,8 +11,8 @@ namespace System;
 /// <typeparam name="T">ReadOnlyMemory에 저장된 항목의 형식입니다.</typeparam>
 public readonly struct ReadOnlyMemory<T>
 {
-    private readonly T[] _array;
-    private readonly int _start;
+    internal readonly T[] _array;
+    internal readonly int _start;
 
     /// <summary>
     ///     현재 ReadOnlyMemory의 길이를 가져옵니다.
@@ -104,6 +107,60 @@ public readonly struct ReadOnlyMemory<T>
     public T[] ToArray()
     {
         return Span.ToArray();
+    }
+
+    /// <summary>
+    ///     이 ReadOnlyMemory의 내용을 대상 Memory에 복사합니다.
+    /// </summary>
+    /// <param name="destination">복사 대상입니다.</param>
+    public void CopyTo(Memory<T> destination)
+    {
+        Span.CopyTo(destination.Span);
+    }
+
+    /// <summary>
+    ///     이 ReadOnlyMemory의 내용을 대상 Memory에 복사를 시도합니다.
+    /// </summary>
+    /// <param name="destination">복사 대상입니다.</param>
+    /// <returns>복사에 성공하면 true, 그렇지 않으면 false입니다.</returns>
+    public bool TryCopyTo(Memory<T> destination)
+    {
+        return Span.TryCopyTo(destination.Span);
+    }
+
+    /// <summary>
+    ///     메모리를 고정하고 고정된 메모리에 대한 핸들을 반환합니다.
+    /// </summary>
+    /// <returns>메모리 핸들입니다.</returns>
+    public unsafe MemoryHandle Pin()
+    {
+        if (_array == null)
+        {
+            return default;
+        }
+
+        var handle = GCHandle.Alloc(_array, GCHandleType.Pinned);
+        var basePtr = handle.AddrOfPinnedObject();
+        void* pointer = (void*)new IntPtr(basePtr.ToInt64() + _start * sizeof(T));
+        return new MemoryHandle(pointer, handle);
+    }
+
+    /// <summary>
+    ///     이 ReadOnlyMemory의 문자열 표현을 반환합니다.
+    /// </summary>
+    public override string ToString()
+    {
+        if (typeof(T) == typeof(char))
+        {
+            if (_array == null)
+            {
+                return string.Empty;
+            }
+
+            return new string((char[])(object)_array, _start, Length);
+        }
+
+        return $"System.ReadOnlyMemory<{typeof(T).Name}>[{Length}]";
     }
 
     /// <summary>
