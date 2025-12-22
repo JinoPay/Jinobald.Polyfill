@@ -26,8 +26,8 @@ internal static partial class StringEx
         }
     }
 
-#if FeatureMemory
     // 정적 메서드 (ReadOnlySpan 버전)
+    // net35~net46: ReadOnlySpan 폴리필 사용
     extension(string)
     {
         /// <summary>
@@ -61,7 +61,6 @@ internal static partial class StringEx
             return s.GetHashCode();
         }
     }
-#endif
 }
 
 #endif

@@ -140,6 +140,23 @@ public readonly ref struct ReadOnlySpan<T>
     }
 
     /// <summary>
+    ///     ReadOnlySpan의 문자열 표현을 반환합니다.
+    ///     char 형식의 경우 실제 문자열을 반환하고, 그 외의 경우 형식 정보를 반환합니다.
+    /// </summary>
+    public override string ToString()
+    {
+        if (typeof(T) == typeof(char))
+        {
+            if (_array == null || Length == 0)
+            {
+                return string.Empty;
+            }
+            return new string((char[])(object)_array, _start, Length);
+        }
+        return string.Format("System.ReadOnlySpan<{0}>[{1}]", typeof(T).Name, Length);
+    }
+
+    /// <summary>
     ///     이 ReadOnlySpan의 내용을 새 배열에 복사합니다.
     /// </summary>
     public T[] ToArray()

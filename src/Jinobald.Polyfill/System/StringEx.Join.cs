@@ -14,7 +14,7 @@ internal static partial class StringEx
         //Link: https://learn.microsoft.com/en-us/dotnet/api/system.string.join#system-string-join(system-char-system-string())
         public static string Join(char separator, params string?[] values)
         {
-#if FeatureMemory && AllowUnsafeBlocks
+#if AllowUnsafeBlocks
             return Join(separator, new ReadOnlySpan<string?>(values));
 #else
             return string.Join(new string(separator, 1), values);
@@ -53,7 +53,7 @@ internal static partial class StringEx
         //Link: https://learn.microsoft.com/en-us/dotnet/api/system.string.join#system-string-join(system-char-system-string()-system-int32-system-int32)
         public static string Join(char separator, string?[] value, int startIndex, int count)
         {
-#if FeatureMemory && AllowUnsafeBlocks
+#if AllowUnsafeBlocks
             return Join(separator, new ReadOnlySpan<string?>(value, startIndex, count));
 #else
             return string.Join(new string(separator, 1), value, startIndex, count);
@@ -83,7 +83,7 @@ internal static partial class StringEx
         }
 #endif
 
-#if FeatureMemory && !NET9_0_OR_GREATER
+#if !NET9_0_OR_GREATER
         /// <summary>
         /// 지정된 구분 기호를 각 멤버 사이에 사용하여 개체 범위의 문자열 표현을 연결합니다.
         /// </summary>
