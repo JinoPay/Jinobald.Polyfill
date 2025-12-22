@@ -24,7 +24,7 @@ public readonly ref struct Span<T>
     /// <summary>
     ///     지정된 배열에서 Span을 생성합니다.
     /// </summary>
-    public Span(T[] array)
+    public Span(T[]? array)
     {
         if (array == null)
         {

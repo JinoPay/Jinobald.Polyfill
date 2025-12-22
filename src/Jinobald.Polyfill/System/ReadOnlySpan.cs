@@ -24,7 +24,7 @@ public readonly ref struct ReadOnlySpan<T>
     /// <summary>
     ///     지정된 배열에서 ReadOnlySpan을 생성합니다.
     /// </summary>
-    public ReadOnlySpan(T[] array)
+    public ReadOnlySpan(T[]? array)
     {
         if (array == null)
         {

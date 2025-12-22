@@ -29,7 +29,7 @@ public readonly struct ReadOnlyMemory<T>
     /// <summary>
     ///     지정된 배열에서 ReadOnlyMemory를 생성합니다.
     /// </summary>
-    public ReadOnlyMemory(T[] array)
+    public ReadOnlyMemory(T[]? array)
     {
         if (array == null)
         {
