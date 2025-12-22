@@ -266,7 +266,15 @@ public class ParallelTests
     [Test]
     public void Invoke_EmptyArray_DoesNotThrow()
     {
-        var exception = Record.Exception(() => Parallel.Invoke());
+        Exception? exception = null;
+        try
+        {
+            Parallel.Invoke();
+        }
+        catch (Exception ex)
+        {
+            exception = ex;
+        }
 
         Assert.IsNull(exception);
     }
@@ -319,7 +327,7 @@ public class ParallelTests
         });
 
         Assert.IsNotEmpty(exception.InnerExceptions);
-        Assert.Contains(exception.InnerExceptions, e => e is InvalidOperationException);
+        Assert.IsTrue(exception.InnerExceptions.Any(e => e is InvalidOperationException));
     }
 
     /// <summary>

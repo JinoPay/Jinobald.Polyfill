@@ -69,7 +69,10 @@ public class SpanTests
         int[] array = new[] { 1, 2, 3, 4, 5 };
         var span = new Span<int>(array);
         span.Fill(99);
-        Assert.All(array, x => Assert.Equal(99, x));
+        foreach (var x in array)
+        {
+            Assert.AreEqual(99, x);
+        }
     }
 
     [Test]

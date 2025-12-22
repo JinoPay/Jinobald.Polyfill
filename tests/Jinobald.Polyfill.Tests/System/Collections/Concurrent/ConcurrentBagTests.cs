@@ -168,9 +168,9 @@ public class ConcurrentBagTests
         var result = bag.ToArray();
 
         Assert.AreEqual(3, result.Length);
-        Assert.Contains(1, result);
-        Assert.Contains(2, result);
-        Assert.Contains(3, result);
+        Assert.IsTrue(result.Contains(1));
+        Assert.IsTrue(result.Contains(2));
+        Assert.IsTrue(result.Contains(3));
     }
 
     /// <summary>
@@ -191,9 +191,9 @@ public class ConcurrentBagTests
         }
 
         Assert.AreEqual(3, list.Count);
-        Assert.Contains(1, list);
-        Assert.Contains(2, list);
-        Assert.Contains(3, list);
+        Assert.IsTrue(list.Contains(1));
+        Assert.IsTrue(list.Contains(2));
+        Assert.IsTrue(list.Contains(3));
     }
 
     #endregion

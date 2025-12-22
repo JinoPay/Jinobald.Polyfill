@@ -81,7 +81,7 @@ public class TaskTests
         var task3 = Task.Delay(1000);
         var whenAny = Task.WhenAny(task1, task2, task3);
         Task? completed = whenAny.Result;
-        Assert.Same(task2, completed);
+        Assert.AreSame(task2, completed);
         Assert.IsTrue(completed.IsCompleted);
     }
 
@@ -101,7 +101,7 @@ public class TaskTests
         Assert.Throws<AggregateException>(() => task.Wait());
         Assert.IsTrue(task.IsFaulted);
         Assert.IsNotNull(task.Exception);
-        Assert.IsType<InvalidOperationException>(task.Exception.InnerExceptions[0]);
+        Assert.IsInstanceOf<InvalidOperationException>(task.Exception.InnerExceptions[0]);
     }
 
     [Test]
@@ -196,9 +196,9 @@ public class TaskTests
         var aggregate = new AggregateException(innerAggregate, outerException);
         AggregateException flattened = aggregate.Flatten();
         Assert.AreEqual(3, flattened.InnerExceptions.Count);
-        Assert.Contains(flattened.InnerExceptions, e => e == innerException1);
-        Assert.Contains(flattened.InnerExceptions, e => e == innerException2);
-        Assert.Contains(flattened.InnerExceptions, e => e == outerException);
+        Assert.IsTrue(flattened.InnerExceptions.Any(e => e == innerException1));
+        Assert.IsTrue(flattened.InnerExceptions.Any(e => e == innerException2));
+        Assert.IsTrue(flattened.InnerExceptions.Any(e => e == outerException));
     }
 
     [Test]
@@ -291,7 +291,7 @@ public class TaskTests
         Assert.IsTrue(task.IsCompleted);
         Assert.IsTrue(task.IsFaulted);
         Assert.IsNotNull(task.Exception);
-        Assert.IsType<InvalidOperationException>(task.Exception.InnerExceptions[0]);
+        Assert.IsInstanceOf<InvalidOperationException>(task.Exception.InnerExceptions[0]);
     }
 
     [Test]
@@ -357,7 +357,7 @@ public class TaskTests
             throw new InvalidOperationException("Test exception");
         });
         AggregateException exception = Assert.Throws<AggregateException>(() => task.Wait());
-        Assert.IsType<InvalidOperationException>(exception.InnerExceptions[0]);
+        Assert.IsInstanceOf<InvalidOperationException>(exception.InnerExceptions[0]);
         Assert.AreEqual("Test exception", exception.InnerExceptions[0].Message);
     }
 }

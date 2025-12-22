@@ -26,7 +26,7 @@ namespace Jinobald.Polyfill.Tests.System.Linq
             var result = source.ToArray();
 
             // 검증
-            Assert.IsType<int[]>(result);
+            Assert.IsInstanceOf<int[]>(result);
             Assert.AreEqual(new[] { 1, 2, 3, 4, 5 }, result);
         }
 
@@ -80,7 +80,7 @@ namespace Jinobald.Polyfill.Tests.System.Linq
             var result = source.ToList();
 
             // 검증
-            Assert.IsType<List<int>>(result);
+            Assert.IsInstanceOf<List<int>>(result);
             Assert.AreEqual(new[] { 1, 2, 3, 4, 5 }, result);
         }
 
@@ -95,7 +95,7 @@ namespace Jinobald.Polyfill.Tests.System.Linq
 
             // 검증
             Assert.IsEmpty(result);
-            Assert.IsType<List<string>>(result);
+            Assert.IsInstanceOf<List<string>>(result);
         }
 
         [Test]
@@ -216,7 +216,7 @@ namespace Jinobald.Polyfill.Tests.System.Linq
             var result = source.Cast<int>();
 
             // 검증 - 같은 참조여야 함
-            Assert.Same(source, result);
+            Assert.AreSame(source, result);
         }
 
         [Test]
@@ -310,7 +310,7 @@ namespace Jinobald.Polyfill.Tests.System.Linq
             var empty2 = Enumerable.Empty<string>();
 
             // 검증 - 같은 참조여야 함 (캐시됨)
-            Assert.Same(empty1, empty2);
+            Assert.AreSame(empty1, empty2);
         }
 
         #endregion
@@ -386,7 +386,10 @@ namespace Jinobald.Polyfill.Tests.System.Linq
 
             // 검증
             Assert.AreEqual(3, result.Count);
-            Assert.All(result, item => Assert.IsNull(item));
+            foreach (var item in result)
+            {
+                Assert.IsNull(item);
+            }
         }
 
         [Test]
@@ -685,7 +688,7 @@ namespace Jinobald.Polyfill.Tests.System.Linq
             var result = source.DefaultIfEmpty().ToList();
 
             // 검증
-            Assert.Single(result);
+            Assert.AreEqual(1, result.Count);
             Assert.AreEqual(0, result[0]);
         }
 
@@ -699,7 +702,7 @@ namespace Jinobald.Polyfill.Tests.System.Linq
             var result = source.DefaultIfEmpty(42).ToList();
 
             // 검증
-            Assert.Single(result);
+            Assert.AreEqual(1, result.Count);
             Assert.AreEqual(42, result[0]);
         }
 

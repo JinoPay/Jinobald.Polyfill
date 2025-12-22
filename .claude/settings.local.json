@@ -13,7 +13,9 @@
       "WebFetch(domain:www.nuget.org)",
       "Bash(findstr:*)",
       "Bash(powershell:*)",
-      "Bash(find:*)"
+      "Bash(find:*)",
+      "Bash(Select-String -Pattern \"error|warning\")",
+      "Bash(Select-Object -First 50)"
     ],
     "deny": [],
     "ask": []

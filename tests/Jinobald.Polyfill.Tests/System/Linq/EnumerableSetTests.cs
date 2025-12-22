@@ -139,7 +139,7 @@ public class EnumerableSetTests
 
         var result = first.Intersect(second, StringComparer.OrdinalIgnoreCase).ToArray();
 
-        Assert.Single(result);
+        Assert.AreEqual(1, result.Length);
         Assert.AreEqual("a", result[0]);
     }
 
@@ -212,7 +212,7 @@ public class EnumerableSetTests
 
         var result = first.Except(second, StringComparer.OrdinalIgnoreCase).ToArray();
 
-        Assert.Single(result);
+        Assert.AreEqual(1, result.Length);
         Assert.AreEqual("B", result[0]);
     }
 

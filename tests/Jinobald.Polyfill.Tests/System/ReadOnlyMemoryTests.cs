@@ -152,7 +152,7 @@ public class ReadOnlyMemoryTests
         var memory = new ReadOnlyMemory<int>(array);
         int hashCode = memory.GetHashCode();
 
-        Assert.NotEqual(0, hashCode);
+        Assert.AreNotEqual(0, hashCode);
     }
 
     [Test]

@@ -38,9 +38,9 @@ public class EnumerableJoinTests
         ).ToArray();
 
         Assert.AreEqual(3, result.Length);
-        Assert.Contains(result, r => r.Category == "과일" && r.Product == "사과");
-        Assert.Contains(result, r => r.Category == "과일" && r.Product == "바나나");
-        Assert.Contains(result, r => r.Category == "채소" && r.Product == "당근");
+        Assert.IsTrue(result.Any(r => r.Category == "과일" && r.Product == "사과"));
+        Assert.IsTrue(result.Any(r => r.Category == "과일" && r.Product == "바나나"));
+        Assert.IsTrue(result.Any(r => r.Category == "채소" && r.Product == "당근"));
     }
 
     /// <summary>
@@ -165,7 +165,7 @@ public class EnumerableJoinTests
 
         Assert.AreEqual(3, result.Length);
         Assert.AreEqual(2, result.First(r => r.Dept == "개발").Employees.Length);
-        Assert.Single(result.First(r => r.Dept == "영업").Employees);
+        Assert.AreEqual(1, result.First(r => r.Dept == "영업").Employees.Length);
         Assert.IsEmpty(result.First(r => r.Dept == "인사").Employees);
     }
 

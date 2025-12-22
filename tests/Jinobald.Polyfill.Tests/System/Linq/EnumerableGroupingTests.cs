@@ -38,8 +38,8 @@ public class EnumerableGroupingTests
         var groups = source.GroupBy(x => x[0], x => x.Length).ToArray();
 
         Assert.AreEqual('a', groups[0].Key);
-        Assert.Contains(5, groups[0]);  // "apple"
-        Assert.Contains(7, groups[0]);  // "apricot"
+        Assert.IsTrue(groups[0].Any(x => x == 5));  // "apple"
+        Assert.IsTrue(groups[0].Any(x => x == 7));  // "apricot"
     }
 
     /// <summary>
