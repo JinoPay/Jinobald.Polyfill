@@ -1,6 +1,6 @@
 ﻿namespace System;
 
-#if NET35 || NET40 || NET45 || NET451 || NET452
+#if NET35 || NET40 || NET45 || NET451 || NET452 || NET46
 public static class ArrayEx
 {
     extension(Array)

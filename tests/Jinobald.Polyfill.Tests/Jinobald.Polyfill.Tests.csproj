@@ -11,6 +11,10 @@
   </PropertyGroup>
 
   <!-- Define conditional compilation symbols based on framework -->
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net461'">
+    <DefineConstants>$(DefineConstants);FeatureMemory;NETFRAMEWORK</DefineConstants>
+  </PropertyGroup>
+
   <PropertyGroup Condition="'$(TargetFramework)' == 'net462' or '$(TargetFramework)' == 'net47' or '$(TargetFramework)' == 'net471' or '$(TargetFramework)' == 'net472' or '$(TargetFramework)' == 'net48' or '$(TargetFramework)' == 'net481'">
     <DefineConstants>$(DefineConstants);FeatureMemory;NETFRAMEWORK</DefineConstants>
   </PropertyGroup>

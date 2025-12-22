@@ -95,6 +95,17 @@ public readonly ref struct Span<T>
     }
 
     /// <summary>
+    ///     현재 Span의 내용을 기본값으로 지웁니다.
+    /// </summary>
+    public void Clear()
+    {
+        if (_array != null && Length > 0)
+        {
+            Array.Clear(_array, _start, Length);
+        }
+    }
+
+    /// <summary>
     ///     현재 Span의 내용을 지정된 대상 Span에 복사합니다.
     /// </summary>
     public void CopyTo(Span<T> destination)

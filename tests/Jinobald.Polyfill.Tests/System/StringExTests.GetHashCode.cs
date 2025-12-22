@@ -2,7 +2,6 @@ namespace Jinobald.Polyfill.Tests.System;
 
 public partial class StringExTests
 {
-#if NETCOREAPP || NETSTANDARD2_1_OR_GREATER
     [Test]
     public void GetHashCode_FromSpan_ShouldReturnHashCode()
     {
@@ -42,9 +41,7 @@ public partial class StringExTests
         // Assert
         Assert.AreEqual(longText.GetHashCode(), hashCode);
     }
-#endif
 
-#if NETCOREAPP3_0_OR_GREATER
     [Test]
     public void GetHashCode_WithComparison_OrdinalShouldReturnHashCode()
     {
@@ -180,5 +177,4 @@ public partial class StringExTests
         // Assert
         Assert.AreEqual(hashCode1, hashCode2);
     }
-#endif
 }

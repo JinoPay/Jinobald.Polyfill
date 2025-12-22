@@ -1,4 +1,3 @@
-#if NETCOREAPP3_0_OR_GREATER
 using NUnit.Framework;
 
 namespace Jinobald.Polyfill.Tests.System;
@@ -70,4 +69,3 @@ public partial class StringExTests
         Assert.IsTrue(result);
     }
 }
-#endif
