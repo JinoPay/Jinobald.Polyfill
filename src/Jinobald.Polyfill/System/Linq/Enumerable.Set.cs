@@ -2,7 +2,6 @@
 // Union, Intersect, Except, Zip
 
 #if NET20
-
 using System.Collections.Generic;
 
 namespace System.Linq

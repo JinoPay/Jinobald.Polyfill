@@ -207,11 +207,12 @@ internal static partial class StringEx
         public static string Join(char separator, params object?[] values)
         {
 #if NET35
-            var stringValues = new string?[values.Length];
+            string?[] stringValues = new string?[values.Length];
             for (int i = 0; i < values.Length; i++)
             {
                 stringValues[i] = values[i]?.ToString();
             }
+
             return string.Join(new string(separator, 1), stringValues);
 #else
             return string.Join(new string(separator, 1), values);
@@ -237,10 +238,11 @@ internal static partial class StringEx
         {
 #if NET35
             var list = new List<string?>();
-            foreach (var value in values)
+            foreach (T value in values)
             {
                 list.Add(value?.ToString());
             }
+
             return string.Join(new string(separator, 1), list.ToArray());
 #else
             return string.Join(new string(separator, 1), values);
@@ -515,13 +517,23 @@ internal static partial class StringEx
 
 #if NETFRAMEWORK && !NET40_OR_GREATER
         /// <summary>
-        /// 지정된 문자열이 null이거나, 비어 있거나, 공백 문자로만 구성되어 있는지 여부를 나타냅니다.
+        ///     지정된 문자열이 null이거나, 비어 있거나, 공백 문자로만 구성되어 있는지 여부를 나타냅니다.
         /// </summary>
         public static bool IsNullOrWhiteSpace(string? value)
         {
-            if (value == null) return true;
-            for (var i = 0; i < value.Length; i++)
-                if (!char.IsWhiteSpace(value[i])) return false;
+            if (value == null)
+            {
+                return true;
+            }
+
+            for (int i = 0; i < value.Length; i++)
+            {
+                if (!char.IsWhiteSpace(value[i]))
+                {
+                    return false;
+                }
+            }
+
             return true;
         }
 #endif

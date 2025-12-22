@@ -1,52 +1,47 @@
+using System.Net.Security;
+using System.Security.Cryptography.X509Certificates;
+
 #if NETFRAMEWORK
 namespace System.Net.Http;
 
-using System.IO;
-using System.Net;
-using System.Net.Security;
-using System.Security.Cryptography.X509Certificates;
-using System.Threading;
-using System.Threading.Tasks;
-
 /// <summary>
-/// <see cref="HttpClient"/>에서 사용하는 기본 메시지 핸들러입니다.
+///     <see cref="HttpClient" />에서 사용하는 기본 메시지 핸들러입니다.
 /// </summary>
 public class HttpClientHandler : HttpMessageHandler
 {
-    private bool _disposed;
     private bool _allowAutoRedirect = true;
-    private int _maxAutomaticRedirections = 50;
-    private DecompressionMethods _automaticDecompression = DecompressionMethods.None;
-    private bool _useCookies = true;
-    private CookieContainer? _cookieContainer;
-    private bool _useProxy = true;
-    private IWebProxy? _proxy;
-    private ICredentials? _credentials;
+    private bool _disposed;
     private bool _preAuthenticate;
-    private TimeSpan _timeout = TimeSpan.FromSeconds(100);
+    private bool _useCookies = true;
+    private bool _useProxy = true;
+    private CookieContainer? _cookieContainer;
+    private DecompressionMethods _automaticDecompression = DecompressionMethods.None;
+
+    private Func<HttpRequestMessage, X509Certificate2?, X509Chain?, SslPolicyErrors, bool>?
+        _serverCertificateCustomValidationCallback;
+
+    private ICredentials? _credentials;
+    private int _maxAutomaticRedirections = 50;
+    private IWebProxy? _proxy;
     private long _maxRequestContentBufferSize = int.MaxValue;
+    private TimeSpan _timeout = TimeSpan.FromSeconds(100);
     private X509CertificateCollection? _clientCertificates;
-    private Func<HttpRequestMessage, X509Certificate2?, X509Chain?, SslPolicyErrors, bool>? _serverCertificateCustomValidationCallback;
 
     /// <summary>
-    /// 자동 압축 해제에 사용되는 압축 해제 방법의 형식을 가져오거나 설정합니다.
+    ///     <see cref="HttpClientHandler" /> 클래스의 새 인스턴스를 초기화합니다.
     /// </summary>
-    public DecompressionMethods AutomaticDecompression
+    public HttpClientHandler()
     {
-        get { return _automaticDecompression; }
-        set
-        {
-            CheckDisposed();
-            _automaticDecompression = value;
-        }
+        // TLS 1.2 활성화
+        ServicePointManagerEx.EnableTls12();
     }
 
     /// <summary>
-    /// 핸들러가 리디렉션 응답을 따르는지 여부를 가져오거나 설정합니다.
+    ///     핸들러가 리디렉션 응답을 따르는지 여부를 가져오거나 설정합니다.
     /// </summary>
     public bool AllowAutoRedirect
     {
-        get { return _allowAutoRedirect; }
+        get => _allowAutoRedirect;
         set
         {
             CheckDisposed();
@@ -55,26 +50,24 @@ public class HttpClientHandler : HttpMessageHandler
     }
 
     /// <summary>
-    /// 핸들러가 따르는 최대 리디렉션 수를 가져오거나 설정합니다.
+    ///     핸들러가 요청과 함께 인증 정보를 보내는지 여부를 가져오거나 설정합니다.
     /// </summary>
-    public int MaxAutomaticRedirections
+    public bool PreAuthenticate
     {
-        get { return _maxAutomaticRedirections; }
+        get => _preAuthenticate;
         set
         {
-            if (value <= 0)
-                throw new ArgumentOutOfRangeException(nameof(value));
             CheckDisposed();
-            _maxAutomaticRedirections = value;
+            _preAuthenticate = value;
         }
     }
 
     /// <summary>
-    /// 핸들러가 쿠키를 사용하여 쿠키를 저장하고 요청을 보낼 때 이 쿠키를 사용할지 여부를 가져오거나 설정합니다.
+    ///     핸들러가 쿠키를 사용하여 쿠키를 저장하고 요청을 보낼 때 이 쿠키를 사용할지 여부를 가져오거나 설정합니다.
     /// </summary>
     public bool UseCookies
     {
-        get { return _useCookies; }
+        get => _useCookies;
         set
         {
             CheckDisposed();
@@ -83,14 +76,30 @@ public class HttpClientHandler : HttpMessageHandler
     }
 
     /// <summary>
-    /// 서버에서 보낸 쿠키를 저장하는 데 사용되는 쿠키 컨테이너를 가져오거나 설정합니다.
+    ///     핸들러가 프록시를 사용하여 요청을 보낼지 여부를 가져오거나 설정합니다.
+    /// </summary>
+    public bool UseProxy
+    {
+        get => _useProxy;
+        set
+        {
+            CheckDisposed();
+            _useProxy = value;
+        }
+    }
+
+    /// <summary>
+    ///     서버에서 보낸 쿠키를 저장하는 데 사용되는 쿠키 컨테이너를 가져오거나 설정합니다.
     /// </summary>
     public CookieContainer CookieContainer
     {
         get
         {
             if (_cookieContainer == null)
+            {
                 _cookieContainer = new CookieContainer();
+            }
+
             return _cookieContainer;
         }
         set
@@ -101,76 +110,25 @@ public class HttpClientHandler : HttpMessageHandler
     }
 
     /// <summary>
-    /// 핸들러가 프록시를 사용하여 요청을 보낼지 여부를 가져오거나 설정합니다.
+    ///     자동 압축 해제에 사용되는 압축 해제 방법의 형식을 가져오거나 설정합니다.
     /// </summary>
-    public bool UseProxy
+    public DecompressionMethods AutomaticDecompression
     {
-        get { return _useProxy; }
+        get => _automaticDecompression;
         set
         {
             CheckDisposed();
-            _useProxy = value;
+            _automaticDecompression = value;
         }
     }
 
     /// <summary>
-    /// 핸들러에서 사용하는 프록시 정보를 가져오거나 설정합니다.
+    ///     서버 인증서 유효성 검사를 위한 콜백 메서드를 가져오거나 설정합니다.
     /// </summary>
-    public IWebProxy? Proxy
+    public Func<HttpRequestMessage, X509Certificate2?, X509Chain?, SslPolicyErrors, bool>?
+        ServerCertificateCustomValidationCallback
     {
-        get { return _proxy; }
-        set
-        {
-            CheckDisposed();
-            _proxy = value;
-        }
-    }
-
-    /// <summary>
-    /// 이 핸들러에서 사용하는 인증 정보를 가져오거나 설정합니다.
-    /// </summary>
-    public ICredentials? Credentials
-    {
-        get { return _credentials; }
-        set
-        {
-            CheckDisposed();
-            _credentials = value;
-        }
-    }
-
-    /// <summary>
-    /// 핸들러가 요청과 함께 인증 정보를 보내는지 여부를 가져오거나 설정합니다.
-    /// </summary>
-    public bool PreAuthenticate
-    {
-        get { return _preAuthenticate; }
-        set
-        {
-            CheckDisposed();
-            _preAuthenticate = value;
-        }
-    }
-
-    /// <summary>
-    /// 요청에 사용할 클라이언트 인증서의 컬렉션을 가져옵니다.
-    /// </summary>
-    public X509CertificateCollection ClientCertificates
-    {
-        get
-        {
-            if (_clientCertificates == null)
-                _clientCertificates = new X509CertificateCollection();
-            return _clientCertificates;
-        }
-    }
-
-    /// <summary>
-    /// 서버 인증서 유효성 검사를 위한 콜백 메서드를 가져오거나 설정합니다.
-    /// </summary>
-    public Func<HttpRequestMessage, X509Certificate2?, X509Chain?, SslPolicyErrors, bool>? ServerCertificateCustomValidationCallback
-    {
-        get { return _serverCertificateCustomValidationCallback; }
+        get => _serverCertificateCustomValidationCallback;
         set
         {
             CheckDisposed();
@@ -179,41 +137,167 @@ public class HttpClientHandler : HttpMessageHandler
     }
 
     /// <summary>
-    /// 요청 콘텐츠를 버퍼링할 때 사용할 최대 요청 콘텐츠 버퍼 크기(바이트)를 가져오거나 설정합니다.
+    ///     이 핸들러에서 사용하는 인증 정보를 가져오거나 설정합니다.
+    /// </summary>
+    public ICredentials? Credentials
+    {
+        get => _credentials;
+        set
+        {
+            CheckDisposed();
+            _credentials = value;
+        }
+    }
+
+    /// <summary>
+    ///     핸들러가 따르는 최대 리디렉션 수를 가져오거나 설정합니다.
+    /// </summary>
+    public int MaxAutomaticRedirections
+    {
+        get => _maxAutomaticRedirections;
+        set
+        {
+            if (value <= 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(value));
+            }
+
+            CheckDisposed();
+            _maxAutomaticRedirections = value;
+        }
+    }
+
+    /// <summary>
+    ///     핸들러에서 사용하는 프록시 정보를 가져오거나 설정합니다.
+    /// </summary>
+    public IWebProxy? Proxy
+    {
+        get => _proxy;
+        set
+        {
+            CheckDisposed();
+            _proxy = value;
+        }
+    }
+
+    /// <summary>
+    ///     요청 콘텐츠를 버퍼링할 때 사용할 최대 요청 콘텐츠 버퍼 크기(바이트)를 가져오거나 설정합니다.
     /// </summary>
     public long MaxRequestContentBufferSize
     {
-        get { return _maxRequestContentBufferSize; }
+        get => _maxRequestContentBufferSize;
         set
         {
             if (value < 0)
+            {
                 throw new ArgumentOutOfRangeException(nameof(value));
+            }
+
             CheckDisposed();
             _maxRequestContentBufferSize = value;
         }
     }
 
     /// <summary>
-    /// <see cref="HttpClientHandler"/> 클래스의 새 인스턴스를 초기화합니다.
+    ///     요청에 사용할 클라이언트 인증서의 컬렉션을 가져옵니다.
     /// </summary>
-    public HttpClientHandler()
+    public X509CertificateCollection ClientCertificates
     {
-        // TLS 1.2 활성화
-        ServicePointManagerEx.EnableTls12();
+        get
+        {
+            if (_clientCertificates == null)
+            {
+                _clientCertificates = new X509CertificateCollection();
+            }
+
+            return _clientCertificates;
+        }
     }
 
     /// <summary>
-    /// HTTP 요청을 비동기 작업으로 보냅니다.
+    ///     <see cref="HttpClientHandler" />에서 사용하는 관리되지 않는 리소스를 해제합니다.
     /// </summary>
-    /// <param name="request">보낼 HTTP 요청 메시지입니다.</param>
-    /// <param name="cancellationToken">작업을 취소하기 위한 취소 토큰입니다.</param>
-    /// <returns>비동기 작업을 나타내는 작업 개체입니다.</returns>
-    protected internal override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+    /// <param name="disposing">관리되는 리소스와 관리되지 않는 리소스를 모두 해제하려면 <c>true</c>이고, 관리되지 않는 리소스만 해제하려면 <c>false</c>입니다.</param>
+    protected override void Dispose(bool disposing)
     {
-        if (request == null)
-            throw new ArgumentNullException(nameof(request));
+        if (disposing && !_disposed)
+        {
+            _disposed = true;
+        }
 
-        return Task.Run(() => SendCore(request, cancellationToken));
+        base.Dispose(disposing);
+    }
+
+    private static void CopyStream(Stream source, Stream destination)
+    {
+        byte[] buffer = new byte[4096];
+        int bytesRead;
+        while ((bytesRead = source.Read(buffer, 0, buffer.Length)) > 0)
+        {
+            destination.Write(buffer, 0, bytesRead);
+        }
+    }
+
+    private HttpResponseMessage CreateResponseMessage(HttpWebResponse webResponse, HttpRequestMessage request)
+    {
+        var response = new HttpResponseMessage(webResponse.StatusCode)
+        {
+            ReasonPhrase = webResponse.StatusDescription,
+            Version = webResponse.ProtocolVersion,
+            RequestMessage = request
+        };
+
+        // 응답 헤더 복사
+        foreach (string headerName in webResponse.Headers)
+        {
+            string? headerValue = webResponse.Headers[headerName];
+            if (!string.IsNullOrEmpty(headerValue))
+            {
+                response.Headers.TryAddWithoutValidation(headerName, headerValue);
+            }
+        }
+
+        // 응답 콘텐츠 설정
+        Stream? responseStream = webResponse.GetResponseStream();
+        if (responseStream != null)
+        {
+            // 스트림을 메모리로 복사 (WebResponse는 곧 dispose될 수 있으므로)
+            var memoryStream = new MemoryStream();
+            CopyStream(responseStream, memoryStream);
+            memoryStream.Position = 0;
+
+            response.Content = new StreamContent(memoryStream);
+
+            // 콘텐츠 헤더 복사
+            string contentType = webResponse.ContentType;
+            if (!string.IsNullOrEmpty(contentType))
+            {
+                response.Content.Headers.TryAddWithoutValidation("Content-Type", contentType);
+            }
+
+            long contentLength = webResponse.ContentLength;
+            if (contentLength >= 0)
+            {
+                response.Content.Headers.ContentLength = contentLength;
+            }
+
+            string contentEncoding = webResponse.ContentEncoding;
+            if (!string.IsNullOrEmpty(contentEncoding))
+            {
+                response.Content.Headers.TryAddWithoutValidation("Content-Encoding", contentEncoding);
+            }
+        }
+
+        // 쿠키 업데이트
+        if (_useCookies && _cookieContainer != null && webResponse.Cookies.Count > 0)
+        {
+            foreach (Cookie cookie in webResponse.Cookies)
+            {
+                _cookieContainer.Add(cookie);
+            }
+        }
+
+        return response;
     }
 
     private HttpResponseMessage SendCore(HttpRequestMessage request, CancellationToken cancellationToken)
@@ -221,16 +305,18 @@ public class HttpClientHandler : HttpMessageHandler
         CheckDisposed();
 
         if (request.RequestUri == null)
+        {
             throw new InvalidOperationException("요청 URI가 설정되지 않았습니다.");
+        }
 
-        var webRequest = CreateWebRequest(request);
+        HttpWebRequest webRequest = CreateWebRequest(request);
 
         try
         {
             // 요청 본문 쓰기
             if (request.Content != null)
             {
-                using (var requestStream = webRequest.GetRequestStream())
+                using (Stream requestStream = webRequest.GetRequestStream())
                 {
                     request.Content.CopyTo(requestStream);
                 }
@@ -263,16 +349,24 @@ public class HttpClientHandler : HttpMessageHandler
         webRequest.Timeout = (int)_timeout.TotalMilliseconds;
 
         if (_maxAutomaticRedirections > 0)
+        {
             webRequest.MaximumAutomaticRedirections = _maxAutomaticRedirections;
+        }
 
         if (_useCookies && _cookieContainer != null)
+        {
             webRequest.CookieContainer = _cookieContainer;
+        }
 
         if (_useProxy && _proxy != null)
+        {
             webRequest.Proxy = _proxy;
+        }
 
         if (_credentials != null)
+        {
             webRequest.Credentials = _credentials;
+        }
 
         if (_clientCertificates != null && _clientCertificates.Count > 0)
         {
@@ -285,24 +379,27 @@ public class HttpClientHandler : HttpMessageHandler
         // 서버 인증서 유효성 검사 콜백 설정
         if (_serverCertificateCustomValidationCallback != null)
         {
-            var requestCopy = request;
-            var callbackCopy = _serverCertificateCustomValidationCallback;
+            HttpRequestMessage requestCopy = request;
+            Func<HttpRequestMessage, X509Certificate2?, X509Chain?, SslPolicyErrors, bool>? callbackCopy =
+                _serverCertificateCustomValidationCallback;
 
             ServicePointManager.ServerCertificateValidationCallback = (sender, certificate, chain, sslPolicyErrors) =>
             {
                 var cert2 = certificate as X509Certificate2;
                 if (cert2 == null && certificate != null)
+                {
                     cert2 = new X509Certificate2(certificate);
+                }
 
                 return callbackCopy(requestCopy, cert2, chain, sslPolicyErrors);
             };
         }
 
         // 요청 헤더 복사
-        foreach (var header in request.Headers)
+        foreach (KeyValuePair<string, IEnumerable<string>> header in request.Headers)
         {
-            var headerName = header.Key;
-            var headerValue = string.Join(", ", new System.Collections.Generic.List<string>(header.Value).ToArray());
+            string? headerName = header.Key;
+            string headerValue = string.Join(", ", new List<string>(header.Value).ToArray());
 
             try
             {
@@ -313,9 +410,14 @@ public class HttpClientHandler : HttpMessageHandler
                         break;
                     case "connection":
                         if (headerValue.IndexOf("keep-alive", StringComparison.OrdinalIgnoreCase) >= 0)
+                        {
                             webRequest.KeepAlive = true;
+                        }
                         else if (headerValue.IndexOf("close", StringComparison.OrdinalIgnoreCase) >= 0)
+                        {
                             webRequest.KeepAlive = false;
+                        }
+
                         break;
                     case "content-length":
                         // 콘텐츠 길이는 자동으로 설정됨
@@ -325,22 +427,31 @@ public class HttpClientHandler : HttpMessageHandler
                         break;
                     case "expect":
                         if (headerValue.IndexOf("100-continue", StringComparison.OrdinalIgnoreCase) >= 0)
+                        {
                             webRequest.ServicePoint.Expect100Continue = true;
+                        }
+
                         break;
                     case "host":
                         // Host 속성은 .NET 4.0 이상에서만 사용 가능, 헤더로 직접 설정
                         webRequest.Headers["Host"] = headerValue;
                         break;
                     case "if-modified-since":
-                        if (DateTime.TryParse(headerValue, out var ifModifiedSince))
+                        if (DateTime.TryParse(headerValue, out DateTime ifModifiedSince))
+                        {
                             webRequest.IfModifiedSince = ifModifiedSince;
+                        }
+
                         break;
                     case "referer":
                         webRequest.Referer = headerValue;
                         break;
                     case "transfer-encoding":
                         if (headerValue.IndexOf("chunked", StringComparison.OrdinalIgnoreCase) >= 0)
+                        {
                             webRequest.SendChunked = true;
+                        }
+
                         break;
                     case "user-agent":
                         webRequest.UserAgent = headerValue;
@@ -359,10 +470,10 @@ public class HttpClientHandler : HttpMessageHandler
         // 콘텐츠 헤더 복사
         if (request.Content != null)
         {
-            foreach (var header in request.Content.Headers)
+            foreach (KeyValuePair<string, IEnumerable<string>> header in request.Content.Headers)
             {
-                var headerName = header.Key;
-                var headerValue = string.Join(", ", new System.Collections.Generic.List<string>(header.Value).ToArray());
+                string? headerName = header.Key;
+                string headerValue = string.Join(", ", new List<string>(header.Value).ToArray());
 
                 try
                 {
@@ -372,8 +483,10 @@ public class HttpClientHandler : HttpMessageHandler
                     }
                     else if (headerName.Equals("Content-Length", StringComparison.OrdinalIgnoreCase))
                     {
-                        if (long.TryParse(headerValue, out var contentLength))
+                        if (long.TryParse(headerValue, out long contentLength))
+                        {
                             webRequest.ContentLength = contentLength;
+                        }
                     }
                     else
                     {
@@ -390,96 +503,29 @@ public class HttpClientHandler : HttpMessageHandler
         return webRequest;
     }
 
-    private HttpResponseMessage CreateResponseMessage(HttpWebResponse webResponse, HttpRequestMessage request)
-    {
-        var response = new HttpResponseMessage(webResponse.StatusCode)
-        {
-            ReasonPhrase = webResponse.StatusDescription,
-            Version = webResponse.ProtocolVersion,
-            RequestMessage = request
-        };
-
-        // 응답 헤더 복사
-        foreach (string headerName in webResponse.Headers)
-        {
-            var headerValue = webResponse.Headers[headerName];
-            if (!string.IsNullOrEmpty(headerValue))
-            {
-                response.Headers.TryAddWithoutValidation(headerName, headerValue);
-            }
-        }
-
-        // 응답 콘텐츠 설정
-        var responseStream = webResponse.GetResponseStream();
-        if (responseStream != null)
-        {
-            // 스트림을 메모리로 복사 (WebResponse는 곧 dispose될 수 있으므로)
-            var memoryStream = new MemoryStream();
-            CopyStream(responseStream, memoryStream);
-            memoryStream.Position = 0;
-
-            response.Content = new StreamContent(memoryStream);
-
-            // 콘텐츠 헤더 복사
-            var contentType = webResponse.ContentType;
-            if (!string.IsNullOrEmpty(contentType))
-            {
-                response.Content.Headers.TryAddWithoutValidation("Content-Type", contentType);
-            }
-
-            var contentLength = webResponse.ContentLength;
-            if (contentLength >= 0)
-            {
-                response.Content.Headers.ContentLength = contentLength;
-            }
-
-            var contentEncoding = webResponse.ContentEncoding;
-            if (!string.IsNullOrEmpty(contentEncoding))
-            {
-                response.Content.Headers.TryAddWithoutValidation("Content-Encoding", contentEncoding);
-            }
-        }
-
-        // 쿠키 업데이트
-        if (_useCookies && _cookieContainer != null && webResponse.Cookies.Count > 0)
-        {
-            foreach (Cookie cookie in webResponse.Cookies)
-            {
-                _cookieContainer.Add(cookie);
-            }
-        }
-
-        return response;
-    }
-
-    /// <summary>
-    /// <see cref="HttpClientHandler"/>에서 사용하는 관리되지 않는 리소스를 해제합니다.
-    /// </summary>
-    /// <param name="disposing">관리되는 리소스와 관리되지 않는 리소스를 모두 해제하려면 <c>true</c>이고, 관리되지 않는 리소스만 해제하려면 <c>false</c>입니다.</param>
-    protected override void Dispose(bool disposing)
-    {
-        if (disposing && !_disposed)
-        {
-            _disposed = true;
-        }
-
-        base.Dispose(disposing);
-    }
-
     private void CheckDisposed()
     {
         if (_disposed)
+        {
             throw new ObjectDisposedException(GetType().FullName);
+        }
     }
 
-    private static void CopyStream(Stream source, Stream destination)
+    /// <summary>
+    ///     HTTP 요청을 비동기 작업으로 보냅니다.
+    /// </summary>
+    /// <param name="request">보낼 HTTP 요청 메시지입니다.</param>
+    /// <param name="cancellationToken">작업을 취소하기 위한 취소 토큰입니다.</param>
+    /// <returns>비동기 작업을 나타내는 작업 개체입니다.</returns>
+    protected internal override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request,
+        CancellationToken cancellationToken)
     {
-        var buffer = new byte[4096];
-        int bytesRead;
-        while ((bytesRead = source.Read(buffer, 0, buffer.Length)) > 0)
+        if (request == null)
         {
-            destination.Write(buffer, 0, bytesRead);
+            throw new ArgumentNullException(nameof(request));
         }
+
+        return Task.Run(() => SendCore(request, cancellationToken));
     }
 }
 #endif

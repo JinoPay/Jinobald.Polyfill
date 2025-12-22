@@ -2,7 +2,6 @@
 // Join, GroupJoin
 
 #if NET20
-
 using System.Collections.Generic;
 
 namespace System.Linq

@@ -2,7 +2,7 @@
 namespace System
 {
     /// <summary>
-    /// Represents a method that converts an object from one type to another type.
+    ///     Represents a method that converts an object from one type to another type.
     /// </summary>
     /// <typeparam name="TInput">The type of object that is to be converted.</typeparam>
     /// <typeparam name="TOutput">The type the input object is to be converted to.</typeparam>

@@ -2,7 +2,6 @@
 // 정렬된 시퀀스를 나타내며 후속 정렬 작업을 지원합니다.
 
 #if NET20
-
 using System.Collections.Generic;
 
 namespace System.Linq

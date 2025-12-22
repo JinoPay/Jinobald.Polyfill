@@ -2,7 +2,6 @@
 // GroupBy, ToLookup 및 지원 클래스
 
 #if NET20
-
 using System.Collections;
 using System.Collections.Generic;
 
@@ -316,7 +315,8 @@ namespace System.Linq
 
         public IEnumerator<TResult> GetEnumerator()
         {
-            Lookup<TKey, TElement> lookup = Lookup<TKey, TElement>.Create(_source, _keySelector, _elementSelector, _comparer);
+            Lookup<TKey, TElement> lookup =
+ Lookup<TKey, TElement>.Create(_source, _keySelector, _elementSelector, _comparer);
             return lookup.ApplyResultSelector(_resultSelector).GetEnumerator();
         }
 

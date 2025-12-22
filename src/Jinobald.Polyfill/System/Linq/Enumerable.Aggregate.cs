@@ -2,7 +2,6 @@
 // Aggregate, Sum, Average, Min, Max
 
 #if NET20
-
 using System.Collections.Generic;
 
 namespace System.Linq

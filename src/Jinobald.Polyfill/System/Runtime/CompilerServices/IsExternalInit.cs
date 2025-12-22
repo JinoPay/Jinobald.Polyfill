@@ -1,5 +1,4 @@
 #if NET46 || NET462 || NET47 || NET472 || NET48 || NETSTANDARD2_0 || NETSTANDARD2_1
-
 namespace System.Runtime.CompilerServices
 {
     /// <summary>

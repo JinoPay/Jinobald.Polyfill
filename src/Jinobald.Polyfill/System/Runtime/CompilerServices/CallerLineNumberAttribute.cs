@@ -3,13 +3,13 @@
 namespace System.Runtime.CompilerServices
 {
     /// <summary>
-    /// Allows you to obtain the line number in the source file at which the method is called.
+    ///     Allows you to obtain the line number in the source file at which the method is called.
     /// </summary>
     [AttributeUsage(AttributeTargets.Parameter, AllowMultiple = false, Inherited = false)]
     public sealed class CallerLineNumberAttribute : Attribute
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="CallerLineNumberAttribute"/> class.
+        ///     Initializes a new instance of the <see cref="CallerLineNumberAttribute" /> class.
         /// </summary>
         public CallerLineNumberAttribute()
         {

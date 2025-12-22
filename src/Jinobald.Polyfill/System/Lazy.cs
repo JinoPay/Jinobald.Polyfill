@@ -1,25 +1,23 @@
 #if NET35
 namespace System
 {
-    using System.Threading;
-
     public class Lazy<T>
     {
-        private readonly object lockObject = new object();
-        private Func<T> valueFactory;
-        private T value;
+        private readonly Func<T> valueFactory;
+        private readonly object lockObject = new();
         private bool isValueCreated;
+        private T value;
 
         public Lazy()
         {
-            this.valueFactory = () => Activator.CreateInstance<T>();
-            this.isValueCreated = false;
+            valueFactory = () => Activator.CreateInstance<T>();
+            isValueCreated = false;
         }
 
         public Lazy(T value)
         {
             this.value = value;
-            this.isValueCreated = true;
+            isValueCreated = true;
         }
 
         public Lazy(Func<T> valueFactory)
@@ -30,16 +28,16 @@ namespace System
             }
 
             this.valueFactory = valueFactory;
-            this.isValueCreated = false;
+            isValueCreated = false;
         }
 
         public bool IsValueCreated
         {
             get
             {
-                lock (this.lockObject)
+                lock (lockObject)
                 {
-                    return this.isValueCreated;
+                    return isValueCreated;
                 }
             }
         }
@@ -48,31 +46,31 @@ namespace System
         {
             get
             {
-                lock (this.lockObject)
+                lock (lockObject)
                 {
-                    if (!this.isValueCreated)
+                    if (!isValueCreated)
                     {
-                        if (this.valueFactory != null)
+                        if (valueFactory != null)
                         {
-                            this.value = this.valueFactory();
+                            value = valueFactory();
                         }
 
-                        this.isValueCreated = true;
+                        isValueCreated = true;
                     }
 
-                    return this.value;
+                    return value;
                 }
             }
         }
 
         public override string ToString()
         {
-            if (!this.IsValueCreated)
+            if (!IsValueCreated)
             {
                 return "값이 생성되지 않았습니다";
             }
 
-            T val = this.Value;
+            T val = Value;
             return val == null ? "null" : val.ToString();
         }
     }

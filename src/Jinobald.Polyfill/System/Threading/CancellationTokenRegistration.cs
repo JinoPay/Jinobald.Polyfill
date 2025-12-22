@@ -2,7 +2,7 @@
 namespace System.Threading;
 
 /// <summary>
-/// CancellationToken에 등록된 콜백 대리자를 나타냅니다.
+///     CancellationToken에 등록된 콜백 대리자를 나타냅니다.
 /// </summary>
 public struct CancellationTokenRegistration : IDisposable
 {
@@ -16,7 +16,7 @@ public struct CancellationTokenRegistration : IDisposable
     }
 
     /// <summary>
-    /// 등록을 삭제하고 연결된 CancellationToken에서 대상 콜백의 등록을 취소합니다.
+    ///     등록을 삭제하고 연결된 CancellationToken에서 대상 콜백의 등록을 취소합니다.
     /// </summary>
     public void Dispose()
     {
@@ -33,6 +33,7 @@ public struct CancellationTokenRegistration : IDisposable
             var other = (CancellationTokenRegistration)obj;
             return _source == other._source && _callback == other._callback;
         }
+
         return false;
     }
 
@@ -45,9 +46,15 @@ public struct CancellationTokenRegistration : IDisposable
     {
         int hash = 17;
         if (_source != null)
-            hash = hash * 31 + _source.GetHashCode();
+        {
+            hash = (hash * 31) + _source.GetHashCode();
+        }
+
         if (_callback != null)
-            hash = hash * 31 + _callback.GetHashCode();
+        {
+            hash = (hash * 31) + _callback.GetHashCode();
+        }
+
         return hash;
     }
 

@@ -2,7 +2,6 @@
 // .NET 2.0에서 LINQ 기능을 사용할 수 있도록 하는 확장 메서드 모음
 
 #if NET20
-
 using System.Collections;
 using System.Collections.Generic;
 

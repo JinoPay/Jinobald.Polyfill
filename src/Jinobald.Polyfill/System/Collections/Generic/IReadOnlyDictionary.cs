@@ -3,11 +3,10 @@ namespace System.Collections.Generic
 {
     public interface IReadOnlyDictionary<TKey, TValue> : IReadOnlyCollection<KeyValuePair<TKey, TValue>>
     {
-        TValue this[TKey key] { get; }
-
         IEnumerable<TKey> Keys { get; }
 
         IEnumerable<TValue> Values { get; }
+        TValue this[TKey key] { get; }
 
         bool ContainsKey(TKey key);
 
