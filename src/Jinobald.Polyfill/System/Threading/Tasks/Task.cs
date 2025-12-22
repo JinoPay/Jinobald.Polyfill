@@ -143,25 +143,48 @@ public class Task : IDisposable
 
         var task = new Task(cancellationToken);
 
+        if (cancellationToken.IsCancellationRequested)
+        {
+            task.SetCanceled();
+            return task;
+        }
+
         if (millisecondsDelay == 0)
         {
             task.SetResult();
             return task;
         }
 
-        var timer = new Timer(_ =>
+        Timer? timer = null;
+        CancellationTokenRegistration registration = default;
+
+        timer = new Timer(_ =>
         {
-            if (cancellationToken.IsCancellationRequested)
+            try
             {
-                task.SetCanceled();
-            }
-            else
-            {
+                registration.Dispose();
                 task.SetResult();
+            }
+            finally
+            {
+                timer?.Dispose();
             }
         }, null, millisecondsDelay, Timeout.Infinite);
 
-        task.ContinueWith(_ => timer.Dispose());
+        if (cancellationToken.CanBeCanceled)
+        {
+            registration = cancellationToken.Register(() =>
+            {
+                try
+                {
+                    task.SetCanceled();
+                }
+                finally
+                {
+                    timer?.Dispose();
+                }
+            });
+        }
 
         return task;
     }
@@ -172,6 +195,19 @@ public class Task : IDisposable
     public static Task FromCanceled(CancellationToken cancellationToken)
     {
         var task = new Task(cancellationToken);
+        task.SetCanceled();
+        return task;
+    }
+
+    /// <summary>
+    ///     지정된 CancellationToken으로 취소로 인해 완료된 Task를 만듭니다.
+    /// </summary>
+    /// <typeparam name="TResult">Task의 결과 형식입니다.</typeparam>
+    /// <param name="cancellationToken">취소에 사용된 CancellationToken입니다.</param>
+    /// <returns>취소로 완료된 Task입니다.</returns>
+    public static Task<TResult> FromCanceled<TResult>(CancellationToken cancellationToken)
+    {
+        var task = new Task<TResult>(cancellationToken);
         task.SetCanceled();
         return task;
     }
@@ -615,7 +651,10 @@ public class Task : IDisposable
         });
     }
 
-    internal void SetCanceled()
+    /// <summary>
+    ///     Task를 취소된 것으로 표시합니다.
+    /// </summary>
+    public void SetCanceled()
     {
         lock (_lock)
         {
