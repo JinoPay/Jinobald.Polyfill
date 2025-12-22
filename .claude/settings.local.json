@@ -1,26 +1,13 @@
 {
   "permissions": {
     "allow": [
-      "Bash(ForEach-Object { $_ame })",
-      "Bash(dir:*)",
-      "Bash(tree:*)",
-      "Bash(\"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\Common7\\Tools\\VsDevCmd.bat\")",
-      "Bash(msbuild:*)",
-      "Bash(cmd.exe /c \"dir \"\"C:\\Program Files\\Microsoft Visual Studio\"\" 2>nul\")",
-      "Bash(cmd.exe:*)",
-      "Bash(dotnet build:*)",
-      "WebSearch",
-      "WebFetch(domain:www.nuget.org)",
+      "Bash(dir \"C:\\Users\\Jinho\\Documents\\Jinobald.Polyfill\\src\\Jinobald.Polyfill\\System\" /s)",
+      "Bash(dir \"C:\\Users\\Jinho\\Documents\\Jinobald.Polyfill\\src\\Jinobald.Polyfill\" /s /b)",
       "Bash(findstr:*)",
-      "Bash(powershell:*)",
-      "Bash(find:*)",
-      "Bash(Select-String -Pattern \"error|warning\")",
-      "Bash(Select-Object -First 50)",
-      "Bash(dotnet restore:*)",
-      "Bash(dotnet test:*)",
-      "Bash(Select-String -Pattern \"error|Build succeeded\")",
-      "Bash(Select-String -Pattern \"error|warning.*Action|Build succeeded\")",
-      "Bash(Select-Object -First 30)"
+      "Bash(head:*)",
+      "WebSearch",
+      "Bash(dotnet build:*)",
+      "Bash(dotnet test:*)"
     ],
     "deny": [],
     "ask": []

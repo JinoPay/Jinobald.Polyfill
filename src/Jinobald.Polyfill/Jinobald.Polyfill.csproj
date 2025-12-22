@@ -11,27 +11,27 @@
 
     <!-- Define conditional compilation symbols based on framework -->
     <PropertyGroup Condition="'$(TargetFramework)' == 'net35'">
-        <DefineConstants>$(DefineConstants);NET35;NETFRAMEWORK</DefineConstants>
+        <DefineConstants>$(DefineConstants);NET35;NETFRAMEWORK;AllowUnsafeBlocks</DefineConstants>
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(TargetFramework)' == 'net40'">
-        <DefineConstants>$(DefineConstants);NET40;NETFRAMEWORK</DefineConstants>
+        <DefineConstants>$(DefineConstants);NET40;NETFRAMEWORK;AllowUnsafeBlocks</DefineConstants>
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(TargetFramework)' == 'net45'">
-        <DefineConstants>$(DefineConstants);NET45;NETFRAMEWORK</DefineConstants>
+        <DefineConstants>$(DefineConstants);NET45;NETFRAMEWORK;AllowUnsafeBlocks</DefineConstants>
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(TargetFramework)' == 'net451'">
-        <DefineConstants>$(DefineConstants);NET451;NETFRAMEWORK</DefineConstants>
+        <DefineConstants>$(DefineConstants);NET451;NETFRAMEWORK;AllowUnsafeBlocks</DefineConstants>
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(TargetFramework)' == 'net452'">
-        <DefineConstants>$(DefineConstants);NET452;NETFRAMEWORK</DefineConstants>
+        <DefineConstants>$(DefineConstants);NET452;NETFRAMEWORK;AllowUnsafeBlocks</DefineConstants>
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(TargetFramework)' == 'net46'">
-        <DefineConstants>$(DefineConstants);NET46;NETFRAMEWORK</DefineConstants>
+        <DefineConstants>$(DefineConstants);NET46;NETFRAMEWORK;AllowUnsafeBlocks</DefineConstants>
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(TargetFramework)' == 'net461'">

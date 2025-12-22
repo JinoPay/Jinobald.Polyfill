@@ -10,6 +10,7 @@ public readonly ref struct Span<T>
 {
     private readonly T[] _array;
     private readonly int _start;
+    private readonly IntPtr _pointer;
 
     /// <summary>
     ///     현재 Span의 길이를 가져옵니다.
@@ -30,12 +31,14 @@ public readonly ref struct Span<T>
         {
             _array = null!;
             _start = 0;
+            _pointer = IntPtr.Zero;
             Length = 0;
             return;
         }
 
         _array = array;
         _start = 0;
+        _pointer = IntPtr.Zero;
         Length = array.Length;
     }
 
@@ -53,6 +56,7 @@ public readonly ref struct Span<T>
 
             _array = null!;
             _start = 0;
+            _pointer = IntPtr.Zero;
             Length = 0;
             return;
         }
@@ -64,19 +68,43 @@ public readonly ref struct Span<T>
 
         _array = array;
         _start = start;
+        _pointer = IntPtr.Zero;
+        Length = length;
+    }
+
+    /// <summary>
+    ///     지정된 포인터와 길이로 Span을 생성합니다.
+    /// </summary>
+    /// <param name="pointer">관리되지 않는 메모리에 대한 포인터입니다.</param>
+    /// <param name="length">Span의 요소 수입니다.</param>
+    public unsafe Span(void* pointer, int length)
+    {
+        if (length < 0)
+        {
+            throw new ArgumentOutOfRangeException(nameof(length));
+        }
+
+        _array = null!;
+        _start = 0;
+        _pointer = (IntPtr)pointer;
         Length = length;
     }
 
     /// <summary>
     ///     현재 Span에서 지정된 인덱스의 요소를 가져오거나 설정합니다.
     /// </summary>
-    public ref T this[int index]
+    public unsafe ref T this[int index]
     {
         get
         {
             if ((uint)index >= (uint)Length)
             {
                 throw new IndexOutOfRangeException();
+            }
+
+            if (_pointer != IntPtr.Zero)
+            {
+                return ref ((T*)(void*)_pointer)[index];
             }
 
             return ref _array[_start + index];
@@ -90,16 +118,29 @@ public readonly ref struct Span<T>
     {
         for (int i = 0; i < Length; i++)
         {
-            _array[_start + i] = value;
+            this[i] = value;
         }
     }
 
     /// <summary>
     ///     현재 Span의 내용을 기본값으로 지웁니다.
     /// </summary>
-    public void Clear()
+    public unsafe void Clear()
     {
-        if (_array != null && Length > 0)
+        if (Length == 0)
+        {
+            return;
+        }
+
+        if (_pointer != IntPtr.Zero)
+        {
+            // 포인터 기반: 수동으로 기본값 설정
+            for (int i = 0; i < Length; i++)
+            {
+                ((T*)(void*)_pointer)[i] = default!;
+            }
+        }
+        else if (_array != null)
         {
             Array.Clear(_array, _start, Length);
         }
@@ -117,7 +158,7 @@ public readonly ref struct Span<T>
 
         for (int i = 0; i < Length; i++)
         {
-            destination._array[destination._start + i] = _array[_start + i];
+            destination[i] = this[i];
         }
     }
 
@@ -138,11 +179,16 @@ public readonly ref struct Span<T>
     /// <summary>
     ///     지정된 오프셋에서 시작하는 이 Span의 새 슬라이스를 형성합니다.
     /// </summary>
-    public Span<T> Slice(int start)
+    public unsafe Span<T> Slice(int start)
     {
         if ((uint)start > (uint)Length)
         {
             throw new ArgumentOutOfRangeException(nameof(start));
+        }
+
+        if (_pointer != IntPtr.Zero)
+        {
+            return new Span<T>((T*)(void*)_pointer + start, Length - start);
         }
 
         return new Span<T>(_array, _start + start, Length - start);
@@ -151,11 +197,16 @@ public readonly ref struct Span<T>
     /// <summary>
     ///     지정된 오프셋에서 시작하여 지정된 길이를 가지는 이 Span의 새 슬라이스를 형성합니다.
     /// </summary>
-    public Span<T> Slice(int start, int length)
+    public unsafe Span<T> Slice(int start, int length)
     {
         if ((uint)start > (uint)Length || (uint)length > (uint)(Length - start))
         {
             throw new ArgumentOutOfRangeException();
+        }
+
+        if (_pointer != IntPtr.Zero)
+        {
+            return new Span<T>((T*)(void*)_pointer + start, length);
         }
 
         return new Span<T>(_array, _start + start, length);
@@ -165,16 +216,23 @@ public readonly ref struct Span<T>
     ///     Span의 문자열 표현을 반환합니다.
     ///     char 형식의 경우 실제 문자열을 반환하고, 그 외의 경우 형식 정보를 반환합니다.
     /// </summary>
-    public override string ToString()
+    public unsafe override string ToString()
     {
         if (typeof(T) == typeof(char))
         {
-            if (_array == null || Length == 0)
+            if (Length == 0)
             {
                 return string.Empty;
             }
+
+            if (_pointer != IntPtr.Zero)
+            {
+                return new string((char*)(void*)_pointer, 0, Length);
+            }
+
             return new string((char[])(object)_array, _start, Length);
         }
+
         return string.Format("System.Span<{0}>[{1}]", typeof(T).Name, Length);
     }
 
@@ -191,7 +249,7 @@ public readonly ref struct Span<T>
         var result = new T[Length];
         for (int i = 0; i < Length; i++)
         {
-            result[i] = _array[_start + i];
+            result[i] = this[i];
         }
 
         return result;
@@ -245,8 +303,13 @@ public readonly ref struct Span<T>
     /// <summary>
     ///     Span을 ReadOnlySpan으로 암시적 변환합니다.
     /// </summary>
-    public static implicit operator ReadOnlySpan<T>(Span<T> span)
+    public static unsafe implicit operator ReadOnlySpan<T>(Span<T> span)
     {
+        if (span._pointer != IntPtr.Zero)
+        {
+            return new ReadOnlySpan<T>((void*)span._pointer, span.Length);
+        }
+
         return new ReadOnlySpan<T>(span._array, span._start, span.Length);
     }
 
