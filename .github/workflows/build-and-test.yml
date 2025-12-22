@@ -1,0 +1,281 @@
+name: Build and Test
+
+on:
+  push:
+    branches: [main, develop, 'JinoPay/**']
+  pull_request:
+    branches: [main, develop]
+  workflow_dispatch:
+
+env:
+  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
+  DOTNET_CLI_TELEMETRY_OPTOUT: true
+  DOTNET_NOLOGO: true
+
+jobs:
+  # ===========================================
+  # 빌드 Job - Windows에서 전체 프레임워크 빌드
+  # ===========================================
+  build:
+    name: Build
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup .NET SDKs
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: |
+            6.0.x
+            7.0.x
+            8.0.x
+            9.0.x
+            10.0.x
+
+      - name: Restore dependencies
+        run: dotnet restore Jinobald.Polyfill.sln
+
+      - name: Build Release
+        run: dotnet build Jinobald.Polyfill.sln -c Release --no-restore
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-output
+          path: |
+            src/*/bin/Release/
+            tests/*/bin/Release/
+          retention-days: 7
+
+  # ===========================================
+  # 테스트 Job - .NET Framework (Windows만)
+  # ===========================================
+  test-netfx:
+    name: Test .NET Framework
+    needs: build
+    runs-on: windows-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        framework:
+          - net462
+          - net47
+          - net471
+          - net472
+          - net48
+          - net481
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET SDKs
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: |
+            6.0.x
+            8.0.x
+
+      - name: Restore dependencies
+        run: dotnet restore Jinobald.Polyfill.sln
+
+      - name: Build
+        run: dotnet build Jinobald.Polyfill.sln -c Debug --no-restore
+
+      - name: Test ${{ matrix.framework }}
+        run: |
+          dotnet test tests/Jinobald.Polyfill.Tests/Jinobald.Polyfill.Tests.csproj `
+            --framework ${{ matrix.framework }} `
+            --no-build `
+            --logger "trx;LogFileName=${{ matrix.framework }}-results.trx" `
+            --results-directory ./TestResults `
+            --collect:"XPlat Code Coverage"
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results-${{ matrix.framework }}
+          path: ./TestResults/
+          retention-days: 7
+
+  # ===========================================
+  # 테스트 Job - .NET Framework 레거시 (NUnit Console)
+  # NET35~NET461은 dotnet test 미지원
+  # ===========================================
+  test-netfx-legacy:
+    name: Test .NET Framework Legacy
+    needs: build
+    runs-on: windows-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        framework:
+          - net35
+          - net40
+          - net45
+          - net451
+          - net452
+          - net46
+          - net461
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET SDKs
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: |
+            6.0.x
+            8.0.x
+
+      - name: Setup NuGet
+        uses: nuget/setup-nuget@v2
+
+      - name: Restore dependencies
+        run: dotnet restore Jinobald.Polyfill.sln
+
+      - name: Build
+        run: dotnet build Jinobald.Polyfill.sln -c Debug --no-restore
+
+      - name: Install NUnit Console Runner
+        run: nuget install NUnit.ConsoleRunner -Version 3.18.3 -OutputDirectory tools
+
+      - name: Test ${{ matrix.framework }}
+        run: |
+          $testDll = "tests/Jinobald.Polyfill.Tests/bin/Debug/${{ matrix.framework }}/Jinobald.Polyfill.Tests.dll"
+          if (Test-Path $testDll) {
+            ./tools/NUnit.ConsoleRunner.3.18.3/tools/nunit3-console.exe $testDll `
+              --result="TestResults/${{ matrix.framework }}-results.xml" `
+              --labels=All
+          } else {
+            Write-Host "Test DLL not found: $testDll"
+            exit 1
+          }
+        shell: pwsh
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results-legacy-${{ matrix.framework }}
+          path: ./TestResults/
+          retention-days: 7
+
+  # ===========================================
+  # 테스트 Job - .NET Core/5+ (크로스 플랫폼)
+  # ===========================================
+  test-dotnet:
+    name: Test .NET ${{ matrix.framework }} (${{ matrix.os }})
+    needs: build
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        framework:
+          - net6.0
+          - net7.0
+          - net8.0
+          - net9.0
+          - net10.0
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET SDKs
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: |
+            6.0.x
+            7.0.x
+            8.0.x
+            9.0.x
+            10.0.x
+
+      - name: Restore dependencies
+        run: dotnet restore Jinobald.Polyfill.sln
+
+      - name: Build
+        run: dotnet build Jinobald.Polyfill.sln -c Debug --no-restore
+
+      - name: Test ${{ matrix.framework }}
+        run: |
+          dotnet test tests/Jinobald.Polyfill.Tests/Jinobald.Polyfill.Tests.csproj \
+            --framework ${{ matrix.framework }} \
+            --no-build \
+            --logger "trx;LogFileName=${{ matrix.framework }}-${{ matrix.os }}-results.trx" \
+            --results-directory ./TestResults \
+            --collect:"XPlat Code Coverage"
+        shell: bash
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results-${{ matrix.framework }}-${{ matrix.os }}
+          path: ./TestResults/
+          retention-days: 7
+
+  # ===========================================
+  # 테스트 결과 요약
+  # ===========================================
+  test-summary:
+    name: Test Summary
+    needs: [test-netfx, test-netfx-legacy, test-dotnet]
+    if: always()
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Download all test results
+        uses: actions/download-artifact@v4
+        with:
+          path: ./TestResults
+          pattern: test-results-*
+          merge-multiple: true
+
+      - name: Test Report Summary
+        run: |
+          echo "## 테스트 결과 요약" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### .NET Framework (Windows)" >> $GITHUB_STEP_SUMMARY
+          echo "- net35 ~ net461: NUnit Console Runner" >> $GITHUB_STEP_SUMMARY
+          echo "- net462 ~ net481: dotnet test" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### .NET Core/5+ (크로스 플랫폼)" >> $GITHUB_STEP_SUMMARY
+          echo "- net6.0 ~ net10.0: Ubuntu, Windows, macOS" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "총 **18개** 타겟 프레임워크 테스트 완료" >> $GITHUB_STEP_SUMMARY
+
+  # ===========================================
+  # 코드 품질 분석
+  # ===========================================
+  code-quality:
+    name: Code Quality
+    needs: build
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Restore dependencies
+        run: dotnet restore Jinobald.Polyfill.sln
+
+      - name: Check code format
+        run: dotnet format Jinobald.Polyfill.sln --verify-no-changes --verbosity diagnostic
+        continue-on-error: true
+
+      - name: Build with analyzers
+        run: dotnet build Jinobald.Polyfill.sln -c Release --no-restore /p:TreatWarningsAsErrors=false

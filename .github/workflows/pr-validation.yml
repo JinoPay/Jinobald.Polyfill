@@ -1,0 +1,200 @@
+name: PR Validation
+
+on:
+  pull_request:
+    branches: [main, develop]
+    types: [opened, synchronize, reopened]
+
+env:
+  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
+  DOTNET_CLI_TELEMETRY_OPTOUT: true
+  DOTNET_NOLOGO: true
+
+jobs:
+  # ===========================================
+  # PR 기본 검증
+  # ===========================================
+  pr-check:
+    name: PR Check
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Validate PR Title (Semantic)
+        run: |
+          TITLE="${{ github.event.pull_request.title }}"
+          PATTERN="^(feat|fix|docs|style|refactor|test|chore|build|ci|perf|breaking|major|patch|feature)(\(.+\))?: .+"
+
+          if [[ ! "$TITLE" =~ $PATTERN ]]; then
+            echo "::error::PR 제목이 Semantic 형식을 따르지 않습니다."
+            echo "예시: feat: 새로운 기능 추가"
+            echo "예시: fix(linq): Where 메서드 버그 수정"
+            exit 1
+          fi
+
+          echo "PR 제목 검증 통과: $TITLE"
+
+      - name: Check for merge conflicts
+        run: |
+          git fetch origin ${{ github.base_ref }}
+          if ! git merge-tree $(git merge-base HEAD origin/${{ github.base_ref }}) HEAD origin/${{ github.base_ref }} | grep -q "^"; then
+            echo "Merge 충돌 없음"
+          fi
+
+  # ===========================================
+  # 빠른 빌드 검증
+  # ===========================================
+  quick-build:
+    name: Quick Build
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: |
+            6.0.x
+            8.0.x
+
+      - name: Restore
+        run: dotnet restore Jinobald.Polyfill.sln
+
+      - name: Build (Debug)
+        run: dotnet build Jinobald.Polyfill.sln -c Debug --no-restore
+
+  # ===========================================
+  # 주요 프레임워크 테스트 (빠른 검증)
+  # ===========================================
+  quick-test:
+    name: Quick Test
+    needs: quick-build
+    runs-on: windows-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        framework:
+          - net462  # .NET Framework 최소 버전
+          - net481  # .NET Framework 최신 버전
+          - net8.0  # .NET LTS
+          - net10.0 # .NET 최신
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: |
+            6.0.x
+            8.0.x
+            10.0.x
+
+      - name: Restore
+        run: dotnet restore Jinobald.Polyfill.sln
+
+      - name: Build
+        run: dotnet build Jinobald.Polyfill.sln -c Debug --no-restore
+
+      - name: Test ${{ matrix.framework }}
+        run: |
+          dotnet test tests/Jinobald.Polyfill.Tests/Jinobald.Polyfill.Tests.csproj `
+            --framework ${{ matrix.framework }} `
+            --no-build `
+            --verbosity normal
+
+  # ===========================================
+  # 코드 스타일 검증
+  # ===========================================
+  code-style:
+    name: Code Style
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Restore
+        run: dotnet restore Jinobald.Polyfill.sln
+
+      - name: Check formatting
+        run: dotnet format Jinobald.Polyfill.sln --verify-no-changes --verbosity diagnostic
+        continue-on-error: true
+
+  # ===========================================
+  # PR 라벨링
+  # ===========================================
+  labeler:
+    name: Auto Labeler
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Label PR
+        uses: actions/labeler@v5
+        with:
+          repo-token: "${{ secrets.GITHUB_TOKEN }}"
+          configuration-path: .github/labeler.yml
+
+  # ===========================================
+  # PR 크기 체크
+  # ===========================================
+  size-check:
+    name: PR Size Check
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Check PR size
+        run: |
+          ADDITIONS=${{ github.event.pull_request.additions }}
+          DELETIONS=${{ github.event.pull_request.deletions }}
+          TOTAL=$((ADDITIONS + DELETIONS))
+          FILES=${{ github.event.pull_request.changed_files }}
+
+          echo "변경 라인: +$ADDITIONS -$DELETIONS (총 $TOTAL)"
+          echo "변경 파일: $FILES개"
+
+          if [ $TOTAL -gt 1000 ]; then
+            echo "::warning::대형 PR입니다. 리뷰를 위해 작은 단위로 분할하는 것을 권장합니다."
+          fi
+
+      - name: Add size label
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const additions = context.payload.pull_request.additions;
+            const deletions = context.payload.pull_request.deletions;
+            const total = additions + deletions;
+
+            let sizeLabel = 'size/S';
+            if (total > 500) sizeLabel = 'size/L';
+            else if (total > 100) sizeLabel = 'size/M';
+
+            await github.rest.issues.addLabels({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              labels: [sizeLabel]
+            });
