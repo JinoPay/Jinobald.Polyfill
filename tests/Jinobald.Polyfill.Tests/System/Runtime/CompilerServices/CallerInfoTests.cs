@@ -1,78 +1,70 @@
 using System.Runtime.CompilerServices;
-using NUnit.Framework;
 
-namespace Jinobald.Polyfill.Tests.System.Runtime.CompilerServices
+namespace Jinobald.Polyfill.Tests.System.Runtime.CompilerServices;
+
+public class CallerInfoTests
 {
-    public class CallerInfoTests
+    private string? GetCallerFilePath([CallerFilePath] string? filePath = null)
     {
-#if NET40 || NET35
-        [Test]
-        public void CallerMemberName_Should_Be_Filled_By_Compiler()
-        {
-            var result = GetCallerMemberName();
-            Assert.AreEqual(nameof(CallerMemberName_Should_Be_Filled_By_Compiler), result);
-        }
+        return filePath;
+    }
 
-        [Test]
-        public void CallerFilePath_Should_Be_Filled_By_Compiler()
-        {
-            var result = GetCallerFilePath();
-            Assert.Contains("CallerInfoTests.cs", result);
-        }
+    private int GetCallerLineNumber([CallerLineNumber] int lineNumber = 0)
+    {
+        return lineNumber;
+    }
 
-        [Test]
-        public void CallerLineNumber_Should_Be_Filled_By_Compiler()
-        {
-            var result = GetCallerLineNumber();
-            Assert.IsTrue(result > 0);
-        }
+    private string? GetCallerMemberName([CallerMemberName] string? memberName = null)
+    {
+        return memberName;
+    }
 
-        [Test]
-        public void CallerInfo_Should_Use_Default_When_Provided()
-        {
-            var memberName = GetCallerMemberName("CustomMember");
-            var filePath = GetCallerFilePath("CustomPath");
-            var lineNumber = GetCallerLineNumber(999);
+    [Test]
+    public void CallerFilePath_Should_Be_Filled_By_Compiler()
+    {
+        string? result = GetCallerFilePath();
+        Assert.Contains("CallerInfoTests.cs", result);
+    }
 
-            Assert.AreEqual("CustomMember", memberName);
-            Assert.AreEqual("CustomPath", filePath);
-            Assert.AreEqual(999, lineNumber);
-        }
+    [Test]
+    public void CallerInfo_Attributes_Should_Exist()
+    {
+        Type memberNameAttr = typeof(CallerMemberNameAttribute);
+        Type filePathAttr = typeof(CallerFilePathAttribute);
+        Type lineNumberAttr = typeof(CallerLineNumberAttribute);
 
-        private string GetCallerMemberName([CallerMemberName] string memberName = null)
-        {
-            return memberName;
-        }
+        Assert.IsNotNull(memberNameAttr);
+        Assert.IsNotNull(filePathAttr);
+        Assert.IsNotNull(lineNumberAttr);
 
-        private string GetCallerFilePath([CallerFilePath] string filePath = null)
-        {
-            return filePath;
-        }
+        Assert.IsTrue(memberNameAttr.IsSealed);
+        Assert.IsTrue(filePathAttr.IsSealed);
+        Assert.IsTrue(lineNumberAttr.IsSealed);
+    }
 
-        private int GetCallerLineNumber([CallerLineNumber] int lineNumber = 0)
-        {
-            return lineNumber;
-        }
-#endif
+    [Test]
+    public void CallerInfo_Should_Use_Default_When_Provided()
+    {
+        string? memberName = GetCallerMemberName("CustomMember");
+        string? filePath = GetCallerFilePath("CustomPath");
+        int lineNumber = GetCallerLineNumber(999);
 
-        [Test]
-        public void CallerInfo_Attributes_Should_Exist()
-        {
-#if NET40 || NET35
-            var memberNameAttr = typeof(CallerMemberNameAttribute);
-            var filePathAttr = typeof(CallerFilePathAttribute);
-            var lineNumberAttr = typeof(CallerLineNumberAttribute);
+        Assert.AreEqual("CustomMember", memberName);
+        Assert.AreEqual("CustomPath", filePath);
+        Assert.AreEqual(999, lineNumber);
+    }
 
-            Assert.IsNotNull(memberNameAttr);
-            Assert.IsNotNull(filePathAttr);
-            Assert.IsNotNull(lineNumberAttr);
+    [Test]
+    public void CallerLineNumber_Should_Be_Filled_By_Compiler()
+    {
+        int result = GetCallerLineNumber();
+        Assert.IsTrue(result > 0);
+    }
 
-            Assert.IsTrue(memberNameAttr.IsSealed);
-            Assert.IsTrue(filePathAttr.IsSealed);
-            Assert.IsTrue(lineNumberAttr.IsSealed);
-#else
-            Assert.IsTrue(true); // Attributes are built-in in newer frameworks
-#endif
-        }
+    [Test]
+    public void CallerMemberName_Should_Be_Filled_By_Compiler()
+    {
+        string? result = GetCallerMemberName();
+        Assert.AreEqual(nameof(CallerMemberName_Should_Be_Filled_By_Compiler), result);
     }
 }

@@ -7,6 +7,52 @@ namespace System.Threading.Tasks;
 /// </summary>
 internal static class TaskEx
 {
+    extension(CancellationTokenSource cts)
+    {
+        /// <summary>
+        /// 지정된 시간 범위 후에 이 CancellationTokenSource에 대한 취소 작업을 예약합니다.
+        /// </summary>
+        /// <param name="millisecondsDelay">취소되기 전까지 기다릴 시간(밀리초)입니다.</param>
+        public void CancelAfter(int millisecondsDelay)
+        {
+            if (millisecondsDelay < -1)
+                throw new ArgumentOutOfRangeException(nameof(millisecondsDelay));
+
+            if (millisecondsDelay == 0)
+            {
+                cts.Cancel();
+                return;
+            }
+
+            Timer? timer = null;
+            timer = new Timer(_ =>
+            {
+                try
+                {
+                    cts.Cancel();
+                }
+                catch (ObjectDisposedException)
+                {
+                    // CancellationTokenSource가 이미 dispose된 경우 무시
+                }
+                timer?.Dispose();
+            }, null, millisecondsDelay, Timeout.Infinite);
+        }
+
+        /// <summary>
+        /// 지정된 시간 범위 후에 이 CancellationTokenSource에 대한 취소 작업을 예약합니다.
+        /// </summary>
+        /// <param name="delay">취소되기 전까지 기다릴 시간입니다.</param>
+        public void CancelAfter(TimeSpan delay)
+        {
+            long totalMilliseconds = (long)delay.TotalMilliseconds;
+            if (totalMilliseconds < -1 || totalMilliseconds > int.MaxValue)
+                throw new ArgumentOutOfRangeException(nameof(delay));
+
+            cts.CancelAfter((int)totalMilliseconds);
+        }
+    }
+
     extension(Task)
     {
         /// <summary>
