@@ -657,6 +657,32 @@ public class Task<TResult> : Task
         }
     }
 
+    /// <summary>
+    ///     대상 Task가 완료될 때 실행되는 연속 작업을 만듭니다.
+    /// </summary>
+    public Task ContinueWith(Action<Task<TResult>> continuationAction)
+    {
+        if (continuationAction == null)
+        {
+            throw new ArgumentNullException(nameof(continuationAction));
+        }
+
+        return base.ContinueWith(t => continuationAction((Task<TResult>)t));
+    }
+
+    /// <summary>
+    ///     대상 Task가 완료될 때 실행되는 연속 작업을 만듭니다.
+    /// </summary>
+    public Task<TNewResult> ContinueWith<TNewResult>(Func<Task<TResult>, TNewResult> continuationFunction)
+    {
+        if (continuationFunction == null)
+        {
+            throw new ArgumentNullException(nameof(continuationFunction));
+        }
+
+        return base.ContinueWith(t => continuationFunction((Task<TResult>)t));
+    }
+
 #if NET35 || NET40
     /// <summary>
     ///     이 Task를 await하는 데 사용되는 awaiter를 가져옵니다.

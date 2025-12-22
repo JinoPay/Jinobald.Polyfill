@@ -1,4 +1,4 @@
-#if NET40 || NET35 || NET20
+#if NET40 || NET35
 
 namespace System.Runtime.CompilerServices
 {
