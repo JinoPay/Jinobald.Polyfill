@@ -5,29 +5,29 @@ using System.Runtime.CompilerServices;
 namespace System
 {
     /// <summary>
-    ///     Represents a range with start and end indexes.
+    ///     시작 및 끝 인덱스를 갖는 범위를 나타냅니다.
     /// </summary>
     /// <remarks>
-    ///     Range is used by the C# compiler to support the range syntax (.. operator).
-    ///     This is a polyfill implementation for .NET Framework 3.5+.
+    ///     Range는 C# 컴파일러가 범위 구문(.. 연산자)을 지원하는 데 사용됩니다.
+    ///     이것은 .NET Framework 3.5+ 용 폴리필 구현입니다.
     /// </remarks>
     public readonly struct Range : IEquatable<Range>
     {
         /// <summary>
-        ///     Gets the start index of the range.
+        ///     범위의 시작 인덱스를 가져옵니다.
         /// </summary>
         public Index Start { get; }
 
         /// <summary>
-        ///     Gets the end index of the range.
+        ///     범위의 끝 인덱스를 가져옵니다.
         /// </summary>
         public Index End { get; }
 
         /// <summary>
-        ///     Initializes a new Range with the specified start and end indexes.
+        ///     지정된 시작 및 끝 인덱스로 새 Range를 초기화합니다.
         /// </summary>
-        /// <param name="start">The start index of the range.</param>
-        /// <param name="end">The end index of the range.</param>
+        /// <param name="start">범위의 시작 인덱스입니다.</param>
+        /// <param name="end">범위의 끝 인덱스입니다.</param>
         [MethodImpl((MethodImplOptions)256)]
         public Range(Index start, Index end)
         {
@@ -36,9 +36,9 @@ namespace System
         }
 
         /// <summary>
-        ///     Creates a Range starting at the specified start index to the end.
+        ///     지정된 시작 인덱스부터 끝까지의 Range를 만듭니다.
         /// </summary>
-        /// <param name="start">The start index.</param>
+        /// <param name="start">시작 인덱스입니다.</param>
         [MethodImpl((MethodImplOptions)256)]
         public static Range StartAt(Index start)
         {
@@ -46,9 +46,9 @@ namespace System
         }
 
         /// <summary>
-        ///     Creates a Range from the beginning to the specified end index.
+        ///     처음부터 지정된 끝 인덱스까지의 Range를 만듭니다.
         /// </summary>
-        /// <param name="end">The end index.</param>
+        /// <param name="end">끝 인덱스입니다.</param>
         [MethodImpl((MethodImplOptions)256)]
         public static Range EndAt(Index end)
         {
@@ -56,7 +56,7 @@ namespace System
         }
 
         /// <summary>
-        ///     Creates a Range that encompasses all elements.
+        ///     모든 요소를 포함하는 Range를 만듭니다.
         /// </summary>
         [MethodImpl((MethodImplOptions)256)]
         public static Range All()
@@ -65,10 +65,10 @@ namespace System
         }
 
         /// <summary>
-        ///     Calculates the start offset and length of the range given a collection length.
+        ///     컬렉션 길이가 주어지면 범위의 시작 오프셋과 길이를 계산합니다.
         /// </summary>
-        /// <param name="length">The length of the collection.</param>
-        /// <returns>A tuple containing the offset and length.</returns>
+        /// <param name="length">컬렉션의 길이입니다.</param>
+        /// <returns>오프셋과 길이를 포함하는 튜플입니다.</returns>
         [MethodImpl((MethodImplOptions)256)]
         public (int Offset, int Length) GetOffsetAndLength(int length)
         {
@@ -101,7 +101,7 @@ namespace System
         }
 
         /// <summary>
-        ///     Indicates whether the current Range is equal to another Range.
+        ///     현재 Range가 다른 Range와 같은지 여부를 나타냅니다.
         /// </summary>
         public bool Equals(Range other)
         {
@@ -109,7 +109,7 @@ namespace System
         }
 
         /// <summary>
-        ///     Indicates whether the current Range is equal to the specified object.
+        ///     현재 Range가 지정된 개체와 같은지 여부를 나타냅니다.
         /// </summary>
         public override bool Equals(object obj)
         {
@@ -117,12 +117,12 @@ namespace System
         }
 
         /// <summary>
-        ///     Returns the hash code for this Range.
+        ///     이 Range의 해시 코드를 반환합니다.
         /// </summary>
         public override int GetHashCode()
         {
 #if NET35
-            // For .NET 3.5, use simple hash combination
+            // .NET 3.5의 경우 단순 해시 조합 사용
             int hash = 17;
             hash = (hash * 31) + Start.GetHashCode();
             hash = (hash * 31) + End.GetHashCode();
@@ -133,7 +133,7 @@ namespace System
         }
 
         /// <summary>
-        ///     Returns a string representation of this Range.
+        ///     이 Range의 문자열 표현을 반환합니다.
         /// </summary>
         public override string ToString()
         {
@@ -141,7 +141,7 @@ namespace System
         }
 
         /// <summary>
-        ///     Determines whether two Range values are equal.
+        ///     두 Range 값이 같은지 여부를 확인합니다.
         /// </summary>
         public static bool operator ==(Range left, Range right)
         {
@@ -149,7 +149,7 @@ namespace System
         }
 
         /// <summary>
-        ///     Determines whether two Range values are not equal.
+        ///     두 Range 값이 다른지 여부를 확인합니다.
         /// </summary>
         public static bool operator !=(Range left, Range right)
         {

@@ -4,9 +4,9 @@ using System.Runtime.CompilerServices;
 namespace System.Threading.Tasks;
 
 /// <summary>
-///     ValueTask 내부에서 사용하기 위한 캐시된 완료 Task입니다.
+///     ValueTask 내부에서 사용하기 위한 캐시된 완료 Task 및 헬퍼 메서드입니다.
 /// </summary>
-internal static class CachedTasks
+internal static class TaskHelpers
 {
     /// <summary>
     ///     완료된 Task 인스턴스입니다.
@@ -18,7 +18,77 @@ internal static class CachedTasks
 #if NET35
         return Task.CompletedTask;
 #else
-        return Task.FromResult<object?>(null);
+        return FromResult<object?>(null);
+#endif
+    }
+
+    /// <summary>
+    ///     지정된 결과로 완료된 Task를 만듭니다.
+    /// </summary>
+    internal static Task<TResult> FromResult<TResult>(TResult result)
+    {
+#if NET46
+        return Task.FromResult(result);
+#else
+        var tcs = new TaskCompletionSource<TResult>();
+        tcs.SetResult(result);
+        return tcs.Task;
+#endif
+    }
+
+    /// <summary>
+    ///     지정된 예외로 완료된 Task를 만듭니다.
+    /// </summary>
+    internal static Task FromException(Exception exception)
+    {
+#if NET46
+        return Task.FromException(exception);
+#else
+        var tcs = new TaskCompletionSource<object?>();
+        tcs.SetException(exception);
+        return tcs.Task;
+#endif
+    }
+
+    /// <summary>
+    ///     지정된 예외로 완료된 Task를 만듭니다.
+    /// </summary>
+    internal static Task<TResult> FromException<TResult>(Exception exception)
+    {
+#if NET46
+        return Task.FromException<TResult>(exception);
+#else
+        var tcs = new TaskCompletionSource<TResult>();
+        tcs.SetException(exception);
+        return tcs.Task;
+#endif
+    }
+
+    /// <summary>
+    ///     취소된 Task를 만듭니다.
+    /// </summary>
+    internal static Task FromCanceled(CancellationToken cancellationToken)
+    {
+#if NET46
+        return Task.FromCanceled(cancellationToken);
+#else
+        var tcs = new TaskCompletionSource<object?>();
+        tcs.SetCanceled();
+        return tcs.Task;
+#endif
+    }
+
+    /// <summary>
+    ///     취소된 Task를 만듭니다.
+    /// </summary>
+    internal static Task<TResult> FromCanceled<TResult>(CancellationToken cancellationToken)
+    {
+#if NET46
+        return Task.FromCanceled<TResult>(cancellationToken);
+#else
+        var tcs = new TaskCompletionSource<TResult>();
+        tcs.SetCanceled();
+        return tcs.Task;
 #endif
     }
 }
@@ -89,10 +159,10 @@ public readonly struct ValueTask<TResult> : IEquatable<ValueTask<TResult>>
     {
         if (_hasResult)
         {
-            return Task.FromResult(_result);
+            return TaskHelpers.FromResult(_result);
         }
 
-        return _task ?? Task.FromResult(default(TResult)!);
+        return _task ?? TaskHelpers.FromResult(default(TResult)!);
     }
 
     /// <summary>
@@ -225,10 +295,10 @@ public readonly struct ValueTask : IEquatable<ValueTask>
     {
         if (_isCompleted)
         {
-            return CachedTasks.CompletedTask;
+            return TaskHelpers.CompletedTask;
         }
 
-        return _task ?? CachedTasks.CompletedTask;
+        return _task ?? TaskHelpers.CompletedTask;
     }
 
     /// <summary>
@@ -312,7 +382,7 @@ public readonly struct ValueTask : IEquatable<ValueTask>
     /// <returns>예외와 함께 실패한 ValueTask입니다.</returns>
     public static ValueTask FromException(Exception exception)
     {
-        return new ValueTask(Task.FromException(exception));
+        return new ValueTask(TaskHelpers.FromException(exception));
     }
 
     /// <summary>
@@ -323,7 +393,7 @@ public readonly struct ValueTask : IEquatable<ValueTask>
     /// <returns>예외와 함께 실패한 ValueTask입니다.</returns>
     public static ValueTask<TResult> FromException<TResult>(Exception exception)
     {
-        return new ValueTask<TResult>(Task.FromException<TResult>(exception));
+        return new ValueTask<TResult>(TaskHelpers.FromException<TResult>(exception));
     }
 
     /// <summary>
@@ -344,7 +414,7 @@ public readonly struct ValueTask : IEquatable<ValueTask>
     /// <returns>취소된 ValueTask입니다.</returns>
     public static ValueTask FromCanceled(CancellationToken cancellationToken)
     {
-        return new ValueTask(Task.FromCanceled(cancellationToken));
+        return new ValueTask(TaskHelpers.FromCanceled(cancellationToken));
     }
 
     /// <summary>
@@ -355,7 +425,7 @@ public readonly struct ValueTask : IEquatable<ValueTask>
     /// <returns>취소된 ValueTask입니다.</returns>
     public static ValueTask<TResult> FromCanceled<TResult>(CancellationToken cancellationToken)
     {
-        return new ValueTask<TResult>(Task.FromCanceled<TResult>(cancellationToken));
+        return new ValueTask<TResult>(TaskHelpers.FromCanceled<TResult>(cancellationToken));
     }
 }
 #endif

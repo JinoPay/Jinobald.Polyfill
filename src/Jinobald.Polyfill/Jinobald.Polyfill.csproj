@@ -6,7 +6,7 @@
         <Nullable>enable</Nullable>
         <ImplicitUsings>true</ImplicitUsings>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-        <RootNamespace>Jinobald.Polifill</RootNamespace>
+        <RootNamespace>Jinobald.Polyfill</RootNamespace>
     </PropertyGroup>
 
     <!-- Define conditional compilation symbols based on framework -->

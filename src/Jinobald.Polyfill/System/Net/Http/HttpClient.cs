@@ -1,5 +1,8 @@
 using System.Collections.Generic;
 using System.Net.Http.Headers;
+#if NET40 || NET45 || NET451 || NET452
+using System.Threading.Tasks;
+#endif
 
 #if NETFRAMEWORK
 namespace System.Net.Http;
@@ -295,7 +298,11 @@ public class HttpClient : HttpMessageInvoker
     /// <returns>비동기 작업을 나타내는 작업 개체입니다.</returns>
     public Task<string> GetStringAsync(Uri? requestUri)
     {
+#if NET40 || NET45 || NET451 || NET452
+        return TaskEx.Run(() =>
+#else
         return Task.Run(() =>
+#endif
         {
             HttpResponseMessage response =
                 GetAsync(requestUri, HttpCompletionOption.ResponseContentRead, CancellationToken.None).Result;
@@ -321,7 +328,11 @@ public class HttpClient : HttpMessageInvoker
     /// <returns>비동기 작업을 나타내는 작업 개체입니다.</returns>
     public Task<byte[]> GetByteArrayAsync(Uri? requestUri)
     {
+#if NET40 || NET45 || NET451 || NET452
+        return TaskEx.Run(() =>
+#else
         return Task.Run(() =>
+#endif
         {
             HttpResponseMessage response =
                 GetAsync(requestUri, HttpCompletionOption.ResponseContentRead, CancellationToken.None).Result;
@@ -347,7 +358,11 @@ public class HttpClient : HttpMessageInvoker
     /// <returns>비동기 작업을 나타내는 작업 개체입니다.</returns>
     public Task<Stream> GetStreamAsync(Uri? requestUri)
     {
+#if NET40 || NET45 || NET451 || NET452
+        return TaskEx.Run(() =>
+#else
         return Task.Run(() =>
+#endif
         {
             HttpResponseMessage response =
                 GetAsync(requestUri, HttpCompletionOption.ResponseContentRead, CancellationToken.None).Result;

@@ -1,5 +1,8 @@
 using System.Net.Http.Headers;
 using System.Text;
+#if NET40 || NET45 || NET451 || NET452
+using System.Threading.Tasks;
+#endif
 
 #if NETFRAMEWORK
 namespace System.Net.Http;
@@ -96,7 +99,11 @@ public abstract class HttpContent : IDisposable
             throw new ArgumentNullException(nameof(stream));
         }
 
+#if NET40 || NET45 || NET451 || NET452
+        return TaskEx.Run(() => SerializeToStream(stream, context));
+#else
         return Task.Run(() => SerializeToStream(stream, context));
+#endif
     }
 
     /// <summary>
@@ -115,7 +122,11 @@ public abstract class HttpContent : IDisposable
     /// <returns>비동기 작업을 나타내는 작업 개체입니다.</returns>
     public Task LoadIntoBufferAsync(long maxBufferSize)
     {
+#if NET40 || NET45 || NET451 || NET452
+        return TaskEx.Run(() => LoadIntoBuffer(maxBufferSize));
+#else
         return Task.Run(() => LoadIntoBuffer(maxBufferSize));
+#endif
     }
 
     /// <summary>
@@ -125,7 +136,11 @@ public abstract class HttpContent : IDisposable
     public Task<byte[]> ReadAsByteArrayAsync()
     {
         CheckDisposed();
+#if NET40 || NET45 || NET451 || NET452
+        return TaskEx.Run(() => ReadAsByteArray());
+#else
         return Task.Run(() => ReadAsByteArray());
+#endif
     }
 
     /// <summary>
@@ -135,7 +150,11 @@ public abstract class HttpContent : IDisposable
     public Task<Stream> ReadAsStreamAsync()
     {
         CheckDisposed();
+#if NET40 || NET45 || NET451 || NET452
+        return TaskEx.Run(() => ReadAsStream());
+#else
         return Task.Run(() => ReadAsStream());
+#endif
     }
 
     /// <summary>
@@ -145,7 +164,11 @@ public abstract class HttpContent : IDisposable
     public Task<string> ReadAsStringAsync()
     {
         CheckDisposed();
+#if NET40 || NET45 || NET451 || NET452
+        return TaskEx.Run(() => ReadAsString());
+#else
         return Task.Run(() => ReadAsString());
+#endif
     }
 
     /// <summary>
