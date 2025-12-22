@@ -1,12 +1,12 @@
-#if NET40
+#if NET40 || NET45 || NET451 || NET452
 namespace System.Threading.Tasks;
 
 /// <summary>
-/// .NET 4.0에서 Task.Run을 제공하는 확장 클래스입니다.
-/// .NET 4.5 이상에서는 Task.Run이 기본 제공됩니다.
+/// .NET 4.0/4.5에서 Task 관련 확장 메서드를 제공하는 확장 클래스입니다.
 /// </summary>
 internal static class TaskEx
 {
+#if NET40
     extension(CancellationTokenSource cts)
     {
         /// <summary>
@@ -52,9 +52,11 @@ internal static class TaskEx
             cts.CancelAfter((int)totalMilliseconds);
         }
     }
+#endif
 
     extension(Task)
     {
+#if NET40
         /// <summary>
         /// 지정된 작업을 스레드 풀에서 실행하도록 큐에 넣고 해당 작업을 나타내는 Task 개체를 반환합니다.
         /// </summary>
@@ -225,43 +227,6 @@ internal static class TaskEx
         }
 
         /// <summary>
-        /// 지정된 예외와 함께 예외적으로 완료된 Task를 만듭니다.
-        /// </summary>
-        /// <param name="exception">Task를 완료할 예외입니다.</param>
-        /// <returns>지정된 예외로 완료된 Task입니다.</returns>
-        public static Task FromException(Exception exception)
-        {
-            var tcs = new TaskCompletionSource<object?>();
-            tcs.SetException(exception);
-            return tcs.Task;
-        }
-
-        /// <summary>
-        /// 지정된 예외와 함께 예외적으로 완료된 Task를 만듭니다.
-        /// </summary>
-        /// <typeparam name="TResult">Task의 결과 형식입니다.</typeparam>
-        /// <param name="exception">Task를 완료할 예외입니다.</param>
-        /// <returns>지정된 예외로 완료된 Task입니다.</returns>
-        public static Task<TResult> FromException<TResult>(Exception exception)
-        {
-            var tcs = new TaskCompletionSource<TResult>();
-            tcs.SetException(exception);
-            return tcs.Task;
-        }
-
-        /// <summary>
-        /// 지정된 CancellationToken으로 취소로 인해 완료된 Task를 만듭니다.
-        /// </summary>
-        /// <param name="cancellationToken">취소에 사용된 CancellationToken입니다.</param>
-        /// <returns>취소로 완료된 Task입니다.</returns>
-        public static Task FromCanceled(CancellationToken cancellationToken)
-        {
-            var tcs = new TaskCompletionSource<object?>();
-            tcs.SetCanceled();
-            return tcs.Task;
-        }
-
-        /// <summary>
         /// 제공된 모든 작업이 완료되면 완료되는 작업을 만듭니다.
         /// </summary>
         /// <param name="tasks">완료를 기다릴 Task 배열입니다.</param>
@@ -331,6 +296,57 @@ internal static class TaskEx
                 int index = Task.WaitAny(tasks);
                 return tasks[index];
             });
+        }
+#endif
+
+        /// <summary>
+        /// 지정된 예외와 함께 예외적으로 완료된 Task를 만듭니다.
+        /// </summary>
+        /// <param name="exception">Task를 완료할 예외입니다.</param>
+        /// <returns>지정된 예외로 완료된 Task입니다.</returns>
+        public static Task FromException(Exception exception)
+        {
+            var tcs = new TaskCompletionSource<object?>();
+            tcs.SetException(exception);
+            return tcs.Task;
+        }
+
+        /// <summary>
+        /// 지정된 예외와 함께 예외적으로 완료된 Task를 만듭니다.
+        /// </summary>
+        /// <typeparam name="TResult">Task의 결과 형식입니다.</typeparam>
+        /// <param name="exception">Task를 완료할 예외입니다.</param>
+        /// <returns>지정된 예외로 완료된 Task입니다.</returns>
+        public static Task<TResult> FromException<TResult>(Exception exception)
+        {
+            var tcs = new TaskCompletionSource<TResult>();
+            tcs.SetException(exception);
+            return tcs.Task;
+        }
+
+        /// <summary>
+        /// 지정된 CancellationToken으로 취소로 인해 완료된 Task를 만듭니다.
+        /// </summary>
+        /// <param name="cancellationToken">취소에 사용된 CancellationToken입니다.</param>
+        /// <returns>취소로 완료된 Task입니다.</returns>
+        public static Task FromCanceled(CancellationToken cancellationToken)
+        {
+            var tcs = new TaskCompletionSource<object?>();
+            tcs.SetCanceled();
+            return tcs.Task;
+        }
+
+        /// <summary>
+        /// 지정된 CancellationToken으로 취소로 인해 완료된 Task를 만듭니다.
+        /// </summary>
+        /// <typeparam name="TResult">Task의 결과 형식입니다.</typeparam>
+        /// <param name="cancellationToken">취소에 사용된 CancellationToken입니다.</param>
+        /// <returns>취소로 완료된 Task입니다.</returns>
+        public static Task<TResult> FromCanceled<TResult>(CancellationToken cancellationToken)
+        {
+            var tcs = new TaskCompletionSource<TResult>();
+            tcs.SetCanceled();
+            return tcs.Task;
         }
     }
 }
