@@ -53,9 +53,9 @@ public class TaskTests
     public void Task_WhenAll_WaitsForAllTasks()
     {
         int counter = 0;
-        var task1 = Task.Run(() => Interlocked.Increment(ref counter));
-        var task2 = Task.Run(() => Interlocked.Increment(ref counter));
-        var task3 = Task.Run(() => Interlocked.Increment(ref counter));
+        Task task1 = Task.Run(() => { Interlocked.Increment(ref counter); });
+        Task task2 = Task.Run(() => { Interlocked.Increment(ref counter); });
+        Task task3 = Task.Run(() => { Interlocked.Increment(ref counter); });
         var whenAll = Task.WhenAll(task1, task2, task3);
         whenAll.Wait();
         Assert.AreEqual(3, counter);
@@ -65,10 +65,10 @@ public class TaskTests
     [Test]
     public void Task_WhenAll_WithResults_ReturnsAllResults()
     {
-        var task1 = Task.Run(() => 1);
-        var task2 = Task.Run(() => 2);
-        var task3 = Task.Run(() => 3);
-        var whenAll = Task.WhenAll(task1, task2, task3);
+        Task<int> task1 = Task.Run(() => 1);
+        Task<int> task2 = Task.Run(() => 2);
+        Task<int> task3 = Task.Run(() => 3);
+        Task<int[]> whenAll = Task.WhenAll(task1, task2, task3);
         int[]? results = whenAll.Result;
         Assert.AreEqual(new[] { 1, 2, 3 }, results);
     }

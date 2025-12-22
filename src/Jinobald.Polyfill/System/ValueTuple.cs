@@ -10,8 +10,47 @@ namespace System;
 /// <summary>
 ///     값 튜플 개체를 만들기 위한 정적 메서드를 제공합니다.
 /// </summary>
-public static class ValueTuple
+public struct ValueTuple : IEquatable<ValueTuple>, IStructuralEquatable, IStructuralComparable, IComparable, ITuple
 {
+    /// <inheritdoc />
+    int ITuple.Length => 0;
+
+    /// <inheritdoc />
+    object? ITuple.this[int index] => throw new IndexOutOfRangeException();
+
+    /// <inheritdoc />
+    public int CompareTo(object? other)
+    {
+        if (other == null) return 1;
+        if (other is not ValueTuple) throw new ArgumentException("Argument must be a ValueTuple.", nameof(other));
+        return 0;
+    }
+
+    /// <inheritdoc />
+    int IStructuralComparable.CompareTo(object? other, IComparer comparer)
+    {
+        if (other == null) return 1;
+        if (other is not ValueTuple) throw new ArgumentException("Argument must be a ValueTuple.", nameof(other));
+        return 0;
+    }
+
+    /// <inheritdoc />
+    public override bool Equals(object? obj) => obj is ValueTuple;
+
+    /// <inheritdoc />
+    public bool Equals(ValueTuple other) => true;
+
+    /// <inheritdoc />
+    bool IStructuralEquatable.Equals(object? other, IEqualityComparer comparer) => other is ValueTuple;
+
+    /// <inheritdoc />
+    public override int GetHashCode() => 0;
+
+    /// <inheritdoc />
+    int IStructuralEquatable.GetHashCode(IEqualityComparer comparer) => 0;
+
+    /// <inheritdoc />
+    public override string ToString() => "()";
     public static ValueTuple<T1, T2, T3, T4, T5, T6, T7> Create<T1, T2, T3, T4, T5, T6, T7>(
         T1 item1, T2 item2, T3 item3, T4 item4, T5 item5, T6 item6, T7 item7)
     {
