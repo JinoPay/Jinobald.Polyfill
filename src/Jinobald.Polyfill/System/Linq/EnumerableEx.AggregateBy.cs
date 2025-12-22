@@ -30,6 +30,7 @@ public static partial class EnumerableEx
         Func<TSource, TKey> keySelector,
         TAccumulate seed,
         Func<TAccumulate, TSource, TAccumulate> func)
+        where TKey : notnull
     {
         return AggregateBy(source, keySelector, seed, func, null);
     }
@@ -55,6 +56,7 @@ public static partial class EnumerableEx
         TAccumulate seed,
         Func<TAccumulate, TSource, TAccumulate> func,
         IEqualityComparer<TKey>? keyComparer)
+        where TKey : notnull
     {
         if (source == null)
         {
@@ -80,6 +82,7 @@ public static partial class EnumerableEx
         TAccumulate seed,
         Func<TAccumulate, TSource, TAccumulate> func,
         IEqualityComparer<TKey>? keyComparer)
+        where TKey : notnull
     {
         // 순서를 유지하면서 집계를 추적
         Dictionary<TKey, TAccumulate> aggregateByKey = new Dictionary<TKey, TAccumulate>(keyComparer);
@@ -126,6 +129,7 @@ public static partial class EnumerableEx
         Func<TSource, TKey> keySelector,
         Func<TKey, TAccumulate> seedSelector,
         Func<TAccumulate, TSource, TAccumulate> func)
+        where TKey : notnull
     {
         return AggregateBy(source, keySelector, seedSelector, func, null);
     }
@@ -152,6 +156,7 @@ public static partial class EnumerableEx
         Func<TKey, TAccumulate> seedSelector,
         Func<TAccumulate, TSource, TAccumulate> func,
         IEqualityComparer<TKey>? keyComparer)
+        where TKey : notnull
     {
         if (source == null)
         {
@@ -182,6 +187,7 @@ public static partial class EnumerableEx
         Func<TKey, TAccumulate> seedSelector,
         Func<TAccumulate, TSource, TAccumulate> func,
         IEqualityComparer<TKey>? keyComparer)
+        where TKey : notnull
     {
         // 순서를 유지하면서 집계를 추적
         Dictionary<TKey, TAccumulate> aggregateByKey = new Dictionary<TKey, TAccumulate>(keyComparer);

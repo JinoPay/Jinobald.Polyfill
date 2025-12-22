@@ -29,6 +29,7 @@ public static partial class EnumerableEx
     public static IEnumerable<KeyValuePair<TKey, int>> CountBy<TSource, TKey>(
         this IEnumerable<TSource> source,
         Func<TSource, TKey> keySelector)
+        where TKey : notnull
     {
         return CountBy(source, keySelector, null);
     }
@@ -49,6 +50,7 @@ public static partial class EnumerableEx
         this IEnumerable<TSource> source,
         Func<TSource, TKey> keySelector,
         IEqualityComparer<TKey>? keyComparer)
+        where TKey : notnull
     {
         if (source == null)
         {
@@ -67,6 +69,7 @@ public static partial class EnumerableEx
         IEnumerable<TSource> source,
         Func<TSource, TKey> keySelector,
         IEqualityComparer<TKey>? keyComparer)
+        where TKey : notnull
     {
         // 순서를 유지하면서 카운트를 추적
         Dictionary<TKey, int> countByKey = new Dictionary<TKey, int>(keyComparer);
