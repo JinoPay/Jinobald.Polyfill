@@ -8,6 +8,18 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - 코드 주석도 한글로 작성
 - XML 문서화 주석도 한글로 작성
 
+## 핵심 원칙
+
+**버전 간 동작 일관성 보장이 최우선 목표입니다.**
+
+- NET35부터 최신 버전까지 모든 타겟 프레임워크에서 완벽하게 동일한 기능 동작을 보장해야 함
+- 버전마다 다르게 동작하는 코드는 절대 허용되지 않음
+- 새 기능 구현 시 모든 타겟 프레임워크에서 테스트 필수
+- 조건부 컴파일(`#if`)은 구현 방식만 다르게 하고, 외부 동작은 반드시 동일해야 함
+- **테스트 코드는 버전별로 분기하지 않음** - 동일한 테스트 코드가 모든 프레임워크에서 실행되어 동일한 결과를 보장해야 함
+- **완전한 폴리필 구현** - 땜빵이나 우회 구현이 아닌 실제 타입을 완벽하게 구현해야 함. 예: Span이 없으면 Span을 구현하고, 그 과정에서 Memory가 필요하면 Memory도 구현함. 의존성 타입까지 모두 완전하게 구현하는 것이 원칙
+- **누락 기능 캐치 및 구현** - 특정 프레임워크 버전에서 없거나 누락된 타입/기능을 발견하면 반드시 구현해야 함. 빌드나 테스트 중 누락된 것이 발견되면 즉시 폴리필로 추가
+
 ## Project Overview
 
 Jinobald.Polyfill is a .NET polyfill library that enables modern .NET features (.NET 10.0) in legacy .NET Framework versions (NET35 through NET481). Documentation is in Korean.
