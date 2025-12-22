@@ -13,8 +13,8 @@ public class MemoryTests
     [Test]
     public void Memory_Equals_DifferentBackingArray_ReturnsFalse()
     {
-        int[] array1 = new[] { 1, 2, 3 };
-        int[] array2 = new[] { 1, 2, 3 };
+        int[] array1 = [1, 2, 3];
+        int[] array2 = [1, 2, 3];
         var memory1 = new Memory<int>(array1);
         var memory2 = new Memory<int>(array2);
 
@@ -24,7 +24,7 @@ public class MemoryTests
     [Test]
     public void Memory_Equals_SameBackingArray_ReturnsTrue()
     {
-        int[] array = new[] { 1, 2, 3 };
+        int[] array = [1, 2, 3];
         var memory1 = new Memory<int>(array);
         var memory2 = new Memory<int>(array);
 
@@ -34,7 +34,7 @@ public class MemoryTests
     [Test]
     public void Memory_FromArray_CreatesMemory()
     {
-        int[] array = new[] { 1, 2, 3, 4, 5 };
+        int[] array = [1, 2, 3, 4, 5];
         var memory = new Memory<int>(array);
         Assert.AreEqual(5, memory.Length);
         Assert.IsFalse(memory.IsEmpty);
@@ -43,7 +43,7 @@ public class MemoryTests
     [Test]
     public void Memory_FromArraySegment_CreatesMemory()
     {
-        int[] array = new[] { 1, 2, 3, 4, 5 };
+        int[] array = [1, 2, 3, 4, 5];
         var memory = new Memory<int>(array, 1, 3);
         Assert.AreEqual(3, memory.Length);
         Span<int> span = memory.Span;
@@ -63,7 +63,7 @@ public class MemoryTests
     [Test]
     public void Memory_GetHashCode_ReturnsHashCode()
     {
-        int[] array = new[] { 1, 2, 3 };
+        int[] array = [1, 2, 3];
         var memory = new Memory<int>(array);
         int hashCode = memory.GetHashCode();
 
@@ -73,7 +73,7 @@ public class MemoryTests
     [Test]
     public void Memory_ImplicitConversion_FromArray()
     {
-        int[] array = new[] { 1, 2, 3 };
+        int[] array = [1, 2, 3];
         Memory<int> memory = array;
 
         Assert.AreEqual(3, memory.Length);
@@ -83,7 +83,7 @@ public class MemoryTests
     [Test]
     public void Memory_ImplicitConversion_ToReadOnlyMemory()
     {
-        int[] array = new[] { 1, 2, 3 };
+        int[] array = [1, 2, 3];
         var memory = new Memory<int>(array);
         ReadOnlyMemory<int> readOnlyMemory = memory;
 
@@ -94,7 +94,7 @@ public class MemoryTests
     [Test]
     public void Memory_Slice_OutOfRange_Throws()
     {
-        int[] array = new[] { 1, 2, 3 };
+        int[] array = [1, 2, 3];
         var memory = new Memory<int>(array);
         Assert.Throws<ArgumentOutOfRangeException>(() => memory.Slice(5));
         Assert.Throws<ArgumentOutOfRangeException>(() => memory.Slice(1, 10));
@@ -103,7 +103,7 @@ public class MemoryTests
     [Test]
     public void Memory_Slice_WithStart_CreatesSlice()
     {
-        int[] array = new[] { 1, 2, 3, 4, 5 };
+        int[] array = [1, 2, 3, 4, 5];
         var memory = new Memory<int>(array);
         Memory<int> slice = memory.Slice(2);
 
@@ -117,7 +117,7 @@ public class MemoryTests
     [Test]
     public void Memory_Slice_WithStartAndLength_CreatesSlice()
     {
-        int[] array = new[] { 1, 2, 3, 4, 5 };
+        int[] array = [1, 2, 3, 4, 5];
         var memory = new Memory<int>(array);
         Memory<int> slice = memory.Slice(1, 3);
 
@@ -131,7 +131,7 @@ public class MemoryTests
     [Test]
     public void Memory_SliceModification_AffectsOriginal()
     {
-        int[] array = new[] { 1, 2, 3, 4, 5 };
+        int[] array = [1, 2, 3, 4, 5];
         var memory = new Memory<int>(array);
         Memory<int> slice = memory.Slice(1, 3);
         Span<int> span = slice.Span;
@@ -146,7 +146,7 @@ public class MemoryTests
     [Test]
     public void Memory_Span_CanModifyElements()
     {
-        int[] array = new[] { 1, 2, 3 };
+        int[] array = [1, 2, 3];
         var memory = new Memory<int>(array);
         Span<int> span = memory.Span;
 
@@ -158,7 +158,7 @@ public class MemoryTests
     [Test]
     public void Memory_Span_ReturnsSpan()
     {
-        int[] array = new[] { 1, 2, 3 };
+        int[] array = [1, 2, 3];
         var memory = new Memory<int>(array);
         Span<int> span = memory.Span;
 
@@ -171,7 +171,7 @@ public class MemoryTests
     [Test]
     public void Memory_ToArray_CreatesNewArray()
     {
-        int[] array = new[] { 1, 2, 3 };
+        int[] array = [1, 2, 3];
         var memory = new Memory<int>(array);
         int[]? newArray = memory.ToArray();
 
@@ -182,7 +182,7 @@ public class MemoryTests
     [Test]
     public void Memory_ToArray_EmptyMemory_ReturnsEmptyArray()
     {
-        var memory = new Memory<int>(new int[0]);
+        var memory = new Memory<int>([]);
         int[]? array = memory.ToArray();
 
         Assert.IsEmpty(array);
