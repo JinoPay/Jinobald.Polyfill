@@ -22,56 +22,67 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Jinobald.Polyfill is a .NET polyfill library that enables modern .NET features (.NET 10.0) in legacy .NET Framework versions (NET35 through NET481). Documentation is in Korean.
+Jinobald.Polyfill은 최신 .NET 기능(.NET 10.0)을 레거시 .NET Framework 버전(NET35~NET481)에서 사용할 수 있게 하는 .NET 폴리필 라이브러리입니다. 문서화는 한글로 작성됩니다.
 
 ## Build Commands
 
 ```bash
-# Restore and build all 19 target frameworks
+# 전체 18개 타겟 프레임워크 복원 및 빌드
 dotnet restore Jinobald.Polyfill.sln
 dotnet build Jinobald.Polyfill.sln -c Release
 
-# Build specific framework
+# 특정 프레임워크 빌드
 dotnet build -f net8.0
 ```
 
 ## Test Commands
 
-Test framework: NUnit 3.14.0
+테스트 프레임워크: NUnit 3.14.0
 
 ```bash
-# Run all tests
+# 전체 테스트 실행
 dotnet test
 
-# Test specific framework
+# 특정 프레임워크 테스트
 dotnet test --framework net8.0
 dotnet test --framework net462
 
-# Test specific class
+# 특정 클래스 테스트
 dotnet test --filter "FullyQualifiedName~EnumerableBasicTests"
 
-# Test specific method
+# 특정 메서드 테스트
 dotnet test --filter "FullyQualifiedName~Where_Should_Filter_Elements"
 ```
 
 ## Architecture
 
-**Multi-targeting Strategy:**
-- Main library: `src/Jinobald.Polyfill/Jinobald.Polyfill.csproj`
-- Tests: `tests/Jinobald.Polyfill.Tests/Jinobald.Polyfill.Tests.csproj`
-- Shared build config: `Directory.Build.props`
+**멀티 타겟팅 전략:**
+- 메인 라이브러리: `src/Jinobald.Polyfill/Jinobald.Polyfill.csproj`
+- 테스트: `tests/Jinobald.Polyfill.Tests/Jinobald.Polyfill.Tests.csproj`
+- 공유 빌드 설정: `Directory.Build.props`
 
-**Namespace Organization:**
-Files mirror .NET namespaces under `src/Jinobald.Polyfill/System/`:
-- `Buffers/` - Memory operations (SpanAction)
-- `Collections/Concurrent/` - ConcurrentQueue, ConcurrentStack, ConcurrentBag
-- `Collections/Generic/` - IReadOnlyCollection, IReadOnlyList, IReadOnlyDictionary
-- `Linq/` - LINQ operators (EnumerableEx, IGrouping, ILookup)
-- `Net/Http/` - HttpClient implementation
-- `Runtime/CompilerServices/` - Compiler attributes, async support
-- `Threading/Tasks/` - Task, Parallel, TaskFactory
+**타겟 프레임워크 (18개):**
+- .NET Framework: net35, net40, net45, net451, net452, net46, net461, net462, net47, net471, net472, net48, net481
+- Modern .NET: net6.0, net7.0, net8.0, net9.0, net10.0
 
-**Conditional Compilation Pattern:**
+**네임스페이스 구조:**
+`src/Jinobald.Polyfill/System/` 아래 .NET 네임스페이스를 미러링:
+- `Buffers/` - ArrayPool, MemoryPool, SpanAction, MemoryManager 등 (8개 파일)
+- `Collections/Concurrent/` - ConcurrentQueue, ConcurrentStack, ConcurrentBag (3개 파일)
+- `Collections/Generic/` - IReadOnlyCollection, IReadOnlyList, IReadOnlyDictionary (3개 파일)
+- `Diagnostics/CodeAnalysis/` - Nullable 분석 어트리뷰트 (11개 파일)
+- `Linq/` - LINQ 연산자 (16개 파일)
+- `Net/Http/` - HttpClient 구현 (15개 파일)
+- `Runtime/CompilerServices/` - 컴파일러 속성, async 지원 (15개 파일)
+- `Runtime/InteropServices/` - MemoryMarshal (1개 파일)
+- `Threading/` - CancellationToken, SpinWait 등 스레딩 유틸리티 (7개 파일)
+- `Threading/Tasks/` - Task, Parallel, ValueTask 등 (12개 파일)
+
+**현재 파일 수:**
+- 소스 파일: 127개
+- 테스트 파일: 53개
+
+**조건부 컴파일 패턴:**
 ```csharp
 #if NET35
 namespace System
@@ -81,28 +92,28 @@ namespace System
 #endif
 ```
 
-**Target Framework Symbols:**
-- Legacy: NET35, NET40, NET45, NET451, NET452, NET46, NET461, NET462, NET47, NET471, NET472, NET48, NET481
-- Feature flags: NETFRAMEWORK, FeatureMemory, FeatureSpan, FeatureAsync, FeatureTPL
+**타겟 프레임워크 심볼:**
+- 레거시: NET35, NET40, NET45, NET451, NET452, NET46, NET461, NET462, NET47, NET471, NET472, NET48, NET481
+- 기능 플래그: NETFRAMEWORK, FeatureMemory, AllowUnsafeBlocks
 
 ## Coding Conventions
 
-- XML documentation in Korean for all public APIs
-- Test method names in Korean (e.g., `All_모든_요소가_조건_만족_True()`)
-- InternalsVisibleTo configured for `Jinobald.Polyfill.Tests` in `Properties/AssemblyInfo.cs`
-- Nullable reference types enabled with specific warnings as errors (CS8600-CS8604, CS8625)
-- Code analyzers: StyleCop, Roslynator, SonarAnalyzer
+- 모든 public API에 한글 XML 문서화
+- 테스트 메서드 이름은 한글 (예: `All_모든_요소가_조건_만족_True()`)
+- `Properties/AssemblyInfo.cs`에 `Jinobald.Polyfill.Tests`용 InternalsVisibleTo 설정
+- Nullable 참조 타입 활성화, 특정 경고를 오류로 처리 (CS8600-CS8604, CS8625)
+- 코드 분석기: StyleCop, Roslynator, SonarAnalyzer
 
 ## Commit Message Format
 
-Uses semantic versioning triggers:
-- `feat:` or `feature:` → Minor version bump
-- `fix:` or `patch:` → Patch version bump
-- `breaking:` or `major:` → Major version bump
-- `docs:`, `chore:`, `style:`, `refactor:`, `test:`, `build:` → No version bump
+시맨틱 버저닝 트리거:
+- `feat:` 또는 `feature:` → 마이너 버전 증가
+- `fix:` 또는 `patch:` → 패치 버전 증가
+- `breaking:` 또는 `major:` → 메이저 버전 증가
+- `docs:`, `chore:`, `style:`, `refactor:`, `test:`, `build:` → 버전 변경 없음
 
 ## Key Files
 
-- `GitVersion.yml` - Branch-based versioning configuration
-- `stylecop.json` - StyleCop rules (company: Jinobald)
-- `.editorconfig` - Code style (4 spaces, CRLF, UTF-8)
+- `GitVersion.yml` - 브랜치 기반 버전 관리 설정
+- `stylecop.json` - StyleCop 규칙 (company: Jinobald)
+- `.editorconfig` - 코드 스타일 (4 spaces, CRLF, UTF-8)
