@@ -68,7 +68,7 @@ public class TaskTests
         Task<int> task1 = Task.Run(() => 1);
         Task<int> task2 = Task.Run(() => 2);
         Task<int> task3 = Task.Run(() => 3);
-        Task<int[]> whenAll = Task.WhenAll(task1, task2, task3);
+        Task<int[]> whenAll = Task.WhenAll<int>(task1, task2, task3);
         int[]? results = whenAll.Result;
         Assert.AreEqual(new[] { 1, 2, 3 }, results);
     }
