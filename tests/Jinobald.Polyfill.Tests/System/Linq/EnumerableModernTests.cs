@@ -1,7 +1,7 @@
 // Jinobald.Polyfill - Modern LINQ 확장 메서드 테스트 (.NET 6.0+)
 // Chunk, Index, TryGetNonEnumeratedCount 메서드 테스트
 
-#if NET20
+#if NET35
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
