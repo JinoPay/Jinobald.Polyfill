@@ -1,62 +1,11 @@
 #if NET40 || NET45 || NET451 || NET452
-namespace System.Threading.Tasks;
-
-/// <summary>
-/// .NET 4.0/4.5에서 Task 관련 확장 메서드를 제공하는 확장 클래스입니다.
-/// </summary>
-internal static class TaskEx
+namespace System.Threading.Tasks
 {
-#if NET40
-    extension(CancellationTokenSource cts)
+    /// <summary>
+    /// .NET 4.0/4.5에서 Task 관련 정적 메서드를 제공하는 클래스입니다.
+    /// </summary>
+    internal static class TaskEx
     {
-        /// <summary>
-        /// 지정된 시간 범위 후에 이 CancellationTokenSource에 대한 취소 작업을 예약합니다.
-        /// </summary>
-        /// <param name="millisecondsDelay">취소되기 전까지 기다릴 시간(밀리초)입니다.</param>
-        public void CancelAfter(int millisecondsDelay)
-        {
-            if (millisecondsDelay < -1)
-                throw new ArgumentOutOfRangeException(nameof(millisecondsDelay));
-
-            if (millisecondsDelay == 0)
-            {
-                cts.Cancel();
-                return;
-            }
-
-            Timer? timer = null;
-            timer = new Timer(_ =>
-            {
-                try
-                {
-                    cts.Cancel();
-                }
-                catch (ObjectDisposedException)
-                {
-                    // CancellationTokenSource가 이미 dispose된 경우 무시
-                }
-                timer?.Dispose();
-            }, null, millisecondsDelay, Timeout.Infinite);
-        }
-
-        /// <summary>
-        /// 지정된 시간 범위 후에 이 CancellationTokenSource에 대한 취소 작업을 예약합니다.
-        /// </summary>
-        /// <param name="delay">취소되기 전까지 기다릴 시간입니다.</param>
-        public void CancelAfter(TimeSpan delay)
-        {
-            long totalMilliseconds = (long)delay.TotalMilliseconds;
-            if (totalMilliseconds < -1 || totalMilliseconds > int.MaxValue)
-                throw new ArgumentOutOfRangeException(nameof(delay));
-
-            cts.CancelAfter((int)totalMilliseconds);
-        }
-    }
-#endif
-
-    extension(Task)
-    {
-#if NET40
         /// <summary>
         /// 지정된 작업을 스레드 풀에서 실행하도록 큐에 넣고 해당 작업을 나타내는 Task 개체를 반환합니다.
         /// </summary>
@@ -297,7 +246,6 @@ internal static class TaskEx
                 return tasks[index];
             });
         }
-#endif
 
         /// <summary>
         /// 지정된 예외와 함께 예외적으로 완료된 Task를 만듭니다.
@@ -349,5 +297,61 @@ internal static class TaskEx
             return tcs.Task;
         }
     }
+
+#if NET40
+    /// <summary>
+    /// CancellationTokenSource에 대한 확장 메서드를 제공합니다.
+    /// </summary>
+    internal static class CancellationTokenSourceExtensions
+    {
+        /// <summary>
+        /// 지정된 시간 범위 후에 이 CancellationTokenSource에 대한 취소 작업을 예약합니다.
+        /// </summary>
+        /// <param name="cts">취소할 CancellationTokenSource입니다.</param>
+        /// <param name="millisecondsDelay">취소되기 전까지 기다릴 시간(밀리초)입니다.</param>
+        public static void CancelAfter(this CancellationTokenSource cts, int millisecondsDelay)
+        {
+            if (cts == null)
+                throw new ArgumentNullException(nameof(cts));
+
+            if (millisecondsDelay < -1)
+                throw new ArgumentOutOfRangeException(nameof(millisecondsDelay));
+
+            if (millisecondsDelay == 0)
+            {
+                cts.Cancel();
+                return;
+            }
+
+            Timer? timer = null;
+            timer = new Timer(_ =>
+            {
+                try
+                {
+                    cts.Cancel();
+                }
+                catch (ObjectDisposedException)
+                {
+                    // CancellationTokenSource가 이미 dispose된 경우 무시
+                }
+                timer?.Dispose();
+            }, null, millisecondsDelay, Timeout.Infinite);
+        }
+
+        /// <summary>
+        /// 지정된 시간 범위 후에 이 CancellationTokenSource에 대한 취소 작업을 예약합니다.
+        /// </summary>
+        /// <param name="cts">취소할 CancellationTokenSource입니다.</param>
+        /// <param name="delay">취소되기 전까지 기다릴 시간입니다.</param>
+        public static void CancelAfter(this CancellationTokenSource cts, TimeSpan delay)
+        {
+            long totalMilliseconds = (long)delay.TotalMilliseconds;
+            if (totalMilliseconds < -1 || totalMilliseconds > int.MaxValue)
+                throw new ArgumentOutOfRangeException(nameof(delay));
+
+            cts.CancelAfter((int)totalMilliseconds);
+        }
+    }
+#endif
 }
 #endif

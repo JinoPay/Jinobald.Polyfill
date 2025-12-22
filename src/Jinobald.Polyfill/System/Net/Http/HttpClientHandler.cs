@@ -1,5 +1,8 @@
 using System.Net.Security;
 using System.Security.Cryptography.X509Certificates;
+#if NET40 || NET45 || NET451 || NET452
+using System.Threading.Tasks;
+#endif
 
 #if NETFRAMEWORK
 namespace System.Net.Http;
@@ -525,7 +528,11 @@ public class HttpClientHandler : HttpMessageHandler
             throw new ArgumentNullException(nameof(request));
         }
 
+#if NET40 || NET45 || NET451 || NET452
+        return TaskEx.Run(() => SendCore(request, cancellationToken));
+#else
         return Task.Run(() => SendCore(request, cancellationToken));
+#endif
     }
 }
 #endif
