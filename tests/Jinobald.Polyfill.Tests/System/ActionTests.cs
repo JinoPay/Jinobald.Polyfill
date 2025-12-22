@@ -50,6 +50,149 @@ namespace Jinobald.Polyfill.Tests.System
         }
 
         [Test]
+        public void Action_FourParameters_ExecutesWithParameters()
+        {
+            int result = 0;
+            Action<int, int, int, int> action = (a, b, c, d) => { result = a + b + c + d; };
+
+            action(1, 2, 3, 4);
+
+            Assert.AreEqual(10, result);
+        }
+
+        [Test]
+        public void Action_FiveParameters_ExecutesWithParameters()
+        {
+            int result = 0;
+            Action<int, int, int, int, int> action = (a, b, c, d, e) => { result = a + b + c + d + e; };
+
+            action(1, 2, 3, 4, 5);
+
+            Assert.AreEqual(15, result);
+        }
+
+        [Test]
+        public void Action_SixParameters_ExecutesWithParameters()
+        {
+            int result = 0;
+            Action<int, int, int, int, int, int> action = (a, b, c, d, e, f) => { result = a + b + c + d + e + f; };
+
+            action(1, 2, 3, 4, 5, 6);
+
+            Assert.AreEqual(21, result);
+        }
+
+        [Test]
+        public void Action_SevenParameters_ExecutesWithParameters()
+        {
+            int result = 0;
+            Action<int, int, int, int, int, int, int> action = (a, b, c, d, e, f, g) => { result = a + b + c + d + e + f + g; };
+
+            action(1, 2, 3, 4, 5, 6, 7);
+
+            Assert.AreEqual(28, result);
+        }
+
+        [Test]
+        public void Action_EightParameters_ExecutesWithParameters()
+        {
+            int result = 0;
+            Action<int, int, int, int, int, int, int, int> action = (a, b, c, d, e, f, g, h) => { result = a + b + c + d + e + f + g + h; };
+
+            action(1, 2, 3, 4, 5, 6, 7, 8);
+
+            Assert.AreEqual(36, result);
+        }
+
+        [Test]
+        public void Action_NineParameters_ExecutesWithParameters()
+        {
+            int result = 0;
+            Action<int, int, int, int, int, int, int, int, int> action = (a, b, c, d, e, f, g, h, i) => { result = a + b + c + d + e + f + g + h + i; };
+
+            action(1, 2, 3, 4, 5, 6, 7, 8, 9);
+
+            Assert.AreEqual(45, result);
+        }
+
+        [Test]
+        public void Action_TenParameters_ExecutesWithParameters()
+        {
+            int result = 0;
+            Action<int, int, int, int, int, int, int, int, int, int> action = (a, b, c, d, e, f, g, h, i, j) => { result = a + b + c + d + e + f + g + h + i + j; };
+
+            action(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
+
+            Assert.AreEqual(55, result);
+        }
+
+        [Test]
+        public void Action_ElevenParameters_ExecutesWithParameters()
+        {
+            int result = 0;
+            Action<int, int, int, int, int, int, int, int, int, int, int> action = (a, b, c, d, e, f, g, h, i, j, k) => { result = a + b + c + d + e + f + g + h + i + j + k; };
+
+            action(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11);
+
+            Assert.AreEqual(66, result);
+        }
+
+        [Test]
+        public void Action_TwelveParameters_ExecutesWithParameters()
+        {
+            int result = 0;
+            Action<int, int, int, int, int, int, int, int, int, int, int, int> action = (a, b, c, d, e, f, g, h, i, j, k, l) => { result = a + b + c + d + e + f + g + h + i + j + k + l; };
+
+            action(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12);
+
+            Assert.AreEqual(78, result);
+        }
+
+        [Test]
+        public void Action_ThirteenParameters_ExecutesWithParameters()
+        {
+            int result = 0;
+            Action<int, int, int, int, int, int, int, int, int, int, int, int, int> action = (a, b, c, d, e, f, g, h, i, j, k, l, m) => { result = a + b + c + d + e + f + g + h + i + j + k + l + m; };
+
+            action(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13);
+
+            Assert.AreEqual(91, result);
+        }
+
+        [Test]
+        public void Action_FourteenParameters_ExecutesWithParameters()
+        {
+            int result = 0;
+            Action<int, int, int, int, int, int, int, int, int, int, int, int, int, int> action = (a, b, c, d, e, f, g, h, i, j, k, l, m, n) => { result = a + b + c + d + e + f + g + h + i + j + k + l + m + n; };
+
+            action(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14);
+
+            Assert.AreEqual(105, result);
+        }
+
+        [Test]
+        public void Action_FifteenParameters_ExecutesWithParameters()
+        {
+            int result = 0;
+            Action<int, int, int, int, int, int, int, int, int, int, int, int, int, int, int> action = (a, b, c, d, e, f, g, h, i, j, k, l, m, n, o) => { result = a + b + c + d + e + f + g + h + i + j + k + l + m + n + o; };
+
+            action(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15);
+
+            Assert.AreEqual(120, result);
+        }
+
+        [Test]
+        public void Action_SixteenParameters_ExecutesWithParameters()
+        {
+            int result = 0;
+            Action<int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int> action = (a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p) => { result = a + b + c + d + e + f + g + h + i + j + k + l + m + n + o + p; };
+
+            action(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16);
+
+            Assert.AreEqual(136, result);
+        }
+
+        [Test]
         public void Func_NoParameters_ReturnsValue()
         {
             Func<int> func = () => 42;
