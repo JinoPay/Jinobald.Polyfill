@@ -1,13 +1,40 @@
 // Jinobald.Polyfill - ValueTuple 폴리필
-// .NET 4.0~4.6.2에서 ValueTuple을 사용할 수 있도록 하는 구현
+// .NET 3.5~4.6.2에서 ValueTuple을 사용할 수 있도록 하는 구현
 // .NET 4.7 이상에서는 네이티브 ValueTuple이 존재하므로 제외
 
-#if NET40 || NET45 || NET451 || NET452 || NET46 || NET461 || NET462
-
-namespace System;
+#if NET35 || NET40 || NET45 || NET451 || NET452 || NET46 || NET461 || NET462
 
 using System.Collections;
 using System.Collections.Generic;
+
+namespace System.Runtime.CompilerServices
+{
+    /// <summary>
+    /// Indicates that the use of a value tuple on a member is meant to be treated as a tuple with element names.
+    /// </summary>
+    [AttributeUsage(AttributeTargets.Field | AttributeTargets.Parameter | AttributeTargets.Property | AttributeTargets.ReturnValue | AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Event)]
+    public sealed class TupleElementNamesAttribute : Attribute
+    {
+#if NET35 || NET40
+        public string[] TransformNames { get; }
+
+        public TupleElementNamesAttribute(string[] transformNames)
+        {
+            TransformNames = transformNames;
+        }
+#else
+        public string?[] TransformNames { get; }
+
+        public TupleElementNamesAttribute(string?[] transformNames)
+        {
+            TransformNames = transformNames;
+        }
+#endif
+    }
+}
+
+namespace System
+{
 
 /// <summary>
 /// 값 튜플 개체를 만들기 위한 정적 메서드를 제공합니다.
@@ -769,5 +796,7 @@ public struct ValueTuple<T1, T2, T3, T4, T5, T6, T7, T8> : IEquatable<ValueTuple
             _ => throw new IndexOutOfRangeException()
         };
 }
+
+} // namespace System
 
 #endif

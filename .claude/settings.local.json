@@ -3,7 +3,12 @@
     "allow": [
       "Bash(ForEach-Object { $_ame })",
       "Bash(dir:*)",
-      "Bash(tree:*)"
+      "Bash(tree:*)",
+      "Bash(\"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\Common7\\Tools\\VsDevCmd.bat\")",
+      "Bash(msbuild:*)",
+      "Bash(cmd.exe /c \"dir \"\"C:\\Program Files\\Microsoft Visual Studio\"\" 2>nul\")",
+      "Bash(cmd.exe:*)",
+      "Bash(dotnet build:*)"
     ],
     "deny": [],
     "ask": []

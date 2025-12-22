@@ -28,7 +28,7 @@ namespace System
         /// </summary>
         /// <param name="start">The start index of the range.</param>
         /// <param name="end">The end index of the range.</param>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [MethodImpl((MethodImplOptions)256)]
         public Range(Index start, Index end)
         {
             Start = start;
@@ -39,7 +39,7 @@ namespace System
         /// Creates a Range starting at the specified start index to the end.
         /// </summary>
         /// <param name="start">The start index.</param>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [MethodImpl((MethodImplOptions)256)]
         public static Range StartAt(Index start)
         {
             return new Range(start, Index.End);
@@ -49,7 +49,7 @@ namespace System
         /// Creates a Range from the beginning to the specified end index.
         /// </summary>
         /// <param name="end">The end index.</param>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [MethodImpl((MethodImplOptions)256)]
         public static Range EndAt(Index end)
         {
             return new Range(Index.Start, end);
@@ -58,7 +58,7 @@ namespace System
         /// <summary>
         /// Creates a Range that encompasses all elements.
         /// </summary>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [MethodImpl((MethodImplOptions)256)]
         public static Range All()
         {
             return new Range(Index.Start, Index.End);
@@ -69,7 +69,7 @@ namespace System
         /// </summary>
         /// <param name="length">The length of the collection.</param>
         /// <returns>A tuple containing the offset and length.</returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [MethodImpl((MethodImplOptions)256)]
         public (int Offset, int Length) GetOffsetAndLength(int length)
         {
             int startIndex;

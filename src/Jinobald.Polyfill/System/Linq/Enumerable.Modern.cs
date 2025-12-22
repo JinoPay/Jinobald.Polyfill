@@ -38,7 +38,7 @@ namespace System.Linq
             IEnumerable<TSource> source,
             int size)
         {
-            TSource[] chunk = null;
+            TSource[]? chunk = null;
             int count = 0;
 
             foreach (TSource item in source)
@@ -59,7 +59,7 @@ namespace System.Linq
             }
 
             // 마지막 청크가 부분적으로 채워진 경우
-            if (count > 0)
+            if (count > 0 && chunk != null)
             {
                 TSource[] lastChunk = new TSource[count];
                 Array.Copy(chunk, 0, lastChunk, 0, count);
@@ -151,24 +151,21 @@ namespace System.Linq
             if (source == null) throw new ArgumentNullException("source");
 
             // ICollection<T> 확인
-            ICollection<TSource> collectionT = source as ICollection<TSource>;
-            if (collectionT != null)
+            if (source is ICollection<TSource> collectionT)
             {
                 count = collectionT.Count;
                 return true;
             }
 
             // ICollection 확인 (non-generic)
-            System.Collections.ICollection collection = source as System.Collections.ICollection;
-            if (collection != null)
+            if (source is System.Collections.ICollection collection)
             {
                 count = collection.Count;
                 return true;
             }
 
             // 배열 확인
-            TSource[] array = source as TSource[];
-            if (array != null)
+            if (source is TSource[] array)
             {
                 count = array.Length;
                 return true;

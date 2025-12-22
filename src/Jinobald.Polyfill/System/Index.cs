@@ -20,7 +20,7 @@ namespace System
         /// </summary>
         /// <param name="value">The index value. Must be greater than or equal to 0.</param>
         /// <param name="fromEnd">Indicates whether the index is from the start (false) or from the end (true).</param>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [MethodImpl((MethodImplOptions)256)]
         public Index(int value, bool fromEnd = false)
         {
             if (value < 0)
@@ -48,7 +48,7 @@ namespace System
         /// Creates an Index from the start at the specified position.
         /// </summary>
         /// <param name="value">The index value from the start.</param>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [MethodImpl((MethodImplOptions)256)]
         public static Index FromStart(int value)
         {
             if (value < 0)
@@ -63,7 +63,7 @@ namespace System
         /// Creates an Index from the end at the specified position.
         /// </summary>
         /// <param name="value">The index value from the end.</param>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [MethodImpl((MethodImplOptions)256)]
         public static Index FromEnd(int value)
         {
             if (value < 0)
@@ -79,7 +79,7 @@ namespace System
         /// </summary>
         public int Value
         {
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            [MethodImpl((MethodImplOptions)256)]
             get
             {
                 if (_value < 0)
@@ -98,7 +98,7 @@ namespace System
         /// </summary>
         public bool IsFromEnd
         {
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            [MethodImpl((MethodImplOptions)256)]
             get { return _value < 0; }
         }
 
@@ -107,7 +107,7 @@ namespace System
         /// </summary>
         /// <param name="length">The length of the collection.</param>
         /// <returns>The offset from the start.</returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [MethodImpl((MethodImplOptions)256)]
         public int GetOffset(int length)
         {
             int offset = _value;
