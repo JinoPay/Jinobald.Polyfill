@@ -1114,6 +1114,524 @@ public static class MemoryExtensions
 
         return true;
     }
+
+    #region ContainsAny
+
+    /// <summary>
+    /// Span에 지정된 값들 중 하나가 포함되어 있는지 확인합니다.
+    /// </summary>
+    /// <typeparam name="T">요소 형식입니다.</typeparam>
+    /// <param name="span">확인할 Span입니다.</param>
+    /// <param name="value0">찾을 첫 번째 값입니다.</param>
+    /// <param name="value1">찾을 두 번째 값입니다.</param>
+    /// <returns>하나라도 포함되어 있으면 true, 그렇지 않으면 false입니다.</returns>
+    public static bool ContainsAny<T>(this Span<T> span, T value0, T value1)
+        where T : IEquatable<T>
+    {
+        return IndexOfAny(span, value0, value1) >= 0;
+    }
+
+    /// <summary>
+    /// ReadOnlySpan에 지정된 값들 중 하나가 포함되어 있는지 확인합니다.
+    /// </summary>
+    /// <typeparam name="T">요소 형식입니다.</typeparam>
+    /// <param name="span">확인할 ReadOnlySpan입니다.</param>
+    /// <param name="value0">찾을 첫 번째 값입니다.</param>
+    /// <param name="value1">찾을 두 번째 값입니다.</param>
+    /// <returns>하나라도 포함되어 있으면 true, 그렇지 않으면 false입니다.</returns>
+    public static bool ContainsAny<T>(this ReadOnlySpan<T> span, T value0, T value1)
+        where T : IEquatable<T>
+    {
+        return IndexOfAny(span, value0, value1) >= 0;
+    }
+
+    /// <summary>
+    /// Span에 지정된 값들 중 하나가 포함되어 있는지 확인합니다.
+    /// </summary>
+    /// <typeparam name="T">요소 형식입니다.</typeparam>
+    /// <param name="span">확인할 Span입니다.</param>
+    /// <param name="value0">찾을 첫 번째 값입니다.</param>
+    /// <param name="value1">찾을 두 번째 값입니다.</param>
+    /// <param name="value2">찾을 세 번째 값입니다.</param>
+    /// <returns>하나라도 포함되어 있으면 true, 그렇지 않으면 false입니다.</returns>
+    public static bool ContainsAny<T>(this Span<T> span, T value0, T value1, T value2)
+        where T : IEquatable<T>
+    {
+        return IndexOfAny(span, value0, value1, value2) >= 0;
+    }
+
+    /// <summary>
+    /// ReadOnlySpan에 지정된 값들 중 하나가 포함되어 있는지 확인합니다.
+    /// </summary>
+    /// <typeparam name="T">요소 형식입니다.</typeparam>
+    /// <param name="span">확인할 ReadOnlySpan입니다.</param>
+    /// <param name="value0">찾을 첫 번째 값입니다.</param>
+    /// <param name="value1">찾을 두 번째 값입니다.</param>
+    /// <param name="value2">찾을 세 번째 값입니다.</param>
+    /// <returns>하나라도 포함되어 있으면 true, 그렇지 않으면 false입니다.</returns>
+    public static bool ContainsAny<T>(this ReadOnlySpan<T> span, T value0, T value1, T value2)
+        where T : IEquatable<T>
+    {
+        return IndexOfAny(span, value0, value1, value2) >= 0;
+    }
+
+    /// <summary>
+    /// Span에 지정된 값들 중 하나가 포함되어 있는지 확인합니다.
+    /// </summary>
+    /// <typeparam name="T">요소 형식입니다.</typeparam>
+    /// <param name="span">확인할 Span입니다.</param>
+    /// <param name="values">찾을 값들입니다.</param>
+    /// <returns>하나라도 포함되어 있으면 true, 그렇지 않으면 false입니다.</returns>
+    public static bool ContainsAny<T>(this Span<T> span, ReadOnlySpan<T> values)
+        where T : IEquatable<T>
+    {
+        return IndexOfAny(span, values) >= 0;
+    }
+
+    /// <summary>
+    /// ReadOnlySpan에 지정된 값들 중 하나가 포함되어 있는지 확인합니다.
+    /// </summary>
+    /// <typeparam name="T">요소 형식입니다.</typeparam>
+    /// <param name="span">확인할 ReadOnlySpan입니다.</param>
+    /// <param name="values">찾을 값들입니다.</param>
+    /// <returns>하나라도 포함되어 있으면 true, 그렇지 않으면 false입니다.</returns>
+    public static bool ContainsAny<T>(this ReadOnlySpan<T> span, ReadOnlySpan<T> values)
+        where T : IEquatable<T>
+    {
+        return IndexOfAny(span, values) >= 0;
+    }
+
+    #endregion
+
+    #region BinarySearch
+
+    /// <summary>
+    /// 정렬된 Span에서 이진 검색을 수행합니다.
+    /// </summary>
+    /// <typeparam name="T">요소 형식입니다.</typeparam>
+    /// <param name="span">검색할 정렬된 Span입니다.</param>
+    /// <param name="value">찾을 값입니다.</param>
+    /// <returns>값의 인덱스, 또는 찾지 못한 경우 음수 비트 보수입니다.</returns>
+    public static int BinarySearch<T>(this Span<T> span, IComparable<T> value)
+    {
+        return BinarySearch((ReadOnlySpan<T>)span, value);
+    }
+
+    /// <summary>
+    /// 정렬된 ReadOnlySpan에서 이진 검색을 수행합니다.
+    /// </summary>
+    /// <typeparam name="T">요소 형식입니다.</typeparam>
+    /// <param name="span">검색할 정렬된 ReadOnlySpan입니다.</param>
+    /// <param name="value">찾을 값입니다.</param>
+    /// <returns>값의 인덱스, 또는 찾지 못한 경우 음수 비트 보수입니다.</returns>
+    public static int BinarySearch<T>(this ReadOnlySpan<T> span, IComparable<T> value)
+    {
+        int lo = 0;
+        int hi = span.Length - 1;
+
+        while (lo <= hi)
+        {
+            int mid = lo + ((hi - lo) >> 1);
+            int comp = value.CompareTo(span[mid]);
+
+            if (comp == 0)
+            {
+                return mid;
+            }
+
+            if (comp > 0)
+            {
+                lo = mid + 1;
+            }
+            else
+            {
+                hi = mid - 1;
+            }
+        }
+
+        return ~lo;
+    }
+
+    /// <summary>
+    /// 정렬된 Span에서 사용자 정의 비교자를 사용하여 이진 검색을 수행합니다.
+    /// </summary>
+    /// <typeparam name="T">요소 형식입니다.</typeparam>
+    /// <typeparam name="TComparer">비교자 형식입니다.</typeparam>
+    /// <param name="span">검색할 정렬된 Span입니다.</param>
+    /// <param name="value">찾을 값입니다.</param>
+    /// <param name="comparer">비교자입니다.</param>
+    /// <returns>값의 인덱스, 또는 찾지 못한 경우 음수 비트 보수입니다.</returns>
+    public static int BinarySearch<T, TComparer>(this Span<T> span, T value, TComparer comparer)
+        where TComparer : IComparer<T>
+    {
+        return BinarySearch((ReadOnlySpan<T>)span, value, comparer);
+    }
+
+    /// <summary>
+    /// 정렬된 ReadOnlySpan에서 사용자 정의 비교자를 사용하여 이진 검색을 수행합니다.
+    /// </summary>
+    /// <typeparam name="T">요소 형식입니다.</typeparam>
+    /// <typeparam name="TComparer">비교자 형식입니다.</typeparam>
+    /// <param name="span">검색할 정렬된 ReadOnlySpan입니다.</param>
+    /// <param name="value">찾을 값입니다.</param>
+    /// <param name="comparer">비교자입니다.</param>
+    /// <returns>값의 인덱스, 또는 찾지 못한 경우 음수 비트 보수입니다.</returns>
+    public static int BinarySearch<T, TComparer>(this ReadOnlySpan<T> span, T value, TComparer comparer)
+        where TComparer : IComparer<T>
+    {
+        int lo = 0;
+        int hi = span.Length - 1;
+
+        while (lo <= hi)
+        {
+            int mid = lo + ((hi - lo) >> 1);
+            int comp = comparer.Compare(value, span[mid]);
+
+            if (comp == 0)
+            {
+                return mid;
+            }
+
+            if (comp > 0)
+            {
+                lo = mid + 1;
+            }
+            else
+            {
+                hi = mid - 1;
+            }
+        }
+
+        return ~lo;
+    }
+
+    #endregion
+
+    #region SequenceCompareTo
+
+    /// <summary>
+    /// 두 Span을 요소별로 비교합니다.
+    /// </summary>
+    /// <typeparam name="T">요소 형식입니다.</typeparam>
+    /// <param name="span">비교할 첫 번째 Span입니다.</param>
+    /// <param name="other">비교할 두 번째 Span입니다.</param>
+    /// <returns>첫 번째가 작으면 음수, 같으면 0, 크면 양수입니다.</returns>
+    public static int SequenceCompareTo<T>(this Span<T> span, ReadOnlySpan<T> other)
+        where T : IComparable<T>
+    {
+        return SequenceCompareTo((ReadOnlySpan<T>)span, other);
+    }
+
+    /// <summary>
+    /// 두 ReadOnlySpan을 요소별로 비교합니다.
+    /// </summary>
+    /// <typeparam name="T">요소 형식입니다.</typeparam>
+    /// <param name="span">비교할 첫 번째 ReadOnlySpan입니다.</param>
+    /// <param name="other">비교할 두 번째 ReadOnlySpan입니다.</param>
+    /// <returns>첫 번째가 작으면 음수, 같으면 0, 크면 양수입니다.</returns>
+    public static int SequenceCompareTo<T>(this ReadOnlySpan<T> span, ReadOnlySpan<T> other)
+        where T : IComparable<T>
+    {
+        int minLength = span.Length < other.Length ? span.Length : other.Length;
+
+        for (int i = 0; i < minLength; i++)
+        {
+            int result = span[i].CompareTo(other[i]);
+            if (result != 0)
+            {
+                return result;
+            }
+        }
+
+        return span.Length.CompareTo(other.Length);
+    }
+
+    #endregion
+
+    #region Overlaps
+
+    /// <summary>
+    /// 두 Span이 동일한 메모리 영역을 참조하는지 확인합니다.
+    /// </summary>
+    /// <typeparam name="T">요소 형식입니다.</typeparam>
+    /// <param name="span">첫 번째 Span입니다.</param>
+    /// <param name="other">두 번째 Span입니다.</param>
+    /// <returns>겹치면 true, 그렇지 않으면 false입니다.</returns>
+    public static bool Overlaps<T>(this Span<T> span, ReadOnlySpan<T> other)
+    {
+        return Overlaps((ReadOnlySpan<T>)span, other);
+    }
+
+    /// <summary>
+    /// 두 ReadOnlySpan이 동일한 메모리 영역을 참조하는지 확인합니다.
+    /// </summary>
+    /// <typeparam name="T">요소 형식입니다.</typeparam>
+    /// <param name="span">첫 번째 ReadOnlySpan입니다.</param>
+    /// <param name="other">두 번째 ReadOnlySpan입니다.</param>
+    /// <returns>겹치면 true, 그렇지 않으면 false입니다.</returns>
+    public static bool Overlaps<T>(this ReadOnlySpan<T> span, ReadOnlySpan<T> other)
+    {
+        return Overlaps(span, other, out _);
+    }
+
+    /// <summary>
+    /// 두 Span이 동일한 메모리 영역을 참조하는지 확인하고 요소 오프셋을 반환합니다.
+    /// </summary>
+    /// <typeparam name="T">요소 형식입니다.</typeparam>
+    /// <param name="span">첫 번째 Span입니다.</param>
+    /// <param name="other">두 번째 Span입니다.</param>
+    /// <param name="elementOffset">other가 span 내에서 시작하는 요소 오프셋입니다.</param>
+    /// <returns>겹치면 true, 그렇지 않으면 false입니다.</returns>
+    public static bool Overlaps<T>(this Span<T> span, ReadOnlySpan<T> other, out int elementOffset)
+    {
+        return Overlaps((ReadOnlySpan<T>)span, other, out elementOffset);
+    }
+
+    /// <summary>
+    /// 두 ReadOnlySpan이 동일한 메모리 영역을 참조하는지 확인하고 요소 오프셋을 반환합니다.
+    /// </summary>
+    /// <typeparam name="T">요소 형식입니다.</typeparam>
+    /// <param name="span">첫 번째 ReadOnlySpan입니다.</param>
+    /// <param name="other">두 번째 ReadOnlySpan입니다.</param>
+    /// <param name="elementOffset">other가 span 내에서 시작하는 요소 오프셋입니다.</param>
+    /// <returns>겹치면 true, 그렇지 않으면 false입니다.</returns>
+    public static unsafe bool Overlaps<T>(this ReadOnlySpan<T> span, ReadOnlySpan<T> other, out int elementOffset)
+    {
+        if (span.Length == 0 || other.Length == 0)
+        {
+            elementOffset = 0;
+            return false;
+        }
+
+        fixed (T* pSpan = &span.GetPinnableReference())
+        fixed (T* pOther = &other.GetPinnableReference())
+        {
+            long spanStart = (long)pSpan;
+            long spanEnd = spanStart + (span.Length * Runtime.CompilerServices.Unsafe.SizeOf<T>());
+            long otherStart = (long)pOther;
+            long otherEnd = otherStart + (other.Length * Runtime.CompilerServices.Unsafe.SizeOf<T>());
+
+            if (spanStart <= otherStart && otherStart < spanEnd)
+            {
+                elementOffset = (int)((otherStart - spanStart) / Runtime.CompilerServices.Unsafe.SizeOf<T>());
+                return true;
+            }
+
+            if (otherStart <= spanStart && spanStart < otherEnd)
+            {
+                elementOffset = (int)((spanStart - otherStart) / Runtime.CompilerServices.Unsafe.SizeOf<T>());
+                return true;
+            }
+
+            elementOffset = 0;
+            return false;
+        }
+    }
+
+    #endregion
+
+    #region Sort
+
+    /// <summary>
+    /// Span의 요소를 정렬합니다.
+    /// </summary>
+    /// <typeparam name="T">요소 형식입니다.</typeparam>
+    /// <param name="span">정렬할 Span입니다.</param>
+    public static void Sort<T>(this Span<T> span)
+    {
+        Sort(span, Comparer<T>.Default);
+    }
+
+    /// <summary>
+    /// Span의 요소를 사용자 정의 비교자로 정렬합니다.
+    /// </summary>
+    /// <typeparam name="T">요소 형식입니다.</typeparam>
+    /// <typeparam name="TComparer">비교자 형식입니다.</typeparam>
+    /// <param name="span">정렬할 Span입니다.</param>
+    /// <param name="comparer">비교자입니다.</param>
+    public static void Sort<T, TComparer>(this Span<T> span, TComparer comparer)
+        where TComparer : IComparer<T>
+    {
+        if (span.Length <= 1)
+        {
+            return;
+        }
+
+        QuickSort(span, 0, span.Length - 1, comparer);
+    }
+
+    /// <summary>
+    /// Span의 요소를 비교 함수로 정렬합니다.
+    /// </summary>
+    /// <typeparam name="T">요소 형식입니다.</typeparam>
+    /// <param name="span">정렬할 Span입니다.</param>
+    /// <param name="comparison">비교 함수입니다.</param>
+    public static void Sort<T>(this Span<T> span, Comparison<T> comparison)
+    {
+        if (comparison == null)
+        {
+            throw new ArgumentNullException(nameof(comparison));
+        }
+
+        Sort(span, new ComparisonComparer<T>(comparison));
+    }
+
+    private static void QuickSort<T, TComparer>(Span<T> span, int left, int right, TComparer comparer)
+        where TComparer : IComparer<T>
+    {
+        if (left >= right)
+        {
+            return;
+        }
+
+        int pivot = Partition(span, left, right, comparer);
+        QuickSort(span, left, pivot - 1, comparer);
+        QuickSort(span, pivot + 1, right, comparer);
+    }
+
+    private static int Partition<T, TComparer>(Span<T> span, int left, int right, TComparer comparer)
+        where TComparer : IComparer<T>
+    {
+        T pivotValue = span[right];
+        int i = left - 1;
+
+        for (int j = left; j < right; j++)
+        {
+            if (comparer.Compare(span[j], pivotValue) <= 0)
+            {
+                i++;
+                T temp = span[i];
+                span[i] = span[j];
+                span[j] = temp;
+            }
+        }
+
+        T temp2 = span[i + 1];
+        span[i + 1] = span[right];
+        span[right] = temp2;
+
+        return i + 1;
+    }
+
+    private readonly struct ComparisonComparer<T> : IComparer<T>
+    {
+        private readonly Comparison<T> _comparison;
+
+        public ComparisonComparer(Comparison<T> comparison)
+        {
+            _comparison = comparison;
+        }
+
+        public int Compare(T? x, T? y)
+        {
+            return _comparison(x!, y!);
+        }
+    }
+
+    #endregion
+
+    #region LastIndexOf (Sequence)
+
+    /// <summary>
+    /// Span에서 지정된 시퀀스의 마지막 인덱스를 찾습니다.
+    /// </summary>
+    /// <typeparam name="T">요소 형식입니다.</typeparam>
+    /// <param name="span">검색할 Span입니다.</param>
+    /// <param name="value">찾을 시퀀스입니다.</param>
+    /// <returns>시퀀스의 마지막 시작 인덱스, 또는 찾지 못한 경우 -1입니다.</returns>
+    public static int LastIndexOf<T>(this Span<T> span, ReadOnlySpan<T> value)
+        where T : IEquatable<T>
+    {
+        return ((ReadOnlySpan<T>)span).LastIndexOf(value);
+    }
+
+    /// <summary>
+    /// ReadOnlySpan에서 지정된 시퀀스의 마지막 인덱스를 찾습니다.
+    /// </summary>
+    /// <typeparam name="T">요소 형식입니다.</typeparam>
+    /// <param name="span">검색할 ReadOnlySpan입니다.</param>
+    /// <param name="value">찾을 시퀀스입니다.</param>
+    /// <returns>시퀀스의 마지막 시작 인덱스, 또는 찾지 못한 경우 -1입니다.</returns>
+    public static int LastIndexOf<T>(this ReadOnlySpan<T> span, ReadOnlySpan<T> value)
+        where T : IEquatable<T>
+    {
+        if (value.Length == 0)
+        {
+            return span.Length;
+        }
+
+        if (value.Length > span.Length)
+        {
+            return -1;
+        }
+
+        for (int i = span.Length - value.Length; i >= 0; i--)
+        {
+            bool found = true;
+            for (int j = 0; j < value.Length; j++)
+            {
+                if (!span[i + j].Equals(value[j]))
+                {
+                    found = false;
+                    break;
+                }
+            }
+
+            if (found)
+            {
+                return i;
+            }
+        }
+
+        return -1;
+    }
+
+    #endregion
+
+    #region CopyTo
+
+    /// <summary>
+    /// 소스 ReadOnlySpan을 대상 Span으로 복사합니다.
+    /// </summary>
+    /// <typeparam name="T">요소 형식입니다.</typeparam>
+    /// <param name="source">소스 ReadOnlySpan입니다.</param>
+    /// <param name="destination">대상 Span입니다.</param>
+    public static void CopyTo<T>(this ReadOnlySpan<T> source, Span<T> destination)
+    {
+        if (source.Length > destination.Length)
+        {
+            throw new ArgumentException("대상이 너무 짧습니다.");
+        }
+
+        for (int i = 0; i < source.Length; i++)
+        {
+            destination[i] = source[i];
+        }
+    }
+
+    /// <summary>
+    /// 소스 ReadOnlySpan을 대상 Span으로 복사를 시도합니다.
+    /// </summary>
+    /// <typeparam name="T">요소 형식입니다.</typeparam>
+    /// <param name="source">소스 ReadOnlySpan입니다.</param>
+    /// <param name="destination">대상 Span입니다.</param>
+    /// <returns>복사에 성공하면 true, 그렇지 않으면 false입니다.</returns>
+    public static bool TryCopyTo<T>(this ReadOnlySpan<T> source, Span<T> destination)
+    {
+        if (source.Length > destination.Length)
+        {
+            return false;
+        }
+
+        for (int i = 0; i < source.Length; i++)
+        {
+            destination[i] = source[i];
+        }
+
+        return true;
+    }
+
+    #endregion
 }
 
 #endif
