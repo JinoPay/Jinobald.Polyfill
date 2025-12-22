@@ -33,7 +33,7 @@ public class HttpContentTests
     {
         var content = new StringContent("Hello", Encoding.UTF8, "text/plain");
 
-        Assert.Contains("text/plain", content.Headers.ContentType ?? string.Empty);
+        StringAssert.Contains("text/plain", content.Headers.ContentType ?? string.Empty);
     }
 
     [Test]
@@ -129,9 +129,9 @@ public class HttpContentTests
 
         var result = content.ReadAsStringAsync().Result;
 
-        Assert.Contains("key1=value1", result);
-        Assert.Contains("key2=value2", result);
-        Assert.Contains("&", result);
+        StringAssert.Contains("key1=value1", result);
+        StringAssert.Contains("key2=value2", result);
+        StringAssert.Contains("&", result);
     }
 
     [Test]
@@ -145,8 +145,8 @@ public class HttpContentTests
 
         var result = content.ReadAsStringAsync().Result;
 
-        Assert.DoesNotContain(" ", result);
-        Assert.Contains("key=value", result);
+        StringAssert.DoesNotContain(" ", result);
+        StringAssert.Contains("key=value", result);
     }
 
     [Test]
@@ -158,7 +158,7 @@ public class HttpContentTests
         };
         var content = new FormUrlEncodedContent(pairs);
 
-        Assert.Contains("application/x-www-form-urlencoded", content.Headers.ContentType ?? string.Empty);
+        StringAssert.Contains("application/x-www-form-urlencoded", content.Headers.ContentType ?? string.Empty);
     }
 
     #endregion
@@ -212,7 +212,7 @@ public class HttpContentTests
         content.Dispose();
 
         // Dispose 후 읽기 시도하면 ObjectDisposedException 발생
-        Assert.Throws<ObjectDisposedException>(() => content.ReadAsStringAsync().Result);
+        Assert.Throws<ObjectDisposedException>(() => { var _ = content.ReadAsStringAsync().Result; });
     }
 
     #endregion

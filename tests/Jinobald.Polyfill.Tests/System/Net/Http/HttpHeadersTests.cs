@@ -202,7 +202,7 @@ public class HttpHeadersTests
 
         Assert.IsTrue(result);
         Assert.IsNotNull(values);
-        Assert.Contains("value", values);
+        Assert.That(values, Does.Contain("value"));
     }
 
     [Test]

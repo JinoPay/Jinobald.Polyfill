@@ -326,7 +326,7 @@ public class ParallelTests
             );
         });
 
-        Assert.IsNotEmpty(exception.InnerExceptions);
+        Assert.IsNotEmpty(exception!.InnerExceptions);
         Assert.IsTrue(exception.InnerExceptions.Any(e => e is InvalidOperationException));
     }
 
@@ -345,7 +345,7 @@ public class ParallelTests
             );
         });
 
-        Assert.IsTrue(exception.InnerExceptions.Count >= 1);
+        Assert.IsTrue(exception!.InnerExceptions.Count >= 1);
     }
 
     #endregion
@@ -424,7 +424,7 @@ public class ParallelTests
                     throw new InvalidOperationException($"반복 {i}에서 예외");
                 }
             });
-        });
+        })!;
 
         Assert.IsNotEmpty(exception.InnerExceptions);
     }
@@ -446,7 +446,7 @@ public class ParallelTests
                     throw new InvalidOperationException($"항목 {item}에서 예외");
                 }
             });
-        });
+        })!;
 
         Assert.IsNotEmpty(exception.InnerExceptions);
     }

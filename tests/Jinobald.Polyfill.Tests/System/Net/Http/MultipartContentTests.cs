@@ -23,7 +23,7 @@ public class MultipartContentTests
         var content = new MultipartContent();
 
         Assert.IsNotNull(content);
-        Assert.Contains("multipart/mixed", content.Headers.ContentType ?? string.Empty);
+        StringAssert.Contains("multipart/mixed", content.Headers.ContentType ?? string.Empty);
     }
 
     [Test]
@@ -31,7 +31,7 @@ public class MultipartContentTests
     {
         var content = new MultipartContent("form-data");
 
-        Assert.Contains("multipart/form-data", content.Headers.ContentType ?? string.Empty);
+        StringAssert.Contains("multipart/form-data", content.Headers.ContentType ?? string.Empty);
     }
 
     [Test]
@@ -40,7 +40,7 @@ public class MultipartContentTests
         var boundary = "----MyBoundary123";
         var content = new MultipartContent("form-data", boundary);
 
-        Assert.Contains(boundary, content.Headers.ContentType ?? string.Empty);
+        StringAssert.Contains(boundary, content.Headers.ContentType ?? string.Empty);
     }
 
     [Test]
@@ -92,7 +92,7 @@ public class MultipartContentTests
         var content = new MultipartFormDataContent();
 
         Assert.IsNotNull(content);
-        Assert.Contains("multipart/form-data", content.Headers.ContentType ?? string.Empty);
+        StringAssert.Contains("multipart/form-data", content.Headers.ContentType ?? string.Empty);
     }
 
     [Test]
@@ -101,7 +101,7 @@ public class MultipartContentTests
         var boundary = "----FormBoundary";
         var content = new MultipartFormDataContent(boundary);
 
-        Assert.Contains(boundary, content.Headers.ContentType ?? string.Empty);
+        StringAssert.Contains(boundary, content.Headers.ContentType ?? string.Empty);
     }
 
     [Test]
@@ -135,7 +135,7 @@ public class MultipartContentTests
 
         var result = content.ReadAsStringAsync().Result;
 
-        Assert.Contains(boundary, result);
+        StringAssert.Contains(boundary, result);
     }
 
     [Test]
@@ -146,8 +146,8 @@ public class MultipartContentTests
 
         var result = content.ReadAsStringAsync().Result;
 
-        Assert.Contains("Content-Disposition", result);
-        Assert.Contains("fieldName", result);
+        StringAssert.Contains("Content-Disposition", result);
+        StringAssert.Contains("fieldName", result);
     }
 
     [Test]
@@ -158,8 +158,8 @@ public class MultipartContentTests
 
         var result = content.ReadAsStringAsync().Result;
 
-        Assert.Contains("filename", result);
-        Assert.Contains("test.bin", result);
+        StringAssert.Contains("filename", result);
+        StringAssert.Contains("test.bin", result);
     }
 
     #endregion
@@ -181,8 +181,8 @@ public class MultipartContentTests
         var result = new StreamReader(stream).ReadToEnd();
 
         // 시작/종료 경계 확인
-        Assert.Contains("--" + boundary, result);
-        Assert.Contains("--" + boundary + "--", result);
+        StringAssert.Contains("--" + boundary, result);
+        StringAssert.Contains("--" + boundary + "--", result);
     }
 
     [Test]
@@ -194,8 +194,8 @@ public class MultipartContentTests
 
         var result = content.ReadAsStringAsync().Result;
 
-        Assert.Contains("First Part", result);
-        Assert.Contains("Second Part", result);
+        StringAssert.Contains("First Part", result);
+        StringAssert.Contains("Second Part", result);
     }
 
     #endregion

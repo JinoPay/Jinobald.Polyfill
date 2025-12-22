@@ -16,7 +16,8 @@
       "Bash(find:*)",
       "Bash(Select-String -Pattern \"error|warning\")",
       "Bash(Select-Object -First 50)",
-      "Bash(dotnet restore:*)"
+      "Bash(dotnet restore:*)",
+      "Bash(dotnet test:*)"
     ],
     "deny": [],
     "ask": []

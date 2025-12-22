@@ -43,7 +43,7 @@ public class HttpMessageTests
 
         Assert.AreEqual(HttpMethod.Put, request.Method);
         Assert.IsNotNull(request.RequestUri);
-        Assert.AreEqual("https://example.com/api", request.RequestUri.ToString());
+        Assert.AreEqual("https://example.com/api", request.RequestUri!.ToString());
     }
 
     [Test]
@@ -104,7 +104,7 @@ public class HttpMessageTests
 
         request.Dispose();
 
-        Assert.Throws<ObjectDisposedException>(() => content.ReadAsStringAsync().Result);
+        Assert.Throws<ObjectDisposedException>(() => { var _ = content.ReadAsStringAsync().Result; });
     }
 
     #endregion
@@ -201,7 +201,7 @@ public class HttpMessageTests
 
         var result = response.EnsureSuccessStatusCode();
 
-        Assert.Same(response, result);
+        Assert.AreSame(response, result);
     }
 
     [Test]
@@ -212,7 +212,7 @@ public class HttpMessageTests
 
         response.Dispose();
 
-        Assert.Throws<ObjectDisposedException>(() => content.ReadAsStringAsync().Result);
+        Assert.Throws<ObjectDisposedException>(() => { var _ = content.ReadAsStringAsync().Result; });
     }
 
     #endregion

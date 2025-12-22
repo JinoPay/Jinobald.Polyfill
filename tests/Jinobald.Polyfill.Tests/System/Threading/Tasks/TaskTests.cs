@@ -101,7 +101,7 @@ public class TaskTests
         Assert.Throws<AggregateException>(() => task.Wait());
         Assert.IsTrue(task.IsFaulted);
         Assert.IsNotNull(task.Exception);
-        Assert.IsInstanceOf<InvalidOperationException>(task.Exception.InnerExceptions[0]);
+        Assert.IsInstanceOf<InvalidOperationException>(task.Exception!.InnerExceptions[0]);
     }
 
     [Test]
@@ -291,7 +291,7 @@ public class TaskTests
         Assert.IsTrue(task.IsCompleted);
         Assert.IsTrue(task.IsFaulted);
         Assert.IsNotNull(task.Exception);
-        Assert.IsInstanceOf<InvalidOperationException>(task.Exception.InnerExceptions[0]);
+        Assert.IsInstanceOf<InvalidOperationException>(task.Exception!.InnerExceptions[0]);
     }
 
     [Test]
@@ -356,7 +356,7 @@ public class TaskTests
         {
             throw new InvalidOperationException("Test exception");
         });
-        AggregateException exception = Assert.Throws<AggregateException>(() => task.Wait());
+        AggregateException exception = Assert.Throws<AggregateException>(() => task.Wait())!;
         Assert.IsInstanceOf<InvalidOperationException>(exception.InnerExceptions[0]);
         Assert.AreEqual("Test exception", exception.InnerExceptions[0].Message);
     }
