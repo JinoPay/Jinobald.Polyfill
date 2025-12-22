@@ -24,6 +24,7 @@ public class ByteArrayContent : HttpContent
         _content = content;
         _offset = 0;
         _count = content.Length;
+        Headers.ContentLength = _count;
     }
 
     /// <summary>
@@ -52,6 +53,7 @@ public class ByteArrayContent : HttpContent
         _content = content;
         _offset = offset;
         _count = count;
+        Headers.ContentLength = _count;
     }
 
     /// <summary>

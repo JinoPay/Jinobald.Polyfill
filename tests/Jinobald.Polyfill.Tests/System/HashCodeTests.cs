@@ -174,8 +174,8 @@ namespace Jinobald.Polyfill.Tests.System
             }
             var hash2 = hc.GetHashCode();
 
-            // Different values should produce different hashes
-            Assert.AreNotEqual(hash1, hash2);
+            // Same values should produce the same hash
+            Assert.AreEqual(hash1, hash2);
         }
 #endif
     }

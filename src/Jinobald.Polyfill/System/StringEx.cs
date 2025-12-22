@@ -303,72 +303,62 @@ internal static partial class StringEx
 #endif
 #endif
 
+#if NETFRAMEWORK && !NET40_OR_GREATER
+        /// <summary>
+        ///     지정된 문자열이 null이거나, 비어 있거나, 공백 문자로만 구성되어 있는지 여부를 나타냅니다.
+        /// </summary>
+        public static bool IsNullOrWhiteSpace(string? value)
+        {
+            if (value == null)
+            {
+                return true;
+            }
+
+            for (int i = 0; i < value.Length; i++)
+            {
+                if (!char.IsWhiteSpace(value[i]))
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+#endif
+    }
+
+    // 인스턴스 메서드용 extension 블록
+    extension(string str)
+    {
 #if !NETCOREAPP2_1_OR_GREATER
         /// <summary>
         ///     지정된 문자가 이 문자열 내에 있는지 여부를 나타내는 값을 반환합니다.
         /// </summary>
-        public static bool Contains(string str, char value)
+        public bool Contains(char value)
         {
             return str.IndexOf(value) >= 0;
         }
 
-#if !NETCOREAPP3_0_OR_GREATER
         /// <summary>
         ///     지정된 비교 규칙을 사용하여 지정된 부분 문자열이 이 문자열 내에 있는지 여부를 나타내는 값을 반환합니다.
         /// </summary>
-        public static bool Contains(string str, string value, StringComparison comparisonType)
+        public bool Contains(string value, StringComparison comparisonType)
         {
             return str.IndexOf(value, comparisonType) >= 0;
         }
-#endif
 
         /// <summary>
         ///     지정된 비교 규칙을 사용하여 지정된 문자가 이 문자열 내에 있는지 여부를 나타내는 값을 반환합니다.
         /// </summary>
-        public static bool Contains(string str, char value, StringComparison comparisonType)
+        public bool Contains(char value, StringComparison comparisonType)
         {
             return str.IndexOf(value.ToString(), comparisonType) >= 0;
         }
-#endif
 
-#if !NETCOREAPP3_0_OR_GREATER
-        /// <summary>
-        ///     이 문자열 인스턴스가 지정된 문자로 시작하는지 여부를 확인합니다.
-        /// </summary>
-        public static bool StartsWith(string str, char value)
-        {
-            return str.Length > 0 && str[0] == value;
-        }
-
-        /// <summary>
-        ///     이 문자열 인스턴스의 끝이 지정된 문자와 일치하는지 여부를 확인합니다.
-        /// </summary>
-        public static bool EndsWith(string str, char value)
-        {
-            return str.Length > 0 && str[str.Length - 1] == value;
-        }
-
-        /// <summary>
-        ///     지정된 비교 규칙을 사용하여 이 문자열의 해시 코드를 반환합니다.
-        /// </summary>
-        public static int GetHashCode(string str, StringComparison comparisonType)
-        {
-            string s = comparisonType switch
-            {
-                StringComparison.CurrentCultureIgnoreCase => str.ToLower(),
-                StringComparison.OrdinalIgnoreCase => str.ToUpperInvariant(),
-                StringComparison.InvariantCultureIgnoreCase => str.ToUpperInvariant(),
-                _ => str
-            };
-            return s.GetHashCode();
-        }
-#endif
-
-#if !NETCOREAPP2_1_OR_GREATER
         /// <summary>
         ///     제공된 비교 형식을 사용하여 지정된 문자열의 모든 항목을 다른 지정된 문자열로 바꾼 새 문자열을 반환합니다.
         /// </summary>
-        public static string Replace(string str, string oldValue, string? newValue, StringComparison comparisonType)
+        public string Replace(string oldValue, string? newValue, StringComparison comparisonType)
         {
             if (oldValue == null)
             {
@@ -400,8 +390,7 @@ internal static partial class StringEx
         /// <summary>
         ///     제공된 문화권 및 대/소문자 구분을 사용하여 지정된 문자열의 모든 항목을 다른 지정된 문자열로 바꾼 새 문자열을 반환합니다.
         /// </summary>
-        public static string Replace(string str, string oldValue, string? newValue, bool ignoreCase,
-            CultureInfo? culture)
+        public string Replace(string oldValue, string? newValue, bool ignoreCase, CultureInfo? culture)
         {
             if (oldValue == null)
             {
@@ -429,11 +418,44 @@ internal static partial class StringEx
         }
 #endif
 
+#if !NETCOREAPP3_0_OR_GREATER
+        /// <summary>
+        ///     이 문자열 인스턴스가 지정된 문자로 시작하는지 여부를 확인합니다.
+        /// </summary>
+        public bool StartsWith(char value)
+        {
+            return str.Length > 0 && str[0] == value;
+        }
+
+        /// <summary>
+        ///     이 문자열 인스턴스의 끝이 지정된 문자와 일치하는지 여부를 확인합니다.
+        /// </summary>
+        public bool EndsWith(char value)
+        {
+            return str.Length > 0 && str[str.Length - 1] == value;
+        }
+
+        /// <summary>
+        ///     지정된 비교 규칙을 사용하여 이 문자열의 해시 코드를 반환합니다.
+        /// </summary>
+        public int GetHashCode(StringComparison comparisonType)
+        {
+            string s = comparisonType switch
+            {
+                StringComparison.CurrentCultureIgnoreCase => str.ToLower(),
+                StringComparison.OrdinalIgnoreCase => str.ToUpperInvariant(),
+                StringComparison.InvariantCultureIgnoreCase => str.ToUpperInvariant(),
+                _ => str
+            };
+            return s.GetHashCode();
+        }
+#endif
+
 #if !NET5_0_OR_GREATER
         /// <summary>
         ///     지정된 구분 문자를 기준으로 문자열을 부분 문자열로 분할합니다.
         /// </summary>
-        public static string[] Split(string str, char separator, StringSplitOptions options = StringSplitOptions.None)
+        public string[] Split(char separator, StringSplitOptions options = StringSplitOptions.None)
         {
             return str.Split(new[] { separator }, options);
         }
@@ -441,8 +463,7 @@ internal static partial class StringEx
         /// <summary>
         ///     지정된 구분 문자를 기준으로 문자열을 최대 개수의 부분 문자열로 분할합니다.
         /// </summary>
-        public static string[] Split(string str, char separator, int count,
-            StringSplitOptions options = StringSplitOptions.None)
+        public string[] Split(char separator, int count, StringSplitOptions options = StringSplitOptions.None)
         {
             return str.Split(new[] { separator }, count, options);
         }
@@ -450,8 +471,7 @@ internal static partial class StringEx
         /// <summary>
         ///     지정된 구분 문자열을 기준으로 문자열을 부분 문자열로 분할합니다.
         /// </summary>
-        public static string[] Split(string str, string? separator,
-            StringSplitOptions options = StringSplitOptions.None)
+        public string[] Split(string? separator, StringSplitOptions options = StringSplitOptions.None)
         {
             return string.IsNullOrEmpty(separator)
                 ? str.Split((char[]?)null, options)
@@ -461,8 +481,7 @@ internal static partial class StringEx
         /// <summary>
         ///     지정된 구분 문자열을 기준으로 문자열을 최대 개수의 부분 문자열로 분할합니다.
         /// </summary>
-        public static string[] Split(string str, string? separator, int count,
-            StringSplitOptions options = StringSplitOptions.None)
+        public string[] Split(string? separator, int count, StringSplitOptions options = StringSplitOptions.None)
         {
             return string.IsNullOrEmpty(separator)
                 ? str.Split((char[]?)null, count, options)
@@ -472,7 +491,7 @@ internal static partial class StringEx
         /// <summary>
         ///     현재 문자열에서 문자의 모든 선행 및 후행 인스턴스를 제거합니다.
         /// </summary>
-        public static string Trim(string str, char trimChar)
+        public string Trim(char trimChar)
         {
             return str.Trim(new[] { trimChar });
         }
@@ -480,7 +499,7 @@ internal static partial class StringEx
         /// <summary>
         ///     현재 문자열에서 문자의 모든 선행 인스턴스를 제거합니다.
         /// </summary>
-        public static string TrimStart(string str, char trimChar)
+        public string TrimStart(char trimChar)
         {
             return str.TrimStart(new[] { trimChar });
         }
@@ -488,7 +507,7 @@ internal static partial class StringEx
         /// <summary>
         ///     현재 문자열에서 문자의 모든 후행 인스턴스를 제거합니다.
         /// </summary>
-        public static string TrimEnd(string str, char trimChar)
+        public string TrimEnd(char trimChar)
         {
             return str.TrimEnd(new[] { trimChar });
         }
@@ -496,15 +515,15 @@ internal static partial class StringEx
         /// <summary>
         ///     현재 문자열의 모든 줄 바꿈 시퀀스를 Environment.NewLine으로 바꿉니다.
         /// </summary>
-        public static string ReplaceLineEndings(string str)
+        public string ReplaceLineEndings()
         {
-            return ReplaceLineEndings(str, Environment.NewLine);
+            return ReplaceLineEndings(Environment.NewLine);
         }
 
         /// <summary>
         ///     현재 문자열의 모든 줄 바꿈 시퀀스를 지정된 대체 텍스트로 바꿉니다.
         /// </summary>
-        public static string ReplaceLineEndings(string str, string replacementText)
+        public string ReplaceLineEndings(string replacementText)
         {
             if (replacementText == null)
             {
@@ -512,29 +531,6 @@ internal static partial class StringEx
             }
 
             return str.Replace("\r\n", replacementText).Replace("\n", replacementText).Replace("\r", replacementText);
-        }
-#endif
-
-#if NETFRAMEWORK && !NET40_OR_GREATER
-        /// <summary>
-        ///     지정된 문자열이 null이거나, 비어 있거나, 공백 문자로만 구성되어 있는지 여부를 나타냅니다.
-        /// </summary>
-        public static bool IsNullOrWhiteSpace(string? value)
-        {
-            if (value == null)
-            {
-                return true;
-            }
-
-            for (int i = 0; i < value.Length; i++)
-            {
-                if (!char.IsWhiteSpace(value[i]))
-                {
-                    return false;
-                }
-            }
-
-            return true;
         }
 #endif
     }

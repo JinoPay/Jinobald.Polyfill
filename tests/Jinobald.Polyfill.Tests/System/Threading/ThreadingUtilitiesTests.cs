@@ -272,7 +272,9 @@ public class ThreadingUtilitiesTests
     public void SpinWait_NextSpinWillYield_TrueAfterThreshold()
     {
         SpinWait spinner = default;
-        for (int i = 0; i < 10; i++)
+        // Native SpinWait uses Count > 10, polyfill uses Count >= 10
+        // Use 11 spins to satisfy both implementations
+        for (int i = 0; i < 11; i++)
         {
             spinner.SpinOnce();
         }
