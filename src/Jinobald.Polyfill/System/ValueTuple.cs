@@ -890,10 +890,11 @@ public struct ValueTuple<T1, T2, T3, T4, T5, T6, T7> : IEquatable<ValueTuple<T1,
 }
 
 /// <summary>
-///     8-튜플을 값 형식으로 나타냅니다.
+///     8개 이상의 요소를 가진 튜플을 값 형식으로 나타냅니다.
 /// </summary>
-public struct ValueTuple<T1, T2, T3, T4, T5, T6, T7, T8> : IEquatable<ValueTuple<T1, T2, T3,
-    T4, T5, T6, T7, T8>>, IStructuralEquatable, IStructuralComparable, IComparable, ITuple
+public struct ValueTuple<T1, T2, T3, T4, T5, T6, T7, TRest> : IEquatable<ValueTuple<T1, T2, T3,
+    T4, T5, T6, T7, TRest>>, IStructuralEquatable, IStructuralComparable, IComparable, ITuple
+    where TRest : struct
 {
     public T1 Item1;
     public T2 Item2;
@@ -902,10 +903,10 @@ public struct ValueTuple<T1, T2, T3, T4, T5, T6, T7, T8> : IEquatable<ValueTuple
     public T5 Item5;
     public T6 Item6;
     public T7 Item7;
-    public T8 Item8;
+    public TRest Rest;
 
     public ValueTuple(T1 item1, T2 item2, T3 item3, T4 item4, T5 item5, T6 item6, T7 item7,
-        T8 item8)
+        TRest rest)
     {
         Item1 = item1;
         Item2 = item2;
@@ -914,15 +915,15 @@ public struct ValueTuple<T1, T2, T3, T4, T5, T6, T7, T8> : IEquatable<ValueTuple
         Item5 = item5;
         Item6 = item6;
         Item7 = item7;
-        Item8 = item8;
+        Rest = rest;
     }
 
     public override bool Equals(object? obj)
     {
-        return obj is ValueTuple<T1, T2, T3, T4, T5, T6, T7, T8> tuple && Equals(tuple);
+        return obj is ValueTuple<T1, T2, T3, T4, T5, T6, T7, TRest> tuple && Equals(tuple);
     }
 
-    public bool Equals(ValueTuple<T1, T2, T3, T4, T5, T6, T7, T8> other)
+    public bool Equals(ValueTuple<T1, T2, T3, T4, T5, T6, T7, TRest> other)
     {
         return EqualityComparer<T1>.Default.Equals(Item1, other.Item1) &&
                EqualityComparer<T2>.Default.Equals(Item2, other.Item2) &&
@@ -931,12 +932,12 @@ public struct ValueTuple<T1, T2, T3, T4, T5, T6, T7, T8> : IEquatable<ValueTuple
                EqualityComparer<T5>.Default.Equals(Item5, other.Item5) &&
                EqualityComparer<T6>.Default.Equals(Item6, other.Item6) &&
                EqualityComparer<T7>.Default.Equals(Item7, other.Item7) &&
-               EqualityComparer<T8>.Default.Equals(Item8, other.Item8);
+               EqualityComparer<TRest>.Default.Equals(Rest, other.Rest);
     }
 
     bool IStructuralEquatable.Equals(object? other, IEqualityComparer comparer)
     {
-        if (other is not ValueTuple<T1, T2, T3, T4, T5, T6, T7, T8> objTuple)
+        if (other is not ValueTuple<T1, T2, T3, T4, T5, T6, T7, TRest> objTuple)
         {
             return false;
         }
@@ -948,12 +949,12 @@ public struct ValueTuple<T1, T2, T3, T4, T5, T6, T7, T8> : IEquatable<ValueTuple
                comparer.Equals(Item5, objTuple.Item5) &&
                comparer.Equals(Item6, objTuple.Item6) &&
                comparer.Equals(Item7, objTuple.Item7) &&
-               comparer.Equals(Item8, objTuple.Item8);
+               comparer.Equals(Rest, objTuple.Rest);
     }
 
     int IStructuralComparable.CompareTo(object? other, IComparer comparer)
     {
-        if (other is not ValueTuple<T1, T2, T3, T4, T5, T6, T7, T8> objTuple)
+        if (other is not ValueTuple<T1, T2, T3, T4, T5, T6, T7, TRest> objTuple)
         {
             throw new ArgumentException("other");
         }
@@ -1000,12 +1001,17 @@ public struct ValueTuple<T1, T2, T3, T4, T5, T6, T7, T8> : IEquatable<ValueTuple
             return c;
         }
 
-        return comparer.Compare(Item8, objTuple.Item8);
+        return comparer.Compare(Rest, objTuple.Rest);
     }
 
     int IComparable.CompareTo(object? obj)
     {
-        return obj is ValueTuple<T1, T2, T3, T4, T5, T6, T7, T8> tuple
+        return CompareTo(obj);
+    }
+
+    public int CompareTo(object? obj)
+    {
+        return obj is ValueTuple<T1, T2, T3, T4, T5, T6, T7, TRest> tuple
             ? ((IStructuralComparable)this).CompareTo(tuple, Comparer<object>.Default)
             : 1;
     }
@@ -1025,30 +1031,55 @@ public struct ValueTuple<T1, T2, T3, T4, T5, T6, T7, T8> : IEquatable<ValueTuple
         hash = (hash * 31) + comparer.GetHashCode(Item5!);
         hash = (hash * 31) + comparer.GetHashCode(Item6!);
         hash = (hash * 31) + comparer.GetHashCode(Item7!);
-        hash = (hash * 31) + comparer.GetHashCode(Item8!);
+        hash = (hash * 31) + comparer.GetHashCode(Rest!);
         return hash;
     }
 
     public override string ToString()
     {
-        return $"({Item1}, {Item2}, {Item3}, {Item4}, {Item5}, {Item6}, {Item7}, {Item8})";
+        string restStr = Rest.ToString() ?? "";
+        // Rest의 괄호를 제거하고 연결
+        if (restStr.StartsWith("(") && restStr.EndsWith(")"))
+        {
+            restStr = restStr.Substring(1, restStr.Length - 2);
+        }
+        return $"({Item1}, {Item2}, {Item3}, {Item4}, {Item5}, {Item6}, {Item7}, {restStr})";
     }
 
-    int ITuple.Length => 8;
-
-    object? ITuple.this[int index] =>
-        index switch
+    int ITuple.Length
+    {
+        get
         {
-            0 => Item1,
-            1 => Item2,
-            2 => Item3,
-            3 => Item4,
-            4 => Item5,
-            5 => Item6,
-            6 => Item7,
-            7 => Item8,
-            _ => throw new IndexOutOfRangeException()
-        };
+            if (Rest is ITuple restTuple)
+            {
+                return 7 + restTuple.Length;
+            }
+            return 8;
+        }
+    }
+
+    object? ITuple.this[int index]
+    {
+        get
+        {
+            switch (index)
+            {
+                case 0: return Item1;
+                case 1: return Item2;
+                case 2: return Item3;
+                case 3: return Item4;
+                case 4: return Item5;
+                case 5: return Item6;
+                case 6: return Item7;
+                default:
+                    if (Rest is ITuple restTuple)
+                    {
+                        return restTuple[index - 7];
+                    }
+                    throw new IndexOutOfRangeException();
+            }
+        }
+    }
 }
 
 #endif
