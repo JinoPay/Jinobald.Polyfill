@@ -229,6 +229,25 @@ public readonly ref struct ReadOnlySpan<T>
     }
 
     /// <summary>
+    ///     고정 문에서 사용하기 위해 ReadOnlySpan의 첫 번째 요소에 대한 참조를 반환합니다.
+    /// </summary>
+    /// <returns>첫 번째 요소에 대한 참조, 또는 ReadOnlySpan이 비어 있으면 null 참조입니다.</returns>
+    public unsafe ref readonly T GetPinnableReference()
+    {
+        if (Length == 0)
+        {
+            return ref Runtime.CompilerServices.Unsafe.NullRef<T>();
+        }
+
+        if (_pointer != IntPtr.Zero)
+        {
+            return ref ((T*)(void*)_pointer)[0];
+        }
+
+        return ref _array[_start];
+    }
+
+    /// <summary>
     ///     ReadOnlySpan에 대한 열거자입니다.
     /// </summary>
     public ref struct Enumerator
