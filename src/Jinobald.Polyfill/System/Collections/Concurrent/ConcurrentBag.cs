@@ -1,4 +1,4 @@
-#if NET35 || NET40
+#if NET35
 using System.Diagnostics;
 
 namespace System.Collections.Concurrent

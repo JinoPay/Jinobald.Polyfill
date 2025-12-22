@@ -8,11 +8,7 @@ using global::System.Threading;
 using global::System.Threading.Tasks;
 using NUnit.Framework;
 
-#if NET35 || NET40
 using ConcurrentStack = global::System.Collections.Concurrent.ConcurrentStack<int>;
-#else
-using ConcurrentStack = global::System.Collections.Concurrent.ConcurrentStack<int>;
-#endif
 
 /// <summary>
 /// ConcurrentStack에 대한 테스트입니다.

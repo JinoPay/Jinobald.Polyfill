@@ -8,11 +8,7 @@ using global::System.Threading;
 using global::System.Threading.Tasks;
 using NUnit.Framework;
 
-#if NET35 || NET40
 using ConcurrentQueue = global::System.Collections.Concurrent.ConcurrentQueue<int>;
-#else
-using ConcurrentQueue = global::System.Collections.Concurrent.ConcurrentQueue<int>;
-#endif
 
 /// <summary>
 /// ConcurrentQueue에 대한 테스트입니다.

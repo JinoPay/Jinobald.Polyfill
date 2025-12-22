@@ -51,7 +51,7 @@ public class MultipartContentTests
 
         content.Add(part);
 
-        Assert.Single(content);
+        Assert.AreEqual(1, content.Count());
     }
 
     [Test]
@@ -112,7 +112,7 @@ public class MultipartContentTests
 
         content.Add(stringContent, "fieldName");
 
-        Assert.Single(content);
+        Assert.AreEqual(1, content.Count());
     }
 
     [Test]
@@ -123,7 +123,7 @@ public class MultipartContentTests
 
         content.Add(fileContent, "file", "document.txt");
 
-        Assert.Single(content);
+        Assert.AreEqual(1, content.Count());
     }
 
     [Test]

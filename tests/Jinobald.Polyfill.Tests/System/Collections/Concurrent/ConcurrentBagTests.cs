@@ -8,11 +8,7 @@ using global::System.Threading;
 using global::System.Threading.Tasks;
 using NUnit.Framework;
 
-#if NET35 || NET40
 using ConcurrentBag = global::System.Collections.Concurrent.ConcurrentBag<int>;
-#else
-using ConcurrentBag = global::System.Collections.Concurrent.ConcurrentBag<int>;
-#endif
 
 /// <summary>
 /// ConcurrentBag에 대한 테스트입니다.
