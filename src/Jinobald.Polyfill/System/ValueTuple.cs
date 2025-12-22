@@ -46,11 +46,11 @@ public static class ValueTuple
         return new ValueTuple<T1, T2>(item1, item2);
     }
 
-    public static ValueTuple<T1, T2, T3, T4, T5, T6, T7, T8> Create<T1, T2, T3, T4, T5, T6,
+    public static ValueTuple<T1, T2, T3, T4, T5, T6, T7, ValueTuple<T8>> Create<T1, T2, T3, T4, T5, T6,
         T7, T8>(T1 item1, T2 item2, T3 item3, T4 item4, T5 item5, T6 item6, T7 item7, T8 item8)
     {
-        return new ValueTuple<T1, T2, T3, T4, T5, T6, T7, T8>(item1, item2, item3, item4, item5, item6, item7,
-            item8);
+        return new ValueTuple<T1, T2, T3, T4, T5, T6, T7, ValueTuple<T8>>(item1, item2, item3, item4, item5, item6, item7,
+            new ValueTuple<T8>(item8));
     }
 
     public static ValueTuple<T1> Create<T1>(T1 item1)
@@ -103,6 +103,11 @@ public struct ValueTuple<T1> : IEquatable<ValueTuple<T1>>, IStructuralEquatable,
     }
 
     int IComparable.CompareTo(object? obj)
+    {
+        return CompareTo(obj);
+    }
+
+    public int CompareTo(object? obj)
     {
         return obj is ValueTuple<T1> tuple
             ? ((IStructuralComparable)this).CompareTo(tuple, Comparer<object>.Default)
@@ -194,6 +199,11 @@ public struct ValueTuple<T1, T2> : IEquatable<ValueTuple<T1, T2>>, IStructuralEq
     }
 
     int IComparable.CompareTo(object? obj)
+    {
+        return CompareTo(obj);
+    }
+
+    public int CompareTo(object? obj)
     {
         return obj is ValueTuple<T1, T2> tuple
             ? ((IStructuralComparable)this).CompareTo(tuple, Comparer<object>.Default)
@@ -293,6 +303,11 @@ public struct ValueTuple<T1, T2, T3> : IEquatable<ValueTuple<T1, T2, T3>>,
     }
 
     int IComparable.CompareTo(object? obj)
+    {
+        return CompareTo(obj);
+    }
+
+    public int CompareTo(object? obj)
     {
         return obj is ValueTuple<T1, T2, T3> tuple
             ? ((IStructuralComparable)this).CompareTo(tuple, Comparer<object>.Default)
@@ -404,6 +419,11 @@ public struct ValueTuple<T1, T2, T3, T4> : IEquatable<ValueTuple<T1, T2, T3, T4>
     }
 
     int IComparable.CompareTo(object? obj)
+    {
+        return CompareTo(obj);
+    }
+
+    public int CompareTo(object? obj)
     {
         return obj is ValueTuple<T1, T2, T3, T4> tuple
             ? ((IStructuralComparable)this).CompareTo(tuple, Comparer<object>.Default)
@@ -527,6 +547,11 @@ public struct ValueTuple<T1, T2, T3, T4, T5> : IEquatable<ValueTuple<T1, T2, T3,
     }
 
     int IComparable.CompareTo(object? obj)
+    {
+        return CompareTo(obj);
+    }
+
+    public int CompareTo(object? obj)
     {
         return obj is ValueTuple<T1, T2, T3, T4, T5> tuple
             ? ((IStructuralComparable)this).CompareTo(tuple, Comparer<object>.Default)
@@ -662,6 +687,11 @@ public struct ValueTuple<T1, T2, T3, T4, T5, T6> : IEquatable<ValueTuple<T1, T2,
     }
 
     int IComparable.CompareTo(object? obj)
+    {
+        return CompareTo(obj);
+    }
+
+    public int CompareTo(object? obj)
     {
         return obj is ValueTuple<T1, T2, T3, T4, T5, T6> tuple
             ? ((IStructuralComparable)this).CompareTo(tuple, Comparer<object>.Default)
@@ -809,6 +839,11 @@ public struct ValueTuple<T1, T2, T3, T4, T5, T6, T7> : IEquatable<ValueTuple<T1,
     }
 
     int IComparable.CompareTo(object? obj)
+    {
+        return CompareTo(obj);
+    }
+
+    public int CompareTo(object? obj)
     {
         return obj is ValueTuple<T1, T2, T3, T4, T5, T6, T7> tuple
             ? ((IStructuralComparable)this).CompareTo(tuple, Comparer<object>.Default)

@@ -13,7 +13,7 @@ public class EnumerableAggregateTests
     [Test]
     public void Aggregate_결과선택기_변환적용()
     {
-        int[] source = new[] { 1, 2, 3, 4 };
+        int[] source = [1, 2, 3, 4];
 
         int result = source.Aggregate(0, (acc, x) => acc + x, sum => sum * 2);
 
@@ -26,7 +26,7 @@ public class EnumerableAggregateTests
     [Test]
     public void Aggregate_단일요소_해당요소반환()
     {
-        int[] source = new[] { 42 };
+        int[] source = [42];
 
         int result = source.Aggregate((a, b) => a + b);
 

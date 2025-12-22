@@ -127,9 +127,9 @@ public class TupleTests
     public void Tuple_ITuple_IndexOutOfRange()
     {
         var tuple = Tuple.Create(1, 2);
-        var iTuple = (ITuple)tuple;
+        ITuple iTuple = tuple;
 
-        Assert.Throws<IndexOutOfRangeException>(() => iTuple[2]);
+        Assert.Throws<IndexOutOfRangeException>(() => _ = iTuple[2]);
     }
 }
 
