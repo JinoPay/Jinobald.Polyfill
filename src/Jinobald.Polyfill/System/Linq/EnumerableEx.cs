@@ -1,13 +1,13 @@
 // Jinobald.Polyfill - Modern LINQ 확장 메서드 (.NET 6.0+)
 // .NET 6.0 이상에서 추가된 LINQ 메서드들을 하위 버전에서 사용 가능하도록 폴리필
 
-#if NET20 || NET30 || NET35
+#if NET35
 
 using System.Collections;
 
 namespace System.Linq
 {
-    public static partial class Enumerable
+    public static partial class EnumerableEx
     {
         #region TryGetNonEnumeratedCount - .NET 6.0+
 
