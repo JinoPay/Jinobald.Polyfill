@@ -263,9 +263,9 @@ public class ConcurrentQueueTests
                 {
                     while (!queue.TryDequeue(out int item))
                     {
+                        dequeued.Add(item);
                         Thread.Sleep(0);
                     }
-                    dequeued.Add(item);
                 }
             });
         }

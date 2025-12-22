@@ -289,9 +289,9 @@ public class ConcurrentBagTests
                 {
                     while (!bag.TryTake(out int item))
                     {
+                        taken.Add(item);
                         Thread.Sleep(0);
                     }
-                    taken.Add(item);
                 }
             });
         }
