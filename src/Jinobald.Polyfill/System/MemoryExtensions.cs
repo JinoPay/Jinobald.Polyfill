@@ -269,11 +269,24 @@ public static class MemoryExtensions
     public static int IndexOf<T>(this ReadOnlySpan<T> span, T value)
         where T : IEquatable<T>
     {
-        for (int i = 0; i < span.Length; i++)
+        if (value == null)
         {
-            if (span[i].Equals(value))
+            for (int i = 0; i < span.Length; i++)
             {
-                return i;
+                if (span[i] == null)
+                {
+                    return i;
+                }
+            }
+        }
+        else
+        {
+            for (int i = 0; i < span.Length; i++)
+            {
+                if (value.Equals(span[i]))
+                {
+                    return i;
+                }
             }
         }
 
@@ -357,11 +370,24 @@ public static class MemoryExtensions
     public static int LastIndexOf<T>(this ReadOnlySpan<T> span, T value)
         where T : IEquatable<T>
     {
-        for (int i = span.Length - 1; i >= 0; i--)
+        if (value == null)
         {
-            if (span[i].Equals(value))
+            for (int i = span.Length - 1; i >= 0; i--)
             {
-                return i;
+                if (span[i] == null)
+                {
+                    return i;
+                }
+            }
+        }
+        else
+        {
+            for (int i = span.Length - 1; i >= 0; i--)
+            {
+                if (value.Equals(span[i]))
+                {
+                    return i;
+                }
             }
         }
 
@@ -398,7 +424,17 @@ public static class MemoryExtensions
 
         for (int i = 0; i < span.Length; i++)
         {
-            if (!span[i].Equals(other[i]))
+            T left = span[i];
+            T right = other[i];
+
+            if (left == null)
+            {
+                if (right != null)
+                {
+                    return false;
+                }
+            }
+            else if (!left.Equals(right))
             {
                 return false;
             }
